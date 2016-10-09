@@ -139,7 +139,7 @@ var sketchProc = function(processingInstance) {
         socket.on('get users', function(data){
             var stuffs=[];
             for(var i=0; i<data.length; i++){
-                stuffs.push({x: data[i].x, y: data[i].y, name: data[i].name, id: data[i].id});
+                stuffs.push({x: data[i].x, y: data[i].y, name: data[i].name, score: data[i].score, lvl: data[i].lvl, id: data[i].id});
             }
             users=stuffs;
             var num=0;
@@ -203,6 +203,9 @@ var sketchProc = function(processingInstance) {
         var keyReleased = function() {
             keys[keyCode] = false;
         };
+        var screenx = 0;
+        var screeny = 0;
+
         var mapCamera = {
             x: 0,
             y: 0,
@@ -218,10 +221,13 @@ var sketchProc = function(processingInstance) {
                         this.x = constrain(this.x + (width / 2 - users[i].x - this.x), this.right, this.left);
                         this.y = constrain(this.y + (height / 2 - users[i].y - this.y), this.bottom, this.top);
                         translate(this.x, this.y);
+                        screenx = users[i].x + this.x;
+                        screeny = users[i].y + this.y;
                     }
                 }
             }
         };
+
         var minimap =  {
             x: width-135,
             y: height-135,
@@ -265,9 +271,9 @@ var sketchProc = function(processingInstance) {
                 rect(width / 2 - (350 / 2) + 2, height - 38, 16/*+this.levelBarLength*/, 16, 100);
 
                 textSize(11);
-                //textOutline("Score: " + this.tracking.stats.score, width / 2, height - 51, 0, 0, color(240), color(61), 1);
+                textOutline("Score: " + users[myNum].score, width / 2, height - 51, 0, 0, color(240), color(61), 1);
                 textSize(12.5);
-                //textOutline("Lvl " + this.tracking.stats.lvl + " Tank", width / 2, height - 30, 0, 0, color(240), color(61), 1);
+                textOutline("Lvl " + users[myNum].lvl + " Tank", width / 2, height - 30, 0, 0, color(240), color(61), 1);
                 textSize(32.5);
                 textOutline(users[myNum].name, width / 2, height - 80, 0, 0, color(240), color(61), 3.5);
             }
@@ -310,14 +316,24 @@ var sketchProc = function(processingInstance) {
                 }
                 textSize(20);
                 for(var i=0; i<users.length; i++){
+                    stroke(62);
+                    strokeWeight(2.5);
+                    pushMatrix();
+                    translate(users[i].x, users[i].y);
+                    rotate(atan2(mouseY-screeny, mouseX-screenx) - HALF_PI);
+                    fill(colors.tank_barrel);
+                    rect(-8.75, 5, 17.5, 35);
+                    popMatrix();
                     if(users[i].id===myId){
                         fill(colors.tank_blue);
                     } else {
                         fill(colors.tank_red);
                     }
-                    ellipse(users[i].x, users[i].y, 35, 35);
-                    fill(255, 255, 255);
-                    text(users[i].name, users[i].x, users[i].y);
+                    ellipse(users[i].x, users[i].y, 40, 40);
+                    if(users[i].id!==myId){
+                      fill(255, 255, 255);
+                      text(users[i].name, users[i].x, users[i].y);
+                    }
                 }
                 popMatrix();
                 minimap.run();

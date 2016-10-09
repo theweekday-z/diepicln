@@ -61,7 +61,7 @@ io.on('connection', function (socket) {
     socket.on('new user', function(data, Ip, callback){
         callback(true);
         //socket.username = {name: data, x: Math.floor(Math.random() * (world.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (world.h-100 - 100 + 1) + 100), id: Id, ip: Ip};
-        socket.username = {name: data, x: 100, y:100, id: Id, ip: Ip};
+        socket.username = {name: data, x: 100, y:100, score: 0, lvl: 1, id: Id, ip: Ip};
         users.push(socket.username);
         updateUsernames();
         updateWorld();
@@ -165,7 +165,7 @@ var collisions = function() {
         }
     }
 };
-var enemieUpdates = function(){
+var updates = function(){
     if(squares.length<world.minimumSquares){
         squares.push({x: Math.floor(Math.random() * (world.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (world.h-100 - 100 + 1) + 100), r: Math.floor(Math.random() * (360 - 0 + 1) + 0)})
     }
@@ -186,7 +186,7 @@ var enemieUpdates = function(){
     }
     collisions();
 };
-setInterval(enemieUpdates, 0);
+setInterval(updates, 0);
 
 const readline = require('readline');
 const rl = readline.createInterface({
