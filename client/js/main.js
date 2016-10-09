@@ -251,6 +251,35 @@ var sketchProc = function(processingInstance) {
             }
         };
 
+        var overlays = function() {
+            if(myNumAssigned){
+                noStroke();
+                fill(22, 22, 22, 200);
+                rect(width / 2 - (250 / 2), height - 60, 250, 17.5, 100);
+                rect(width / 2 - (350 / 2), height - 40, 350, 20, 100);
+
+                fill(108, 240, 162);
+                rect(width / 2 - (250 / 2) + 2, height - 58, 13.5/*+this.scoreBarLength*/, 13.5, 100);
+
+                fill(240, 217, 108);
+                rect(width / 2 - (350 / 2) + 2, height - 38, 16/*+this.levelBarLength*/, 16, 100);
+
+                textSize(11);
+                //textOutline("Score: " + this.tracking.stats.score, width / 2, height - 51, 0, 0, color(240), color(61), 1);
+                textSize(12.5);
+                //textOutline("Lvl " + this.tracking.stats.lvl + " Tank", width / 2, height - 30, 0, 0, color(240), color(61), 1);
+                textSize(32.5);
+                textOutline(users[myNum].name, width / 2, height - 80, 0, 0, color(240), color(61), 3.5);
+            }
+
+
+
+            /* Leaderboard */
+            for (var i = 0; i < 10; i += 1) {
+
+            }
+        };
+
         var draw = function() {
             size(window.innerWidth, window.innerHeight-3.25);
             if(playing){
@@ -292,6 +321,7 @@ var sketchProc = function(processingInstance) {
                 }
                 popMatrix();
                 minimap.run();
+                overlays();
                 if(keys[UP]){
                     socket.emit('move up', 2.5);
                 }
