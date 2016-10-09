@@ -335,22 +335,30 @@ var sketchProc = function(processingInstance) {
                 }
             }
         };
-        var keyTyped = function() {
-          if (!playing) {
-              if (key.code !== BACKSPACE && username.length < 15 && !keys[ENTER]) {
-                  username.push(key);
-              }
-              if (key.code === BACKSPACE) {
+        function preventBackspaceHandler(evt) {
+            evt = evt || window.event;
+            if (evt.keyCode == 8) {
+                if(!playing){
                   username.pop();
-              }
-          }
-          if(playing){
-              if(key.code===104 && !hideGrid){ // H key for hiding grid
-                  hideGrid = true;
-              } else if(key.code===104 && hideGrid){
-                  hideGrid = false;
-              }
-          }
+                }
+                return false;
+            }
+        }
+
+        document.onkeydown = preventBackspaceHandler;
+        var keyTyped = function() {
+            if (!playing) {
+                if (key.code !== 8 && username.length < 15 && !keys[ENTER]) {
+                    username.push(key);
+                }
+            }
+            if(playing){
+                if(key.code===104 && !hideGrid){ // H key for hiding grid
+                    hideGrid = true;
+                } else if(key.code===104 && hideGrid){
+                    hideGrid = false;
+                }
+            }
         };
     }
 };
