@@ -1,0 +1,12 @@
+{
+  "name": "diepioMultiplayer",
+  "version": "0.1",
+  "description": "",
+  "main": "server.js",
+  "repository": "",
+  "author": "SharkFin",
+  "dependencies": {
+    "express": "~3.2.4",
+    "socket.io": "~0.9.14"
+  }
+}
