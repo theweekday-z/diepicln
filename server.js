@@ -10,6 +10,9 @@ var io = socketio.listen(server);
 
 router.use(express.static(path.resolve(__dirname, 'client')));
 
+var settings = require("./settings.json");
+var world = settings.world;
+
 var users = [];
 var connections = [];
 var messages = [];
@@ -31,17 +34,6 @@ var triangles = [];
 var pentagons = [];
 var bullets = [];
 
-/** World **/
-var world = {
-    w: 6000, //World Width
-    h: 6000, //World Height
-    minimumSquares: 75, //Minimum Amount Of Squares
-    minimumTriangles: 50, //Minimum Amount Of Triangles
-    minimumPentagons: 10, //Minimum Amount Of Pentagons
-    maxSquares: 175, //Maximum Amount Of Squares
-    maxTriangles: 125, //Maximum Amount Of Triangles
-    maxPentagons: 75 //Maximum Amount Of Pentagons
-};
 
 io.on('connection', function (socket) {
     connections.push(socket);
@@ -60,14 +52,19 @@ io.on('connection', function (socket) {
     //New User
     socket.on('new user', function(data, Ip, callback){
         callback(true);
-        //socket.username = {name: data, x: Math.floor(Math.random() * (world.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (world.h-100 - 100 + 1) + 100), id: Id, ip: Ip};
-        socket.username = {name: data, x: 100, y:100, score: 0, lvl: 1, id: Id, ip: Ip};
+        socket.username = {name: data, x: Math.floor(Math.random() * (world.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (world.h-100 - 100 + 1) + 100), lvl: 1, score: 0, r: 0, id: Id, ip: Ip};
         users.push(socket.username);
         updateUsernames();
         updateWorld();
         updateMessages();
         Id+=1;
         ban();
+    });
+
+    //
+    socket.on('user update', function(r, callback){
+        users[users.indexOf(socket.username)].r=r;
+        updatePositions();
     });
 
     //Send Message
@@ -176,17 +173,31 @@ var updates = function(){
         pentagons.push({x: Math.floor(Math.random() * (world.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (world.h-100 - 100 + 1) + 100), r: Math.floor(Math.random() * (360 - 0 + 1) + 0)})
     }
     for(var i=0; i<squares.length; i++){
-        squares[i].r+=0.0025;
+        squares[i].r+=0.00025;
     }
     for(var i=0; i<triangles.length; i++){
-        triangles[i].r+=0.0025;
+        triangles[i].r+=0.00025;
     }
     for(var i=0; i<pentagons.length; i++){
-        pentagons[i].r+=0.0025;
+        pentagons[i].r+=0.00025;
     }
     collisions();
 };
 setInterval(updates, 0);
+
+var chat = function(to, msg){
+    if(to==="all"){
+        var message = {msg: msg, user: "[Server]", to: "all"};
+        messages.push(message);
+        updateMessages();
+        console.log("Message Sent To All!");
+    } else {
+        var message = {msg: msg, user: "[Server]", to: to};
+        messages.push(message);
+        updateMessages();
+        console.log("Message Sent To "+to);
+    }
+};
 
 const readline = require('readline');
 const rl = readline.createInterface({
@@ -195,8 +206,6 @@ const rl = readline.createInterface({
     prompt: ' > '
 });
 
-rl.prompt();
-
 rl.on('line', (line) => {
     var l=line.trim();
     var msg=l.split(" ");
@@ -204,7 +213,7 @@ rl.on('line', (line) => {
         case "playerlist":
             console.log("Users: ");
             for(var i=0; i<users.length; i++){
-                console.log("|" + "ID: " + users[i].id + " | " + "Name: " + users[i].name + " | " + "IP: " + users[i].ip);
+                console.log("|" + "ID: " + users[i].id + " | " + "Name: " + users[i].name + " | " + "x: " + users[i].x + " | "+ "y: " + users[i].y + " | " + "IP: " + users[i].ip);
             }
             break;
 
@@ -223,23 +232,11 @@ rl.on('line', (line) => {
             break;
 
         case "chat":
-            if(msg[1]==="all"){
-                var messageW=[];
-                for(var i=2; i<msg.length; i++){
-                    messageW.push(msg[i]);
-                }
-                var message = {msg: messageW.join(" "), user: "[Server]", to: "all"};
-                messages.push(message);
-                updateMessages();
-            } else {
-                var messageW=[];
-                for(var i=2; i<msg.length; i++){
-                    messageW.push(msg[i]);
-                }
-                var message = {msg: messageW.join(" "), user: "[Server]", to: msg[1]};
-                messages.push(message);
-                updateMessages();
+            var messageW=[];
+            for(var i=2; i<msg.length; i++){
+                messageW.push(msg[i]);
             }
+            chat(msg[1], messageW.join(" "));
             break;
 
         case "chatBan":
@@ -319,4 +316,5 @@ rl.on('line', (line) => {
 server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function(){
   var addr = server.address();
   console.log("Server running On ", addr.address + ":" + addr.port);
+  rl.prompt();
 });

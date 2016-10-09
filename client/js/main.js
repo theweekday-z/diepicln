@@ -139,7 +139,7 @@ var sketchProc = function(processingInstance) {
         socket.on('get users', function(data){
             var stuffs=[];
             for(var i=0; i<data.length; i++){
-                stuffs.push({x: data[i].x, y: data[i].y, name: data[i].name, score: data[i].score, lvl: data[i].lvl, id: data[i].id});
+                stuffs.push({x: data[i].x, y: data[i].y, name: data[i].name, score: data[i].score, lvl: data[i].lvl, r: data[i].r, id: data[i].id});
             }
             users=stuffs;
             var num=0;
@@ -320,7 +320,7 @@ var sketchProc = function(processingInstance) {
                     strokeWeight(2.5);
                     pushMatrix();
                     translate(users[i].x, users[i].y);
-                    rotate(atan2(mouseY-screeny, mouseX-screenx) - HALF_PI);
+                    rotate(users[i].r);
                     fill(colors.tank_barrel);
                     rect(-8.75, 5, 17.5, 35);
                     popMatrix();
@@ -338,18 +338,19 @@ var sketchProc = function(processingInstance) {
                 popMatrix();
                 minimap.run();
                 overlays();
-                if(keys[UP]){
+                if (keys[UP] || keys[87]) {
                     socket.emit('move up', 2.5);
                 }
-                if(keys[DOWN]){
+                if (keys[DOWN] || keys[83]) {
                     socket.emit('move down', 2.5);
                 }
-                if(keys[LEFT]){
-                    socket.emit('move left', 2.5);
-                }
-                if(keys[RIGHT]){
+                if (keys[RIGHT] || keys[68]) {
                     socket.emit('move right', 5);
                 }
+                if (keys[LEFT] || keys[65]) {
+                    socket.emit('move left', 2.5);
+                }
+                socket.emit('user update', atan2(mouseY-screeny, mouseX-screenx) - HALF_PI);
             } else {
                 background(124,124,124);
                 textSize(16);
@@ -380,6 +381,8 @@ var sketchProc = function(processingInstance) {
                     chat.style.visibility = 'visible';
                 }
             }
+            fill(0,0,0);
+            text(__frameRate, 100, 100);
         };
         function preventBackspaceHandler(evt) {
             evt = evt || window.event;
