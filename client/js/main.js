@@ -307,7 +307,7 @@ var sketchProc = function(processingInstance) {
             } else {
                 background(124,124,124);
                 textSize(16);
-                //textOutline("Game mode: " + gameMode, width / 2, 20, 0, 0, color(255), color(0), 2);
+                textOutline("Game mode", width / 2, 20, 0, 0, color(255), color(0), 2);
                 textSize(20);
                 textOutline("This is the tale of...", width / 2, height / 2 - 35, 0, 0, color(255), color(0), 2);
                 fill(238);
