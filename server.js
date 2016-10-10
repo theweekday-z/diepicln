@@ -52,7 +52,7 @@ io.on('connection', function (socket) {
     //New User
     socket.on('new user', function(data, Ip, callback){
         callback(true);
-        socket.username = {name: data, x: Math.floor(Math.random() * (world.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (world.h-100 - 100 + 1) + 100), lvl: 1, score: 0, r: 0, id: Id, ip: Ip};
+        socket.username = {name: data, x: Math.floor(Math.random() * (world.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (world.h-100 - 100 + 1) + 100), lvl: 1, score: 0, r: 0, d: 40, id: Id, ip: Ip};
         users.push(socket.username);
         updateUsernames();
         updateWorld();
@@ -143,14 +143,45 @@ io.on('connection', function (socket) {
         setInterval(updateEnemies, 0);
     }
 });
-var collideWith = function(collider, obj){
+var dist = function(x1, y1, x2, y2) {
+    var a = x1 - x2;
+    var b = y1 - y2;
+
+    var c = Math.sqrt( a*a + b*b );
+
+    return c;
+};
+var collideWith = function(e, c) {
+    if (dist(e.x, e.y, c.x, c.y) - (e.d / 2) < c.d / 2) {
+        console.log("COLLIDING!!!");
+        return true;
+    } else {
+        return false;
+    }
 
 };
 var collisions = function() {
     for(var u=0; u<users.length; u++){
         /* Squares Collisions */
         for(var i=0; i<squares.length; i++){
-
+          if (collideWith(users[u], squares[i])) {
+              if(users[u].x>squares[i].x){
+                  users[u].x-=1;
+                  squares[i].x+=10;
+              }
+              if(users[u].x<squares[i].x+squares[i].d){
+                  users[u].x+=1;
+                  squares[i].x-=10;
+              }
+              if(users[u].y<squares[i].y){
+                  users[u].y-=1;
+                  squares[i].y+=10;
+              }
+              if(users[u].y>squares[i].y+squares[i].d){
+                users[u].y+=1;
+                squares[i].y-=10;
+              }
+          }
         }
         /* Triangles Collisions */
         for(var i=0; i<triangles.length; i++){
@@ -164,13 +195,13 @@ var collisions = function() {
 };
 var updates = function(){
     if(squares.length<world.minimumSquares){
-        squares.push({x: Math.floor(Math.random() * (world.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (world.h-100 - 100 + 1) + 100), r: Math.floor(Math.random() * (360 - 0 + 1) + 0)})
+        squares.push({x: Math.floor(Math.random() * (world.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (world.h-100 - 100 + 1) + 100), r: Math.floor(Math.random() * (360 - 0 + 1) + 0), d: 35})
     }
     if(triangles.length<world.minimumTriangles){
-        triangles.push({x: Math.floor(Math.random() * (world.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (world.h-100 - 100 + 1) + 100), r: Math.floor(Math.random() * (360 - 0 + 1) + 0)})
+        triangles.push({x: Math.floor(Math.random() * (world.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (world.h-100 - 100 + 1) + 100), r: Math.floor(Math.random() * (360 - 0 + 1) + 0), d: 20})
     }
     if(pentagons.length<world.minimumPentagons){
-        pentagons.push({x: Math.floor(Math.random() * (world.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (world.h-100 - 100 + 1) + 100), r: Math.floor(Math.random() * (360 - 0 + 1) + 0)})
+        pentagons.push({x: Math.floor(Math.random() * (world.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (world.h-100 - 100 + 1) + 100), r: Math.floor(Math.random() * (360 - 0 + 1) + 0), d: 60})
     }
     for(var i=0; i<squares.length; i++){
         squares[i].r+=0.00025;
@@ -181,7 +212,7 @@ var updates = function(){
     for(var i=0; i<pentagons.length; i++){
         pentagons[i].r+=0.00025;
     }
-    collisions();
+    //collisions();
 };
 setInterval(updates, 0);
 

@@ -67,10 +67,10 @@ var sketchProc = function(processingInstance) {
         var triangles = [];
         var pentagons = [];
 
-        var Square = function(x, y, r) {
+        var Square = function(x, y, r, d) {
             this.pos = new PVector(x, y); //Its Position
             this.r = r; //Its Starting Rotation
-            this.d = 35; //Its Diameter
+            this.d = d; //Its Diameter
         };
         Square.prototype.display = function() {
             pushMatrix();
@@ -83,10 +83,10 @@ var sketchProc = function(processingInstance) {
             popMatrix();
         };
 
-        var Triangle = function(x, y, r) {
+        var Triangle = function(x, y, r, d) {
             this.pos = new PVector(x, y); //Its Position
             this.r = r; //Its Starting Rotation
-            this.d = 20; //Its Diameter
+            this.d = d; //Its Diameter
         };
         Triangle.prototype.display = function() {
             pushMatrix();
@@ -99,10 +99,10 @@ var sketchProc = function(processingInstance) {
             popMatrix();
         };
 
-        var Pentagon = function(x, y, r) {
+        var Pentagon = function(x, y, r, d) {
             this.pos = new PVector(x, y); //Its Position
             this.r = r; //Its Starting Rotation
-            this.d = 60; //Its Diameter
+            this.d = d; //Its Diameter
         };
         Pentagon.prototype.display = function() {
             pushMatrix();
@@ -139,7 +139,7 @@ var sketchProc = function(processingInstance) {
         socket.on('get users', function(data){
             var stuffs=[];
             for(var i=0; i<data.length; i++){
-                stuffs.push({x: data[i].x, y: data[i].y, name: data[i].name, score: data[i].score, lvl: data[i].lvl, r: data[i].r, id: data[i].id});
+                stuffs.push({x: data[i].x, y: data[i].y, name: data[i].name, score: data[i].score, lvl: data[i].lvl, r: data[i].r, d: data[i].d, id: data[i].id});
             }
             users=stuffs;
             var num=0;
@@ -175,17 +175,17 @@ var sketchProc = function(processingInstance) {
         socket.on('update enemies', function(s, t, p){
             var stuff=[];
             for(var i=0; i<s.length; i++){
-                stuff.push(new Square(s[i].x, s[i].y, s[i].r));
+                stuff.push(new Square(s[i].x, s[i].y, s[i].r, s[i].d));
             }
             squares=stuff;
             var stuff=[];
             for(var i=0; i<t.length; i++){
-                stuff.push(new Triangle(t[i].x, t[i].y, t[i].r));
+                stuff.push(new Triangle(t[i].x, t[i].y, t[i].r, t[i].d));
             }
             triangles=stuff;
             var stuff=[];
             for(var i=0; i<p.length; i++){
-                stuff.push(new Pentagon(p[i].x, p[i].y, p[i].r));
+                stuff.push(new Pentagon(p[i].x, p[i].y, p[i].r, p[i].d));
             }
             pentagons=stuff;
         });
@@ -329,7 +329,7 @@ var sketchProc = function(processingInstance) {
                     } else {
                         fill(colors.tank_red);
                     }
-                    ellipse(users[i].x, users[i].y, 40, 40);
+                    ellipse(users[i].x, users[i].y, users[i].d, users[i].d);
                     if(users[i].id!==myId){
                       fill(255, 255, 255);
                       text(users[i].name, users[i].x, users[i].y);
