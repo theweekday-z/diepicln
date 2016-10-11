@@ -381,8 +381,8 @@ var sketchProc = function(processingInstance) {
                     chat.style.visibility = 'visible';
                 }
             }
-            fill(0,0,0);
-            text(__frameRate, 100, 100);
+            //fill(0,0,0);
+            //text(__frameRate, 100, 100);
         };
         function preventBackspaceHandler(evt) {
             evt = evt || window.event;

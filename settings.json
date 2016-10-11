@@ -1,9 +1,9 @@
 {
     "world": {
-        "w": 6000,
-        "h": 6000,
-        "minimumSquares": 75,
-        "minimumTriangles": 50,
+        "w": 1000,
+        "h": 1000,
+        "minimumSquares": 10,
+        "minimumTriangles": 10,
         "minimumPentagons": 10,
         "maxSquares": 175,
         "maxTriangles": 125,

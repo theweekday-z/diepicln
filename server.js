@@ -153,7 +153,6 @@ var dist = function(x1, y1, x2, y2) {
 };
 var collideWith = function(e, c) {
     if (dist(e.x, e.y, c.x, c.y) - (e.d / 2) < c.d / 2) {
-        console.log("COLLIDING!!!");
         return true;
     } else {
         return false;
@@ -164,32 +163,66 @@ var collisions = function() {
     for(var u=0; u<users.length; u++){
         /* Squares Collisions */
         for(var i=0; i<squares.length; i++){
-          if (collideWith(users[u], squares[i])) {
-              if(users[u].x>squares[i].x){
-                  users[u].x-=1;
-                  squares[i].x+=10;
-              }
-              if(users[u].x<squares[i].x+squares[i].d){
-                  users[u].x+=1;
-                  squares[i].x-=10;
-              }
-              if(users[u].y<squares[i].y){
-                  users[u].y-=1;
-                  squares[i].y+=10;
-              }
-              if(users[u].y>squares[i].y+squares[i].d){
-                users[u].y+=1;
-                squares[i].y-=10;
-              }
-          }
+            if (collideWith(users[u], squares[i])) {
+                if(users[u].x>squares[i].x){
+                    users[u].x-=1;
+                    squares[i].x+=10;
+                }
+                if(users[u].x<squares[i].x+squares[i].d){
+                    users[u].x+=1;
+                    squares[i].x-=10;
+                }
+                if(users[u].y>squares[i].y){
+                    users[u].y-=1;
+                    squares[i].y+=10;
+                }
+                if(users[u].y<squares[i].y+squares[i].d){
+                  users[u].y+=1;
+                  squares[i].y-=10;
+                }
+            }
         }
         /* Triangles Collisions */
         for(var i=0; i<triangles.length; i++){
-
+            if (collideWith(users[u], triangles[i])) {
+                if(users[u].x>triangles[i].x){
+                    users[u].x-=1;
+                    triangles[i].x+=10;
+                }
+                if(users[u].x<triangles[i].x+triangles[i].d){
+                    users[u].x+=1;
+                    triangles[i].x-=10;
+                }
+                if(users[u].y>triangles[i].y){
+                    users[u].y-=1;
+                    triangles[i].y+=10;
+                }
+                if(users[u].y<triangles[i].y+triangles[i].d){
+                  users[u].y+=1;
+                  triangles[i].y-=10;
+                }
+            }
         }
         /* Pentagons Collisions */
         for(var i=0; i<pentagons.length; i++){
-
+            if (collideWith(users[u], pentagons[i])) {
+                if(users[u].x>pentagons[i].x){
+                    users[u].x-=1;
+                    pentagons[i].x+=10;
+                }
+                if(users[u].x<pentagons[i].x+pentagons[i].d){
+                    users[u].x+=1;
+                    pentagons[i].x-=10;
+                }
+                if(users[u].y>pentagons[i].y){
+                    users[u].y-=1;
+                    pentagons[i].y+=10;
+                }
+                if(users[u].y<pentagons[i].y+pentagons[i].d){
+                  users[u].y+=1;
+                  pentagons[i].y-=10;
+                }
+            }
         }
     }
 };
@@ -212,7 +245,7 @@ var updates = function(){
     for(var i=0; i<pentagons.length; i++){
         pentagons[i].r+=0.00025;
     }
-    //collisions();
+    collisions();
 };
 setInterval(updates, 0);
 
