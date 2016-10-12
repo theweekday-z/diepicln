@@ -52,7 +52,7 @@ io.on('connection', function (socket) {
     //New User
     socket.on('new user', function(data, Ip, callback){
         callback(true);
-        socket.username = {name: data, x: Math.floor(Math.random() * (world.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (world.h-100 - 100 + 1) + 100), lvl: 1, score: 0, r: 0, d: 40, id: Id, ip: Ip};
+        socket.username = {name: data, x: Math.floor(Math.random() * (world.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (world.h-100 - 100 + 1) + 100), xvel: 0, yvel: 0, moving: false, lvl: 1, score: 0, r: 0, d: 40, id: Id, ip: Ip};
         users.push(socket.username);
         updateUsernames();
         updateWorld();
@@ -84,20 +84,23 @@ io.on('connection', function (socket) {
 
     //Movement
     socket.on('move right', function(speed, callback){
-        users[users.indexOf(socket.username)].x+=speed;
-        updatePositions();
+        users[users.indexOf(socket.username)].moving=true;
+        users[users.indexOf(socket.username)].xvel+=speed;
     });
     socket.on('move left', function(speed, callback){
-        users[users.indexOf(socket.username)].x-=speed;
-        updatePositions();
+        users[users.indexOf(socket.username)].moving=true;
+        users[users.indexOf(socket.username)].xvel-=speed;
     });
     socket.on('move up', function(speed, callback){
-        users[users.indexOf(socket.username)].y-=speed;
-        updatePositions();
+        users[users.indexOf(socket.username)].moving=true;
+        users[users.indexOf(socket.username)].yvel-=speed;
     });
     socket.on('move down', function(speed, callback){
-        users[users.indexOf(socket.username)].y+=speed;
-        updatePositions();
+        users[users.indexOf(socket.username)].moving=true;
+        users[users.indexOf(socket.username)].yvel+=speed;
+    });
+    socket.on('stop moving', function(){
+        users[users.indexOf(socket.username)].moving=false;
     });
 
     updateUsernames = function(){
@@ -185,67 +188,61 @@ var collisions = function() {
         /* Triangles Collisions */
         for(var i=0; i<triangles.length; i++){
             if (collideWith(users[u], triangles[i])) {
-                if(users[u].x>triangles[i].x){
-                    users[u].x-=1;
-                    triangles[i].x+=10;
-                }
-                if(users[u].x<triangles[i].x+triangles[i].d){
-                    users[u].x+=1;
-                    triangles[i].x-=10;
-                }
-                if(users[u].y>triangles[i].y){
-                    users[u].y-=1;
-                    triangles[i].y+=10;
-                }
-                if(users[u].y<triangles[i].y+triangles[i].d){
-                  users[u].y+=1;
-                  triangles[i].y-=10;
-                }
+
             }
         }
         /* Pentagons Collisions */
         for(var i=0; i<pentagons.length; i++){
             if (collideWith(users[u], pentagons[i])) {
-                if(users[u].x>pentagons[i].x){
-                    users[u].x-=1;
-                    pentagons[i].x+=10;
-                }
-                if(users[u].x<pentagons[i].x+pentagons[i].d){
-                    users[u].x+=1;
-                    pentagons[i].x-=10;
-                }
-                if(users[u].y>pentagons[i].y){
-                    users[u].y-=1;
-                    pentagons[i].y+=10;
-                }
-                if(users[u].y<pentagons[i].y+pentagons[i].d){
-                  users[u].y+=1;
-                  pentagons[i].y-=10;
-                }
+
             }
         }
     }
 };
 var updates = function(){
-    if(squares.length<world.minimumSquares){
-        squares.push({x: Math.floor(Math.random() * (world.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (world.h-100 - 100 + 1) + 100), r: Math.floor(Math.random() * (360 - 0 + 1) + 0), d: 35})
+    if(users.length!==0){
+        if(squares.length<world.minimumSquares){
+            squares.push({x: Math.floor(Math.random() * (world.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (world.h-100 - 100 + 1) + 100), r: Math.floor(Math.random() * (360 - 0 + 1) + 0), d: 35})
+        }
+        if(triangles.length<world.minimumTriangles){
+            triangles.push({x: Math.floor(Math.random() * (world.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (world.h-100 - 100 + 1) + 100), r: Math.floor(Math.random() * (360 - 0 + 1) + 0), d: 20})
+        }
+        if(pentagons.length<world.minimumPentagons){
+            pentagons.push({x: Math.floor(Math.random() * (world.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (world.h-100 - 100 + 1) + 100), r: Math.floor(Math.random() * (360 - 0 + 1) + 0), d: 60})
+        }
+        for(var i=0; i<squares.length; i++){
+            squares[i].r+=0.00025;
+        }
+        for(var i=0; i<triangles.length; i++){
+            triangles[i].r+=0.00025;
+        }
+        for(var i=0; i<pentagons.length; i++){
+            pentagons[i].r+=0.00025;
+        }
+        collisions();
+        for(var i=0; i<users.length; i++){
+            users[i].x+=users[i].xvel;
+            users[i].y+=users[i].yvel;
+            if(!users[i].moving){
+                users[i].xvel/=1.05;
+                users[i].yvel/=1.05;
+            } else {
+                if(users[i].xvel > 2.5){
+                    users[i].xvel = 2.5;
+                }
+                if(users[i].yvel > 2.5){
+                    users[i].yvel = 2.5;
+                }
+                if(users[i].xvel < -2.5){
+                    users[i].xvel = -2.5;
+                }
+                if(users[i].yvel < -2.5){
+                    users[i].yvel = -2.5;
+                }
+            }
+        }
+        updatePositions();
     }
-    if(triangles.length<world.minimumTriangles){
-        triangles.push({x: Math.floor(Math.random() * (world.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (world.h-100 - 100 + 1) + 100), r: Math.floor(Math.random() * (360 - 0 + 1) + 0), d: 20})
-    }
-    if(pentagons.length<world.minimumPentagons){
-        pentagons.push({x: Math.floor(Math.random() * (world.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (world.h-100 - 100 + 1) + 100), r: Math.floor(Math.random() * (360 - 0 + 1) + 0), d: 60})
-    }
-    for(var i=0; i<squares.length; i++){
-        squares[i].r+=0.00025;
-    }
-    for(var i=0; i<triangles.length; i++){
-        triangles[i].r+=0.00025;
-    }
-    for(var i=0; i<pentagons.length; i++){
-        pentagons[i].r+=0.00025;
-    }
-    collisions();
 };
 setInterval(updates, 0);
 

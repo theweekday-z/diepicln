@@ -339,16 +339,19 @@ var sketchProc = function(processingInstance) {
                 minimap.run();
                 overlays();
                 if (keys[UP] || keys[87]) {
-                    socket.emit('move up', 2.5);
+                    socket.emit('move up', 0.1);
                 }
                 if (keys[DOWN] || keys[83]) {
-                    socket.emit('move down', 2.5);
+                    socket.emit('move down', 0.1);
                 }
                 if (keys[RIGHT] || keys[68]) {
-                    socket.emit('move right', 5);
+                    socket.emit('move right', 0.1);
                 }
                 if (keys[LEFT] || keys[65]) {
-                    socket.emit('move left', 2.5);
+                    socket.emit('move left', 0.1);
+                }
+                if(!keys[LEFT]&&!keys[DOWN]&&!keys[RIGHT]&&!keys[LEFT]&&!keys[87]&&!keys[83]&&!keys[68]&&!keys[65]){
+                    socket.emit('stop moving');
                 }
                 socket.emit('user update', atan2(mouseY-screeny, mouseX-screenx) - HALF_PI);
             } else {
