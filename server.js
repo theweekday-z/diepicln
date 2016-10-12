@@ -83,19 +83,19 @@ io.on('connection', function (socket) {
     });
 
     //Movement
-    socket.on('move right', function(speed, callback){
+    socket.on('move right', function(speed){
         users[users.indexOf(socket.username)].moving=true;
         users[users.indexOf(socket.username)].xvel+=speed;
     });
-    socket.on('move left', function(speed, callback){
+    socket.on('move left', function(speed){
         users[users.indexOf(socket.username)].moving=true;
         users[users.indexOf(socket.username)].xvel-=speed;
     });
-    socket.on('move up', function(speed, callback){
+    socket.on('move up', function(speedk){
         users[users.indexOf(socket.username)].moving=true;
         users[users.indexOf(socket.username)].yvel-=speed;
     });
-    socket.on('move down', function(speed, callback){
+    socket.on('move down', function(speed){
         users[users.indexOf(socket.username)].moving=true;
         users[users.indexOf(socket.username)].yvel+=speed;
     });
