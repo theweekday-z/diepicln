@@ -8,5 +8,7 @@
         "maxSquares": 175,
         "maxTriangles": 125,
         "maxPentagons": 75
-    }
+    },
+    "serverName": "",
+    "maxUsers": 999
 }

@@ -91,7 +91,7 @@ io.on('connection', function (socket) {
         users[users.indexOf(socket.username)].moving=true;
         users[users.indexOf(socket.username)].xvel-=speed;
     });
-    socket.on('move up', function(speedk){
+    socket.on('move up', function(speed){
         users[users.indexOf(socket.username)].moving=true;
         users[users.indexOf(socket.username)].yvel-=speed;
     });
