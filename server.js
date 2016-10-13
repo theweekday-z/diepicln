@@ -83,21 +83,21 @@ io.on('connection', function (socket) {
     });
 
     //Movement
-    socket.on('move right', function(speed){
+    socket.on('move right', function(){
         users[users.indexOf(socket.username)].moving=true;
-        users[users.indexOf(socket.username)].xvel+=speed;
+        users[users.indexOf(socket.username)].xvel+=0.01;
     });
-    socket.on('move left', function(speed){
+    socket.on('move left', function(){
         users[users.indexOf(socket.username)].moving=true;
-        users[users.indexOf(socket.username)].xvel-=speed;
+        users[users.indexOf(socket.username)].xvel-=0.01;
     });
-    socket.on('move up', function(speed){
+    socket.on('move up', function(){
         users[users.indexOf(socket.username)].moving=true;
-        users[users.indexOf(socket.username)].yvel-=speed;
+        users[users.indexOf(socket.username)].yvel-=0.01;
     });
-    socket.on('move down', function(speed){
+    socket.on('move down', function(){
         users[users.indexOf(socket.username)].moving=true;
-        users[users.indexOf(socket.username)].yvel+=speed;
+        users[users.indexOf(socket.username)].yvel+=0.01;
     });
     socket.on('stop moving', function(){
         users[users.indexOf(socket.username)].moving=false;
@@ -227,17 +227,17 @@ var updates = function(){
                 users[i].xvel/=1.05;
                 users[i].yvel/=1.05;
             } else {
-                if(users[i].xvel > 2.5){
-                    users[i].xvel = 2.5;
+                if(users[i].xvel > 1){
+                    users[i].xvel = 1;
                 }
-                if(users[i].yvel > 2.5){
-                    users[i].yvel = 2.5;
+                if(users[i].yvel > 1){
+                    users[i].yvel = 1;
                 }
-                if(users[i].xvel < -2.5){
-                    users[i].xvel = -2.5;
+                if(users[i].xvel < -1){
+                    users[i].xvel = -1;
                 }
-                if(users[i].yvel < -2.5){
-                    users[i].yvel = -2.5;
+                if(users[i].yvel < -1){
+                    users[i].yvel = -1;
                 }
             }
         }
