@@ -225,7 +225,7 @@ var updates = function(){
             users[i].y+=users[i].yvel;
             if(!users[i].moving){
                 users[i].xvel/=1.05;
-                users[i].yvel/=1.05;
+                //users[i].yvel/=1.05;
             } else {
                 if(users[i].xvel > 1){
                     users[i].xvel = 1;
@@ -373,6 +373,15 @@ rl.on('line', (line) => {
   console.log('Bye!');
   process.exit(0);
 });
+
+
+const fs = require('fs');
+var m = JSON.parse(fs.readFileSync('info.json').toString());
+if(!m.initiated) {
+    console.log("Welcome!");
+    m.initiated=true;
+    fs.writeFile('info.json', JSON.stringify(m));
+}
 
 server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function(){
   var addr = server.address();
