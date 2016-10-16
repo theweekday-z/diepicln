@@ -10,7 +10,7 @@ var io = socketio.listen(server);
 
 router.use(express.static(path.resolve(__dirname, 'client')));
 
-var settings = require("./settings.json");
+var settings = require("./settings/settings.json");
 var world = settings.world;
 
 var users = [];
