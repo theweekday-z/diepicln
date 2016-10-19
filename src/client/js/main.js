@@ -12,12 +12,10 @@ var sketchProc = function(processingInstance) {
 
         var socket = io.connect();
         var username =  [];
-        var gameArea =  document.getElementById("gameArea");
-        var chatForm =  document.getElementById("chatForm");
-        var message =  document.getElementById("message");
-        var messages =  document.getElementById("messages");
-        var chat = document.getElementById("chat");
         var users = [];
+        var message = [];
+        var messages = [];
+        var canType = true;
         var myId=0;
         var myIdAssigned=false;
         var myNum=0;
@@ -122,20 +120,6 @@ var sketchProc = function(processingInstance) {
             popMatrix();
         };
 
-        if(chatForm.addEventListener){
-            chatForm.addEventListener("submit", function(e){
-                e.preventDefault();
-                socket.emit('send message', message.value);
-                message.value = '';
-            }, false);  //Modern browsers
-        }else if(chatForm.attachEvent){
-            chatFormele.attachEvent('onsubmit', function(e){
-                e.preventDefault();
-                socket.emit('send message', message.value);
-                message.value = '';
-            });            //Old IE
-        }
-
         socket.on('get users', function(data){
             var stuffs=[];
             for(var i=0; i<data.length; i++){
@@ -158,14 +142,7 @@ var sketchProc = function(processingInstance) {
             }
         });
         socket.on('get messages', function(data){
-            var html = '';
-            for(var i=0; i<data.length; i++){
-                if(data[i].to==='all'||data[i].to===myId){
-                    html += '<div class="well"><strong>'+data[i].user+':</strong> '+data[i].msg+'</div>';
-                }
-            }
-            messages.innerHTML = html;
-            messages.scrollTop = messages.scrollHeight;
+            messages = data;
         });
 
         socket.on('update world', function(data){
@@ -338,6 +315,17 @@ var sketchProc = function(processingInstance) {
                 popMatrix();
                 minimap.run();
                 overlays();
+                if(canType){
+                    fill(0,0,0,150);
+                } else {
+                    fill(0,0,0,50);
+                }
+                rect(25,height-65,250,40);
+                fill(200);
+                text(message.join(""), 50,height-45);
+                for(var i=0; i<7; i++){
+                    text(messages[i], 50,50);
+                }
                 if (keys[UP] || keys[87]) {
                     socket.emit('move up');
                 }
@@ -381,7 +369,7 @@ var sketchProc = function(processingInstance) {
                         }
                     });
                     playing = true;
-                    chat.style.visibility = 'visible';
+                    canType=false;
                 }
             }
             //fill(0,0,0);
@@ -392,6 +380,10 @@ var sketchProc = function(processingInstance) {
             if (evt.keyCode == 8) {
                 if(!playing){
                   username.pop();
+                } else {
+                    if(canType){
+                        message.pop();
+                    }
                 }
                 return false;
             }
@@ -405,10 +397,25 @@ var sketchProc = function(processingInstance) {
                 }
             }
             if(playing){
-                if(key.code===104 && !hideGrid){ // H key for hiding grid
-                    hideGrid = true;
-                } else if(key.code===104 && hideGrid){
-                    hideGrid = false;
+                if(canType){
+                    if (key.code !== 8 && message.length < 500 && !keys[ENTER]) {
+                        message.push(key);
+                    }
+                } else {
+                    if(key.code===104 && !hideGrid){ // H key for hiding grid
+                        hideGrid = true;
+                    } else if(key.code===104 && hideGrid){
+                        hideGrid = false;
+                    }
+                }
+                if(keys[ENTER] && !canType){
+                    canType = true;
+                } else if(keys[ENTER] && canType){
+                    if(message.length!==0){
+                        socket.emit('send message', message.join(""));
+                        message = [];
+                    }
+                    canType = false;
                 }
             }
         };

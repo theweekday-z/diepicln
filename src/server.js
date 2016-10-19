@@ -3,6 +3,7 @@ var path = require('path');
 
 var socketio = require('socket.io');
 var express = require('express');
+var glob = require('glob');
 
 var router = express();
 var server = http.createServer(router);
@@ -10,8 +11,42 @@ var io = socketio.listen(server);
 
 router.use(express.static(path.resolve(__dirname, 'client')));
 
-var settings = require("./settings/settings.json");
-var world = settings.world;
+const fs = require("fs");
+const ini = require('./modules/ini.js');
+
+var config = {
+    w: 6000, //World Width
+    h: 6000, //World Height
+    minimumSquares: 75, //Minimum Amount Of Squares
+    minimumTriangles: 50, //Minimum Amount Of Triangles
+    minimumPentagons: 10, //Minimum Amount Of Pentagons
+    maxSquares: 175, //Maximum Amount Of Squares
+    maxTriangles: 125, //Maximum Amount Of Triangles
+    maxPentagons: 75 //Maximum Amount Of Pentagons
+};
+
+var loadConfig = function() {let configFiles = glob.sync(__dirname + "/settings/*.ini");
+    if (configFiles.length===0) {
+      console.log("No config files found");
+    }
+
+    configFiles.forEach((file)=> {
+      try {
+        console.log('Loading ' + file);
+        // Load the contents of the config file
+        let load = ini.parse(fs.readFileSync(file, 'utf-8'));
+        // Replace all the default config's values with the loaded config's values
+        for (let obj in load) {
+          config[obj] = load[obj];
+        }
+      } catch (err) {
+        console.warn("Error while loading: " + file + " error: " + err);
+      }
+    });
+};
+
+loadConfig();
+
 
 var users = [];
 var connections = [];
@@ -52,7 +87,7 @@ io.on('connection', function (socket) {
     //New User
     socket.on('new user', function(data, Ip, callback){
         callback(true);
-        socket.username = {name: data, x: Math.floor(Math.random() * (world.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (world.h-100 - 100 + 1) + 100), xvel: 0, yvel: 0, moving: false, lvl: 1, score: 0, r: 0, d: 40, id: Id, ip: Ip};
+        socket.username = {name: data, x: Math.floor(Math.random() * (config.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), xvel: 0, yvel: 0, moving: false, lvl: 1, score: 0, r: 0, d: 40, id: Id, ip: Ip};
         users.push(socket.username);
         updateUsernames();
         updateWorld();
@@ -109,11 +144,11 @@ io.on('connection', function (socket) {
     };
     updatePositions = function(){
         for(var i=0; i<users.length; i++){
-            if(users[i].x>world.w){
-                users[i].x=world.w;
+            if(users[i].x>config.w){
+                users[i].x=config.w;
             }
-            if(users[i].y>world.h){
-                users[i].y=world.h;
+            if(users[i].y>config.h){
+                users[i].y=config.h;
             }
             if(users[i].x<0){
                 users[i].x=0;
@@ -128,7 +163,7 @@ io.on('connection', function (socket) {
         io.sockets.emit('get messages', messages);
     };
     updateWorld = function() {
-        io.sockets.emit('update world', world);
+        io.sockets.emit('update world', config);
     };
     ban = function(){
       for(var i=0; i<banList.length; i++){
@@ -201,14 +236,14 @@ var collisions = function() {
 };
 var updates = function(){
     if(users.length!==0){
-        if(squares.length<world.minimumSquares){
-            squares.push({x: Math.floor(Math.random() * (world.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (world.h-100 - 100 + 1) + 100), r: Math.floor(Math.random() * (360 - 0 + 1) + 0), d: 35})
+        if(squares.length<config.minimumSquares){
+            squares.push({x: Math.floor(Math.random() * (config.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), r: Math.floor(Math.random() * (360 - 0 + 1) + 0), d: 35})
         }
-        if(triangles.length<world.minimumTriangles){
-            triangles.push({x: Math.floor(Math.random() * (world.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (world.h-100 - 100 + 1) + 100), r: Math.floor(Math.random() * (360 - 0 + 1) + 0), d: 20})
+        if(triangles.length<config.minimumTriangles){
+            triangles.push({x: Math.floor(Math.random() * (config.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), r: Math.floor(Math.random() * (360 - 0 + 1) + 0), d: 20})
         }
-        if(pentagons.length<world.minimumPentagons){
-            pentagons.push({x: Math.floor(Math.random() * (world.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (world.h-100 - 100 + 1) + 100), r: Math.floor(Math.random() * (360 - 0 + 1) + 0), d: 60})
+        if(pentagons.length<config.minimumPentagons){
+            pentagons.push({x: Math.floor(Math.random() * (config.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), r: Math.floor(Math.random() * (360 - 0 + 1) + 0), d: 60})
         }
         for(var i=0; i<squares.length; i++){
             squares[i].r+=0.00025;
@@ -225,7 +260,7 @@ var updates = function(){
             users[i].y+=users[i].yvel;
             if(!users[i].moving){
                 users[i].xvel/=1.05;
-                //users[i].yvel/=1.05;
+                users[i].yvel/=1.05;
             } else {
                 if(users[i].xvel > 1){
                     users[i].xvel = 1;
@@ -374,8 +409,6 @@ rl.on('line', (line) => {
   process.exit(0);
 });
 
-
-const fs = require('fs');
 var m = JSON.parse(fs.readFileSync('info.json').toString());
 if(!m.initiated) {
     console.log("Welcome!");
