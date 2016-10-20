@@ -1,4 +1,4 @@
-var square = function(x, y, r, d, ) {
+var square = function(x, y, r, d) {
     this.x = x;
     this.y = y;
     this.r = r;
