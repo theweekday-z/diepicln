@@ -1,3 +1,4 @@
+'use strict';
 var http = require('http');
 var path = require('path');
 
@@ -14,46 +15,17 @@ router.use(express.static(path.resolve(__dirname, 'client')));
 const fs = require("fs");
 const ini = require('./modules/ini.js');
 
-const cs = require("./core/chatServer.js");
-const ps = require("./core/playerServer.js");
+const chatServer = require("./core/chatServer.js");
+const configService = require("./core/configService.js");
+const playerServer = require("./core/playerServer.js");
 
-var config = {
-    port: 3000, //Game Port
-    w: 6000, //World Width
-    h: 6000, //World Height
-    minimumSquares: 75, //Minimum Amount Of Squares
-    minimumTriangles: 50, //Minimum Amount Of Triangles
-    minimumPentagons: 10, //Minimum Amount Of Pentagons
-    maxSquares: 175, //Maximum Amount Of Squares
-    maxTriangles: 125, //Maximum Amount Of Triangles
-    maxPentagons: 75 //Maximum Amount Of Pentagons
-};
+configService.init();
 
-var loadConfig = function() {let configFiles = glob.sync(__dirname + "/settings/*.ini");
-    if (configFiles.length===0) {
-      console.log("No config files found");
-    }
+var config = configService.getConfig();
 
-    configFiles.forEach((file)=> {
-      try {
-        console.log('Loading ' + file);
-        // Load the contents of the config file
-        let load = ini.parse(fs.readFileSync(file, 'utf-8'));
-        // Replace all the default config's values with the loaded config's values
-        for (let obj in load) {
-          config[obj] = load[obj];
-        }
-      } catch (err) {
-        console.warn("Error while loading: " + file + " error: " + err);
-      }
-    });
-};
-
-loadConfig();
-
-var users = ps.getPlayers();
+var players = playerServer.getPlayers();
 var connections = [];
-var messages = [];
+var messages = chatServer.getMessages();
 var Id=1;
 var debug=false;
 var chatBanList=[];
@@ -73,8 +45,11 @@ var pentagons = [];
 var bullets = [];
 
 var superAwesomeUpdates = function() {
-    if(users !== ps.getPlayers()){
-        ps.getPlayers() = users;
+    if(players !== playerServer.getPlayers()){
+        playerServer.setPlayers(players);
+    }
+    if(messages !== chatServer.getMessages()){
+        chatServer.setMessages(messages);
     }
 };
 setInterval(superAwesomeUpdates, 0);
@@ -82,23 +57,23 @@ setInterval(superAwesomeUpdates, 0);
 
 io.on('connection', function (socket) {
     connections.push(socket);
-    if(debug){ console.log('Connected: %s users connected', connections.length); }
+    if(debug){ console.log('Connected: %s players connected', connections.length); }
 
     // Disconnect
     socket.on('disconnect', function(data){
         if(socket.username !== undefined){
-            users.splice(users.indexOf(socket.username), 1);
+            players.splice(players.indexOf(socket.username), 1);
             updateUsernames();
         }
         connections.splice(connections.indexOf(socket), 1);
-        if(debug){ console.log('Connected: %s users connected', connections.length); }
+        if(debug){ console.log('Connected: %s players connected', connections.length); }
     });
 
     //New User
     socket.on('new user', function(data, Ip, callback){
         callback(true);
         socket.username = {name: data, x: Math.floor(Math.random() * (config.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), xvel: 0, yvel: 0, moving: false, lvl: 1, score: 0, r: 0, d: 40, id: Id, ip: Ip};
-        users.push(socket.username);
+        players.push(socket.username);
         updateUsernames();
         updateWorld();
         updateMessages();
@@ -108,7 +83,7 @@ io.on('connection', function (socket) {
 
     //
     socket.on('user update', function(r, callback){
-        users[users.indexOf(socket.username)].r=r;
+        players[players.indexOf(socket.username)].r=r;
         updatePositions();
     });
 
@@ -129,45 +104,45 @@ io.on('connection', function (socket) {
 
     //Movement
     socket.on('move right', function(){
-        users[users.indexOf(socket.username)].moving=true;
-        users[users.indexOf(socket.username)].xvel+=0.01;
+        players[players.indexOf(socket.username)].moving=true;
+        players[players.indexOf(socket.username)].xvel+=0.01;
     });
     socket.on('move left', function(){
-        users[users.indexOf(socket.username)].moving=true;
-        users[users.indexOf(socket.username)].xvel-=0.01;
+        players[players.indexOf(socket.username)].moving=true;
+        players[players.indexOf(socket.username)].xvel-=0.01;
     });
     socket.on('move up', function(){
-        users[users.indexOf(socket.username)].moving=true;
-        users[users.indexOf(socket.username)].yvel-=0.01;
+        players[players.indexOf(socket.username)].moving=true;
+        players[players.indexOf(socket.username)].yvel-=0.01;
     });
     socket.on('move down', function(){
-        users[users.indexOf(socket.username)].moving=true;
-        users[users.indexOf(socket.username)].yvel+=0.01;
+        players[players.indexOf(socket.username)].moving=true;
+        players[players.indexOf(socket.username)].yvel+=0.01;
     });
     socket.on('stop moving', function(){
-        users[users.indexOf(socket.username)].moving=false;
+        players[players.indexOf(socket.username)].moving=false;
     });
 
     updateUsernames = function(){
-        io.sockets.emit('get users', users);
+        io.sockets.emit('get players', players);
         io.sockets.emit('get id', Id);
     };
     updatePositions = function(){
-        for(var i=0; i<users.length; i++){
-            if(users[i].x>config.w){
-                users[i].x=config.w;
+        for(var i=0; i<players.length; i++){
+            if(players[i].x>config.w){
+                players[i].x=config.w;
             }
-            if(users[i].y>config.h){
-                users[i].y=config.h;
+            if(players[i].y>config.h){
+                players[i].y=config.h;
             }
-            if(users[i].x<0){
-                users[i].x=0;
+            if(players[i].x<0){
+                players[i].x=0;
             }
-            if(users[i].y<0){
-                users[i].y=0;
+            if(players[i].y<0){
+                players[i].y=0;
             }
         }
-        io.sockets.emit('get users', users);
+        io.sockets.emit('get players', players);
     };
     updateMessages = function(){
         io.sockets.emit('get messages', messages);
@@ -177,9 +152,9 @@ io.on('connection', function (socket) {
     };
     ban = function(){
       for(var i=0; i<banList.length; i++){
-          for(var u=0; u<users.length; u++){
-              if(users[u].ip===banList[i].ip){
-                  io.sockets.emit('banned', users[i].ip);
+          for(var u=0; u<players.length; u++){
+              if(players[u].ip===banList[i].ip){
+                  io.sockets.emit('banned', players[i].ip);
               }
           }
       }
@@ -208,44 +183,44 @@ var collideWith = function(e, c) {
 
 };
 var collisions = function() {
-    for(var u=0; u<users.length; u++){
+    for(var u=0; u<players.length; u++){
         /* Squares Collisions */
         for(var i=0; i<squares.length; i++){
-            if (collideWith(users[u], squares[i])) {
-                if(users[u].x>squares[i].x){
-                    users[u].x-=1;
+            if (collideWith(players[u], squares[i])) {
+                if(players[u].x>squares[i].x){
+                    players[u].x-=1;
                     squares[i].x+=10;
                 }
-                if(users[u].x<squares[i].x+squares[i].d){
-                    users[u].x+=1;
+                if(players[u].x<squares[i].x+squares[i].d){
+                    players[u].x+=1;
                     squares[i].x-=10;
                 }
-                if(users[u].y>squares[i].y){
-                    users[u].y-=1;
+                if(players[u].y>squares[i].y){
+                    players[u].y-=1;
                     squares[i].y+=10;
                 }
-                if(users[u].y<squares[i].y+squares[i].d){
-                  users[u].y+=1;
+                if(players[u].y<squares[i].y+squares[i].d){
+                  players[u].y+=1;
                   squares[i].y-=10;
                 }
             }
         }
         /* Triangles Collisions */
         for(var i=0; i<triangles.length; i++){
-            if (collideWith(users[u], triangles[i])) {
+            if (collideWith(players[u], triangles[i])) {
 
             }
         }
         /* Pentagons Collisions */
         for(var i=0; i<pentagons.length; i++){
-            if (collideWith(users[u], pentagons[i])) {
+            if (collideWith(players[u], pentagons[i])) {
 
             }
         }
     }
 };
 var updates = function(){
-    if(users.length!==0){
+    if(players.length!==0){
         if(squares.length<config.minimumSquares){
             squares.push({x: Math.floor(Math.random() * (config.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), r: Math.floor(Math.random() * (360 - 0 + 1) + 0), d: 35})
         }
@@ -265,24 +240,24 @@ var updates = function(){
             pentagons[i].r+=0.00025;
         }
         collisions();
-        for(var i=0; i<users.length; i++){
-            users[i].x+=users[i].xvel;
-            users[i].y+=users[i].yvel;
-            if(!users[i].moving){
-                users[i].xvel/=1.05;
-                users[i].yvel/=1.05;
+        for(var i=0; i<players.length; i++){
+            players[i].x+=players[i].xvel;
+            players[i].y+=players[i].yvel;
+            if(!players[i].moving){
+                players[i].xvel/=1.05;
+                players[i].yvel/=1.05;
             } else {
-                if(users[i].xvel > 1){
-                    users[i].xvel = 1;
+                if(players[i].xvel > 1){
+                    players[i].xvel = 1;
                 }
-                if(users[i].yvel > 1){
-                    users[i].yvel = 1;
+                if(players[i].yvel > 1){
+                    players[i].yvel = 1;
                 }
-                if(users[i].xvel < -1){
-                    users[i].xvel = -1;
+                if(players[i].xvel < -1){
+                    players[i].xvel = -1;
                 }
-                if(users[i].yvel < -1){
-                    users[i].yvel = -1;
+                if(players[i].yvel < -1){
+                    players[i].yvel = -1;
                 }
             }
         }
@@ -317,9 +292,9 @@ rl.on('line', (line) => {
     var msg=l.split(" ");
     switch(msg[0]){
         case "playerlist":
-            console.log("Users: ");
-            for(var i=0; i<users.length; i++){
-                console.log("|" + "ID: " + users[i].id + " | " + "Name: " + users[i].name + " | " + "x: " + users[i].x + " | "+ "y: " + users[i].y + " | " + "IP: " + users[i].ip);
+            console.log("players: ");
+            for(var i=0; i<players.length; i++){
+                console.log("|" + "ID: " + players[i].id + " | " + "Name: " + players[i].name + " | " + "x: " + players[i].x + " | "+ "y: " + players[i].y + " | " + "IP: " + players[i].ip);
             }
             break;
 
@@ -328,11 +303,11 @@ rl.on('line', (line) => {
             for(var i=2; i<msg.length; i++){
                 nameW.push(msg[i]);
             }
-            for(var i=0; i<users.length; i++){
-                if(users[i].id===parseInt(msg[1])){
-                  users[i].name=nameW;
+            for(var i=0; i<players.length; i++){
+                if(players[i].id===parseInt(msg[1])){
+                  players[i].name=nameW;
                   updateUsernames();
-                  console.log("Changed player "+parseInt(msg[1])+"'s name to "+users[i].name);
+                  console.log("Changed player "+parseInt(msg[1])+"'s name to "+players[i].name);
                 }
             }
             break;
@@ -347,8 +322,8 @@ rl.on('line', (line) => {
 
         case "chatBan":
             var cb=false;
-            for(var i=0; i<users.length; i++){
-                if(parseInt(msg[1])===users[i].id){ cb=true; }
+            for(var i=0; i<players.length; i++){
+                if(parseInt(msg[1])===players[i].id){ cb=true; }
             }
             for(var i=0; i<chatBanList.length; i++){
                 if(parseInt(msg[1])===chatBanList[i]){ cb=false; }
@@ -387,9 +362,9 @@ rl.on('line', (line) => {
             }
             console.log(cb);
             if(cb){
-                for(var i=0; i<users.length; i++){
-                    if(users[i].ip===msg[1]){
-                        banList.push({ip: users[i].ip});
+                for(var i=0; i<players.length; i++){
+                    if(players[i].ip===msg[1]){
+                        banList.push({ip: players[i].ip});
                         console.log("Banned Player "+msg[1]);
                         ban();
                     }
@@ -409,7 +384,7 @@ rl.on('line', (line) => {
             break;
 
         case "banList":
-            console.log("Banned Users:");
+            console.log("Banned players:");
             console.log(banList);
             break;
     }

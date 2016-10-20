@@ -11,7 +11,7 @@ var sketchProc = function(processingInstance) {
 
         var socket = io.connect();
         var username =  [];
-        var users = [];
+        var players = [];
         var message = [];
         var messages = [];
         var canType = true;
@@ -119,15 +119,15 @@ var sketchProc = function(processingInstance) {
             popMatrix();
         };
 
-        socket.on('get users', function(data){
+        socket.on('get players', function(data){
             var stuffs=[];
             for(var i=0; i<data.length; i++){
                 stuffs.push({x: data[i].x, y: data[i].y, name: data[i].name, score: data[i].score, lvl: data[i].lvl, r: data[i].r, d: data[i].d, id: data[i].id});
             }
-            users=stuffs;
+            players=stuffs;
             var num=0;
-            for(var i=0; i<users.length; i++){
-                if(users[i].id===myId){
+            for(var i=0; i<players.length; i++){
+                if(players[i].id===myId){
                   myNum = num;
                 }
                 num+=1;
@@ -192,17 +192,17 @@ var sketchProc = function(processingInstance) {
             right: -world.w,
             bottom: -world.h,
             run: function() {
-                for(var i=0; i<users.length; i++){
-                    if(users[i].id===myId){
-                        this.x = users[i].x;
-                        this.y = users[i].y;
+                for(var i=0; i<players.length; i++){
+                    if(players[i].id===myId){
+                        this.x = players[i].x;
+                        this.y = players[i].y;
                         this.right = -world.w;
                         this.bottom = -world.h;
-                        this.x = constrain(this.x + (width / 2 - users[i].x - this.x), this.right, this.left);
-                        this.y = constrain(this.y + (height / 2 - users[i].y - this.y), this.bottom, this.top);
+                        this.x = constrain(this.x + (width / 2 - players[i].x - this.x), this.right, this.left);
+                        this.y = constrain(this.y + (height / 2 - players[i].y - this.y), this.bottom, this.top);
                         translate(this.x, this.y);
-                        screenx = users[i].x + this.x;
-                        screeny = users[i].y + this.y;
+                        screenx = players[i].x + this.x;
+                        screeny = players[i].y + this.y;
                     }
                 }
             }
@@ -219,8 +219,8 @@ var sketchProc = function(processingInstance) {
                     this.y = height - 135;
                 }
                 if(myNumAssigned){
-                    this.ax = 115 * users[myNum].x / world.w;
-                    this.ay = 115 * users[myNum].y / world.h;
+                    this.ax = 115 * players[myNum].x / world.w;
+                    this.ay = 115 * players[myNum].y / world.h;
                 }
                 stroke(100);
                 strokeWeight(5);
@@ -252,11 +252,11 @@ var sketchProc = function(processingInstance) {
 
                 textAlign(CENTER, CENTER);
                 textSize(11);
-                textOutline("Score: " + users[myNum].score, width / 2, height - 51, 0, 0, color(240), color(61), 1);
+                textOutline("Score: " + players[myNum].score, width / 2, height - 51, 0, 0, color(240), color(61), 1);
                 textSize(12.5);
-                textOutline("Lvl " + users[myNum].lvl + " Tank", width / 2, height - 30, 0, 0, color(240), color(61), 1);
+                textOutline("Lvl " + players[myNum].lvl + " Tank", width / 2, height - 30, 0, 0, color(240), color(61), 1);
                 textSize(32.5);
-                textOutline(users[myNum].name, width / 2, height - 80, 0, 0, color(240), color(61), 3.5);
+                textOutline(players[myNum].name, width / 2, height - 80, 0, 0, color(240), color(61), 3.5);
             }
 
 
@@ -296,24 +296,24 @@ var sketchProc = function(processingInstance) {
                     pentagons[i].display();
                 }
                 textSize(20);
-                for(var i=0; i<users.length; i++){
+                for(var i=0; i<players.length; i++){
                     stroke(62);
                     strokeWeight(2.5);
                     pushMatrix();
-                    translate(users[i].x, users[i].y);
-                    rotate(users[i].r);
+                    translate(players[i].x, players[i].y);
+                    rotate(players[i].r);
                     fill(colors.tank_barrel);
                     rect(-8.75, 5, 17.5, 35);
                     popMatrix();
-                    if(users[i].id===myId){
+                    if(players[i].id===myId){
                         fill(colors.tank_blue);
                     } else {
                         fill(colors.tank_red);
                     }
-                    ellipse(users[i].x, users[i].y, users[i].d, users[i].d);
-                    if(users[i].id!==myId){
+                    ellipse(players[i].x, players[i].y, players[i].d, players[i].d);
+                    if(players[i].id!==myId){
                       fill(255, 255, 255);
-                      text(users[i].name, users[i].x, users[i].y);
+                      text(players[i].name, players[i].x, players[i].y);
                     }
                 }
                 popMatrix();
