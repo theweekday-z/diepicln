@@ -2,7 +2,6 @@ var sketchProc = function(processingInstance) {
     with(processingInstance) {
         size(window.innerWidth, window.innerHeight-3.25);
         frameRate(60); //Set The Frame Rate
-        textAlign(CENTER, CENTER);
         var l = function() {
             return this.Function("gflink", "var f=document.createElement('link');f.setAttribute('rel','stylesheet');f.setAttribute('type','text/css');f.setAttribute('href',gflink);document.head.appendChild(f);");
         }();
@@ -144,7 +143,6 @@ var sketchProc = function(processingInstance) {
         socket.on('get messages', function(data){
             var nmsgs=[];
             for(var i=0; i<data.length; i++){
-                console.log(data[i]);
                 nmsgs.push({user: data[i].user, msg: data[i].msg});
             }
             messages = nmsgs;
@@ -252,6 +250,7 @@ var sketchProc = function(processingInstance) {
                 fill(240, 217, 108);
                 rect(width / 2 - (350 / 2) + 2, height - 38, 16/*+this.levelBarLength*/, 16, 100);
 
+                textAlign(CENTER, CENTER);
                 textSize(11);
                 textOutline("Score: " + users[myNum].score, width / 2, height - 51, 0, 0, color(240), color(61), 1);
                 textSize(12.5);
@@ -325,39 +324,30 @@ var sketchProc = function(processingInstance) {
                 } else {
                     fill(0,0,0,50);
                 }
+                noStroke();
                 rect(25,height-65,250,40);
-                fill(200);
-                text(message.join(""), 50,height-45);
-                /*if(messages.length>0){
-                    if(messages.length>7){
-                        for(var i=messages.length; i>messages.length-7; i--){
-                            text(messages[i].user+": "+messages[i].msg, 50,50);
-                        }
-                    } else {
-                        for(var i=messages.length; i>0; i--){
-                            console.log(messages[i]);
-                            text(messages[i].user+": "+messages[i].msg, 50,50);
-                        }
-                    }
-                }*/
                 textAlign(LEFT,TOP);
+                textSize(25);
+                fill(200);
+                text(message.join(""), 30,height-60);
                 fill(0);
                 textSize(25);
                 for(var i=0; i<messages.length; i++){
-                    console.log(messages[i]);
                     text(messages[i].user+": "+messages[i].msg, 50,50+i*25);
                 }
-                if (keys[UP] || keys[87]) {
-                    socket.emit('move up');
-                }
-                if (keys[DOWN] || keys[83]) {
-                    socket.emit('move down');
-                }
-                if (keys[RIGHT] || keys[68]) {
-                    socket.emit('move right');
-                }
-                if (keys[LEFT] || keys[65]) {
-                    socket.emit('move left');
+                if(!canType){
+                    if (keys[UP] || keys[87]) {
+                        socket.emit('move up');
+                    }
+                    if (keys[DOWN] || keys[83]) {
+                        socket.emit('move down');
+                    }
+                    if (keys[RIGHT] || keys[68]) {
+                        socket.emit('move right');
+                    }
+                    if (keys[LEFT] || keys[65]) {
+                        socket.emit('move left');
+                    }
                 }
                 if(!keys[LEFT]&&!keys[DOWN]&&!keys[RIGHT]&&!keys[LEFT]&&!keys[87]&&!keys[83]&&!keys[68]&&!keys[65]){
                     socket.emit('stop moving');

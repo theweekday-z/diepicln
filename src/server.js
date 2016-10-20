@@ -14,6 +14,9 @@ router.use(express.static(path.resolve(__dirname, 'client')));
 const fs = require("fs");
 const ini = require('./modules/ini.js');
 
+const cs = require("./core/chatServer.js");
+const ps = require("./core/playerServer.js");
+
 var config = {
     port: 3000, //Game Port
     w: 6000, //World Width
@@ -48,8 +51,7 @@ var loadConfig = function() {let configFiles = glob.sync(__dirname + "/settings/
 
 loadConfig();
 
-
-var users = [];
+var users = ps.getPlayers();
 var connections = [];
 var messages = [];
 var Id=1;
@@ -69,6 +71,13 @@ var squares = [];
 var triangles = [];
 var pentagons = [];
 var bullets = [];
+
+var superAwesomeUpdates = function() {
+    if(users !== ps.getPlayers()){
+        ps.getPlayers() = users;
+    }
+};
+setInterval(superAwesomeUpdates, 0);
 
 
 io.on('connection', function (socket) {
