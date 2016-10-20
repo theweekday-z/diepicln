@@ -323,8 +323,17 @@ var sketchProc = function(processingInstance) {
                 rect(25,height-65,250,40);
                 fill(200);
                 text(message.join(""), 50,height-45);
-                for(var i=0; i<7; i++){
-                    text(messages[i], 50,50);
+                if(messages.length>0){
+                    if(messages.length>7){
+                        for(var i=messages.length; i>messages.length-7; i--){
+                            text(messages[i].user+": "+messages[i].msg, 50,50);
+                        }
+                    } else {
+                        for(var i=messages.length; i>0; i--){
+                            console.log(messages[i]);
+                            text(messages[i].user+": "+messages[i].msg, 50,50);
+                        }
+                    }
                 }
                 if (keys[UP] || keys[87]) {
                     socket.emit('move up');
