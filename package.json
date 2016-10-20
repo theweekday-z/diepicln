@@ -1,9 +1,9 @@
 {
   "name": "diepioMultiplayer",
   "version": "1.0.0",
-  "description": "",
+  "description": "A Diep.io Clone Built With NodeJS",
   "main": "server.js",
-  "repository": "",
+  "repository": "https://github.com/SharkFinProductions/diepio-multiplayer",
   "author": "SharkFin",
   "dependencies": {
     "express": "~3.2.4",

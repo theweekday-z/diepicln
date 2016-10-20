@@ -4,7 +4,6 @@ var path = require('path');
 
 var socketio = require('socket.io');
 var express = require('express');
-var glob = require('glob');
 
 var router = express();
 var server = http.createServer(router);
@@ -13,11 +12,11 @@ var io = socketio.listen(server);
 router.use(express.static(path.resolve(__dirname, 'client')));
 
 const fs = require("fs");
-const ini = require('./modules/ini.js');
 
 const chatServer = require("./core/chatServer.js");
 const configService = require("./core/configService.js");
 const playerServer = require("./core/playerServer.js");
+const bulletServer = require("./core/bulletServer.js");
 
 configService.init();
 
@@ -42,7 +41,7 @@ var updatingStarted = false;
 var squares = [];
 var triangles = [];
 var pentagons = [];
-var bullets = [];
+var bullets = bulletServer.getBullets();
 
 var superAwesomeUpdates = function() {
     if(players !== playerServer.getPlayers()){
@@ -50,6 +49,9 @@ var superAwesomeUpdates = function() {
     }
     if(messages !== chatServer.getMessages()){
         chatServer.setMessages(messages);
+    }
+    if(bullets !== bulletServer.getBullets()){
+        bulletServer.setBullets(bullets);
     }
 };
 setInterval(superAwesomeUpdates, 0);
