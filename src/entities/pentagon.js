@@ -1,4 +1,4 @@
-var pentagon = function(x, y, r, d, ) {
+var pentagon = function(x, y, r, d) {
     this.x = x;
     this.y = y;
     this.r = r;
