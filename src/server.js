@@ -15,6 +15,7 @@ const fs = require("fs");
 const ini = require('./modules/ini.js');
 
 var config = {
+    port: 3000, //Game Port
     w: 6000, //World Width
     h: 6000, //World Height
     minimumSquares: 75, //Minimum Amount Of Squares
@@ -416,7 +417,7 @@ if(!m.initiated) {
     fs.writeFile('info.json', JSON.stringify(m));
 }
 
-server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function(){
+server.listen(process.env.PORT || config.port, process.env.IP || "0.0.0.0", function(){
   var addr = server.address();
   console.log("Server running On ", addr.address + ":" + addr.port);
   rl.prompt();

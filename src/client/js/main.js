@@ -142,7 +142,12 @@ var sketchProc = function(processingInstance) {
             }
         });
         socket.on('get messages', function(data){
-            messages = data;
+            var nmsgs=[];
+            for(var i=0; i<data.length; i++){
+                console.log(data[i]);
+                nmsgs.push({user: data[i].user, msg: data[i].msg});
+            }
+            messages = nmsgs;
         });
 
         socket.on('update world', function(data){
@@ -323,7 +328,7 @@ var sketchProc = function(processingInstance) {
                 rect(25,height-65,250,40);
                 fill(200);
                 text(message.join(""), 50,height-45);
-                if(messages.length>0){
+                /*if(messages.length>0){
                     if(messages.length>7){
                         for(var i=messages.length; i>messages.length-7; i--){
                             text(messages[i].user+": "+messages[i].msg, 50,50);
@@ -334,6 +339,13 @@ var sketchProc = function(processingInstance) {
                             text(messages[i].user+": "+messages[i].msg, 50,50);
                         }
                     }
+                }*/
+                textAlign(LEFT,TOP);
+                fill(0);
+                textSize(25);
+                for(var i=0; i<messages.length; i++){
+                    console.log(messages[i]);
+                    text(messages[i].user+": "+messages[i].msg, 50,50+i*25);
                 }
                 if (keys[UP] || keys[87]) {
                     socket.emit('move up');
