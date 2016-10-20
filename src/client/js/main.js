@@ -384,7 +384,7 @@ var sketchProc = function(processingInstance) {
                 }
             }
             //fill(0,0,0);
-            //text(__frameRate, 100, 100);
+            //text(__frameRate, 500, 100);
         };
         function preventBackspaceHandler(evt) {
             evt = evt || window.event;
