@@ -12,7 +12,12 @@ var config = {
     minimumPentagons: 10, //Minimum Amount Of Pentagons
     maxSquares: 175, //Maximum Amount Of Squares
     maxTriangles: 125, //Maximum Amount Of Triangles
-    maxPentagons: 75 //Maximum Amount Of Pentagons
+    maxPentagons: 75, //Maximum Amount Of Pentagons
+    chatMaxMessageLength: 70, //Length of messages in chat
+    chatIntervalTime: 2500, //ms between each message
+    chatBlockedWords: "fuck;bitch", //Words to filter from chat
+    clientMaxName: 15, //Number of maximum characters in the name box
+    clientTitle: "" //The Title That The Client Uses
 };
 
 module.exports = {
