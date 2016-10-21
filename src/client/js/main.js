@@ -119,6 +119,9 @@ var sketchProc = function(processingInstance) {
             popMatrix();
         };
 
+        //
+        var bullets = [];
+
         socket.on('get players', function(data){
             var stuffs=[];
             for(var i=0; i<data.length; i++){
@@ -168,6 +171,14 @@ var sketchProc = function(processingInstance) {
                 stuff.push(new Pentagon(p[i].x, p[i].y, p[i].r, p[i].d));
             }
             pentagons=stuff;
+        });
+
+        socket.on('update bullets', function(data){
+            var stuff=[];
+            for(var i=0; i<data.length; i++){
+                stuff.push({x: data[i].stats.x, y: data[i].stats.y, d: data[i].stats.d});
+            }
+            bullets=stuff;
         });
 
         socket.on('banned', function(data){
@@ -294,6 +305,12 @@ var sketchProc = function(processingInstance) {
                 }
                 for(var i=0; i<pentagons.length; i++){
                     pentagons[i].display();
+                }
+                for(var i=0; i<bullets.length; i++){
+                    stroke(85);
+                    strokeWeight(2.5);
+                    fill(241, 78, 84);
+                    ellipse(bullets[i].x, bullets[i].y, bullets[i].d, bullets[i].d);
                 }
                 textSize(20);
                 for(var i=0; i<players.length; i++){
@@ -429,6 +446,15 @@ var sketchProc = function(processingInstance) {
                     canType = false;
                 }
             }
+        };
+        mouseClicked = function() {
+          for(var i=0; i<players.length; i++){
+              if(players[i].id===myId){
+                  var r = atan2(mouseY - height / 2, mouseX - width / 2);
+                  socket.emit('new bullet', players[i].x, players[i].y, cos(r), sin(r), 5, 19, 1, 1);
+                  console.log("Sent A New Bullet");
+              }
+          }
         };
     }
 };

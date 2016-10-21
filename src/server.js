@@ -18,6 +18,8 @@ const configService = require("./core/configService.js");
 const playerServer = require("./core/playerServer.js");
 const bulletServer = require("./core/bulletServer.js");
 
+const bullet = require("./entities/bullet.js");
+
 configService.init();
 
 var config = configService.getConfig();
@@ -26,7 +28,7 @@ var players = playerServer.getPlayers();
 var connections = [];
 var messages = chatServer.getMessages();
 var Id=1;
-var debug=false;
+var debug=true;
 var chatBanList=[];
 var banList=[];
 
@@ -36,6 +38,7 @@ var updateWorld;
 var updatePositions;
 var ban;
 var updateEnemies;
+var updateBullets;
 var updatingStarted = false;
 
 var squares = [];
@@ -125,6 +128,11 @@ io.on('connection', function (socket) {
         players[players.indexOf(socket.username)].moving=false;
     });
 
+    //Bullets
+    socket.on('new bullet', function(x, y, xd, yd, speed, d, damage, penetration) {
+        bullets.push(new bullet(x, y, xd, yd, speed, d, damage, penetration));
+    });
+
     updateUsernames = function(){
         io.sockets.emit('get players', players);
         io.sockets.emit('get id', Id);
@@ -163,6 +171,9 @@ io.on('connection', function (socket) {
     };
     updateEnemies = function() {
         io.sockets.emit('update enemies', squares, triangles, pentagons);
+    };
+    updateBullets = function() {
+        io.sockets.emit('update bullets', bullets);
     };
     if(updatingStarted===false){
         setInterval(updateEnemies, 0);
@@ -264,6 +275,14 @@ var updates = function(){
             }
         }
         updatePositions();
+        for(var i=0; i<bullets.length; i++){
+            if(!bullets[i].initiated){
+                bullets[i].init();
+            }
+        }
+        if(bullets.length!==0){
+            updateBullets();
+        }
     }
 };
 setInterval(updates, 0);
