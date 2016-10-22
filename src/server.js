@@ -381,7 +381,6 @@ rl.on('line', (line) => {
             for(var i=0; i<banList.length; i++){
                 if(msg[1]===banList[i].ip){ cb=false; }
             }
-            console.log(cb);
             if(cb){
                 for(var i=0; i<players.length; i++){
                     if(players[i].ip===msg[1]){
@@ -417,13 +416,56 @@ rl.on('line', (line) => {
 
 var m = JSON.parse(fs.readFileSync('info.json').toString());
 if(!m.initiated) {
+    const setupServer = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+        prompt: ' > '
+    });
+    var question = 0;
+    var answers = [0];
+    var questions = [
+        "Do You Want To Have Automatic downloads, or just notifications of further updates? y=automatic; n=notifications"
+    ];
+    function displayQuestion() {
+        console.log(questions[question]);
+    }
     console.log("Welcome!");
+    console.log("Before You Start, We Need Some Information From You.");
+    displayQuestion();
+    setupServer.prompt();
+    setupServer.on('line', (line) => {
+        var l=line.trim();
+        var msg=l.split(" ");
+        switch(msg[0]){
+            case "y":
+                answers[question]="y";
+                question+=1;
+                break;
+
+            case "n":
+                answers[question]="n";
+                question+=1;
+                break;
+
+            default:
+                console.log('"'+l+'" Is not A Valid Option, Please Try again..."');
+                break;
+        }
+        if(question<answers.length-1){
+            displayQuestion();
+            //setupServer.prompt();
+        }
+    }).on('close', () => {
+      console.log('Thank You For Your Info!');
+      console.log(answers);
+      process.exit(0);
+    });
     m.initiated=true;
     fs.writeFile('info.json', JSON.stringify(m));
+} else {
+    server.listen(process.env.PORT || config.port, process.env.IP || "0.0.0.0", function(){
+      var addr = server.address();
+      console.log("Server running On ", addr.address + ":" + addr.port);
+      rl.prompt();
+    });
 }
-
-server.listen(process.env.PORT || config.port, process.env.IP || "0.0.0.0", function(){
-  var addr = server.address();
-  console.log("Server running On ", addr.address + ":" + addr.port);
-  rl.prompt();
-});

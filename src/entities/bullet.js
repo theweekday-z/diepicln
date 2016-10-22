@@ -10,7 +10,7 @@ var bullet = function(x, y, xd, yd, speed, d, damage, penetration){
         d: d,
         damage: damage,
         penetration: penetration
-    }
+    };
     this.initiated = false;
 };
 
