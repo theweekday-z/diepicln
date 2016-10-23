@@ -276,8 +276,10 @@ var updates = function(){
         }
         updatePositions();
         for(var i=0; i<bullets.length; i++){
+            bullets[i].stats.x += bullets[i].stats.xd;
+            bullets[i].stats.y += bullets[i].stats.yd;
             if(!bullets[i].initiated){
-                bullets[i].init();
+                console.log(bullets[i].getStats());
             }
         }
         if(bullets.length!==0){
