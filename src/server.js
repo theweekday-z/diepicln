@@ -20,6 +20,19 @@ const bulletServer = require("./core/bulletServer.js");
 
 const bullet = require("./entities/bullet.js");
 
+const commandList = require("./modules/commandList.js");
+
+var cmd = "help";
+
+console.log(commandList);
+
+for(var i in commandList){
+    console.log(commandList[i]);
+    if(commandList[i].toString()==="help"){
+        commandList[i]();
+    }
+}
+
 configService.init();
 
 var config = configService.getConfig();
@@ -279,7 +292,7 @@ var updates = function(){
             bullets[i].stats.x += bullets[i].stats.xd;
             bullets[i].stats.y += bullets[i].stats.yd;
             if(!bullets[i].initiated){
-                console.log(bullets[i].getStats());
+                
             }
         }
         if(bullets.length!==0){
