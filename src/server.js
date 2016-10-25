@@ -292,7 +292,7 @@ var updates = function(){
             bullets[i].stats.x += bullets[i].stats.xd;
             bullets[i].stats.y += bullets[i].stats.yd;
             if(!bullets[i].initiated){
-                
+
             }
         }
         if(bullets.length!==0){

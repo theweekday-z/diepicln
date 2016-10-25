@@ -241,7 +241,7 @@ var sketchProc = function(processingInstance) {
                 stroke(114);
                 pushMatrix();
                 translate(this.ax + (width - 130), this.ay + (height - 130));
-                rotate(atan2(mouseY - height / 2, mouseX - width / 2));
+                rotate(players[myNum].r);
                 fill(0);
                 triangle(10, 0, -1, -2.5, -1, 2.5);
                 popMatrix();
