@@ -1,5 +1,6 @@
 'use strict';
 const glob = require('glob');
+const request = require('request');
 const fs = require('fs');
 const ini = require('../modules/ini.js');
 
@@ -30,7 +31,20 @@ module.exports = {
     loadConfig: function() {
         let configFiles = glob.sync(__dirname + "/../settings/*.ini");
         if (configFiles.length===0) {
-          console.log("No config files found");
+          console.log("[\x1b[34mINFO\x1b[0m] No config files found, generating: src/settings/config.ini");
+              // Create a new config
+              for(var i=0; i<1; i++){
+                  request('https://raw.githubusercontent.com/SharkFinProductions/diepio-multiplayer/master/src/settings/config.ini', function (error, response, code) {
+                    if (!error && response.statusCode == 200) {
+                      fs.writeFileSync(__dirname + '/../settings/config.ini', code);
+                    }
+                  });
+                  request('https://raw.githubusercontent.com/SharkFinProductions/diepio-multiplayer/master/src/settings/clientConfig.ini', function (error, response, code) {
+                    if (!error && response.statusCode == 200) {
+                      fs.writeFileSync(__dirname + '/../settings/clientConfig.ini', code);
+                    }
+                  });
+              }
         }
         configFiles.forEach((file)=> {
             try {
