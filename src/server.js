@@ -19,6 +19,7 @@ const playerServer = require("./core/playerServer.js");
 const bulletServer = require("./core/bulletServer.js");
 
 const bullet = require("./entities/bullet.js");
+const chat = require("./entities/chat.js")
 
 const commandList = require("./modules/commandList.js");
 
@@ -63,9 +64,6 @@ var bullets = bulletServer.getBullets();
 var superAwesomeUpdates = function() {
     if(players !== playerServer.getPlayers()){
         playerServer.setPlayers(players);
-    }
-    if(messages !== chatServer.getMessages()){
-        chatServer.setMessages(messages);
     }
     if(bullets !== bulletServer.getBullets()){
         bulletServer.setBullets(bullets);
@@ -115,9 +113,7 @@ io.on('connection', function (socket) {
             }
         }
         if(cc){
-            var message = {msg: data, user: socket.username.name, to: "all"};
-            messages.push(message);
-            updateMessages();
+            chat("all", socket.username.name, data)
         }
     });
 
@@ -191,6 +187,7 @@ io.on('connection', function (socket) {
     };
     if(updatingStarted===false){
         setInterval(updateEnemies, 0);
+        setInterval(updateMessages, 0);
         updatingStarted = true;
     }
 });
@@ -300,20 +297,6 @@ var updates = function(){
 };
 setInterval(updates, 0);
 
-var chat = function(to, msg){
-    if(to==="all"){
-        var message = {msg: msg, user: "[Server]", to: "all"};
-        messages.push(message);
-        updateMessages();
-        console.log("Message Sent To All!");
-    } else {
-        var message = {msg: msg, user: "[Server]", to: to};
-        messages.push(message);
-        updateMessages();
-        console.log("Message Sent To "+to);
-    }
-};
-
 const readline = require('readline');
 const rl = readline.createInterface({
     input: process.stdin,
@@ -351,7 +334,7 @@ rl.on('line', (line) => {
             for(var i=2; i<msg.length; i++){
                 messageW.push(msg[i]);
             }
-            chat(msg[1], messageW.join(" "));
+            chat(msg[1], "[Server]", messageW.join(" "));
             break;
 
         case "chatBan":
@@ -364,9 +347,7 @@ rl.on('line', (line) => {
             }
             if(cb){
                 chatBanList.push(parseInt(msg[1]));
-                var message = {msg: "You Have Been Banned From Chatting.", user: "[Server]", to: parseInt(msg[1])};
-                messages.push(message);
-                updateMessages();
+                chat(parseInt(msg[1]), "[Server]", "You Have Been Banned From Chatting.");
                 console.log("Banned Player "+parseInt(msg[1])+" From Chatting.");
             } else {
                 console.log("Failed To Ban Player "+parseInt(msg[1])+" From Chatting.");
@@ -381,9 +362,7 @@ rl.on('line', (line) => {
             for(var i=0; i<chatBanList.length; i++){
                 if(parseInt(msg[1])===chatBanList[i]){
                     chatBanList.splice(i, 1);
-                    var message = {msg: "You Have Been Unbanned From Chatting.", user: "[Server]", to: parseInt(msg[1])};
-                    messages.push(message);
-                    updateMessages();
+                    chat(parseInt(msg[1]), "[Server]", "You Have Been Unbanned From Chatting.");
                     console.log("Unbanned Player "+parseInt(msg[1])+" From Chatting.");
                 }
             }

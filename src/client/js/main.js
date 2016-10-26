@@ -185,7 +185,11 @@ var sketchProc = function(processingInstance) {
                     stroke(114);
                     pushMatrix();
                     translate(this.ax + (width - 130), this.ay + (height - 130));
-                    rotate(players[myNum].r);
+                    for(var i=0; i<players.length; i++){
+                        if(players[i].id===myId){
+                            rotate(players[i].r);
+                        }
+                    }
                     fill(0);
                     triangle(10, 0, -1, -2.5, -1, 2.5);
                     popMatrix();
