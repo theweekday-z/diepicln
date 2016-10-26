@@ -168,26 +168,28 @@ var sketchProc = function(processingInstance) {
             ax: 0,
             ay: 0,
             run: function() {
-                if (this.x !== width - 135 || this.y !== height - 135) {
-                    this.x = width - 135;
-                    this.y = height - 135;
+                if(playing){
+                    if (this.x !== width - 135 || this.y !== height - 135) {
+                        this.x = width - 135;
+                        this.y = height - 135;
+                    }
+                    if(myNumAssigned){
+                        this.ax = 115 * players[myNum].x / world.w;
+                        this.ay = 115 * players[myNum].y / world.h;
+                    }
+                    stroke(100);
+                    strokeWeight(5);
+                    fill(207, 207, 207, 200);
+                    rect(this.x, this.y, 125, 125);
+                    strokeWeight(5);
+                    stroke(114);
+                    pushMatrix();
+                    translate(this.ax + (width - 130), this.ay + (height - 130));
+                    rotate(players[myNum].r);
+                    fill(0);
+                    triangle(10, 0, -1, -2.5, -1, 2.5);
+                    popMatrix();
                 }
-                if(myNumAssigned){
-                    this.ax = 115 * players[myNum].x / world.w;
-                    this.ay = 115 * players[myNum].y / world.h;
-                }
-                stroke(100);
-                strokeWeight(5);
-                fill(207, 207, 207, 200);
-                rect(this.x, this.y, 125, 125);
-                strokeWeight(5);
-                stroke(114);
-                pushMatrix();
-                translate(this.ax + (width - 130), this.ay + (height - 130));
-                rotate(players[myNum].r);
-                fill(0);
-                triangle(10, 0, -1, -2.5, -1, 2.5);
-                popMatrix();
             }
         };
 

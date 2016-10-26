@@ -8,6 +8,7 @@
   "dependencies": {
     "express": "~3.2.4",
     "glob": "^7.1.1",
+    "request": "^2.76.0",
     "socket.io": "^1.5.0"
   }
 }
