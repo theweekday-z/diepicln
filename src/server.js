@@ -22,16 +22,17 @@ const bullet = require("./entities/bullet.js");
 
 const commandList = require("./modules/commandList.js");
 
-var cmd = "help";
+/*var cmd = "help";
 
 console.log(commandList);
 
 for(var i in commandList){
     console.log(commandList[i]);
-    if(commandList[i].toString()==="help"){
+    if(commandList[i]==="help"){
+        console.log("TEST :D");
         commandList[i]();
     }
-}
+}*/
 
 configService.init();
 
@@ -190,6 +191,7 @@ io.on('connection', function (socket) {
     };
     if(updatingStarted===false){
         setInterval(updateEnemies, 0);
+        updatingStarted = true;
     }
 });
 var dist = function(x1, y1, x2, y2) {
@@ -289,11 +291,7 @@ var updates = function(){
         }
         updatePositions();
         for(var i=0; i<bullets.length; i++){
-            bullets[i].stats.x += bullets[i].stats.xd;
-            bullets[i].stats.y += bullets[i].stats.yd;
-            if(!bullets[i].initiated){
-
-            }
+            bullets[i].update();
         }
         if(bullets.length!==0){
             updateBullets();

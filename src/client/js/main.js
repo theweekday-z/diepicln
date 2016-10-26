@@ -59,67 +59,10 @@ var sketchProc = function(processingInstance) {
             h: 0 //World Height
         };
 
-        /** Enemies **/
+        /** Stuff **/
         var squares = [];
         var triangles = [];
         var pentagons = [];
-
-        var Square = function(x, y, r, d) {
-            this.pos = new PVector(x, y); //Its Position
-            this.r = r; //Its Starting Rotation
-            this.d = d; //Its Diameter
-        };
-        Square.prototype.display = function() {
-            pushMatrix();
-            translate(this.pos.x, this.pos.y);
-            rotate(this.r);
-            stroke(85);
-            strokeWeight(3);
-            fill(colors.square);
-            rect(-this.d / 2, -this.d / 2, this.d, this.d);
-            popMatrix();
-        };
-
-        var Triangle = function(x, y, r, d) {
-            this.pos = new PVector(x, y); //Its Position
-            this.r = r; //Its Starting Rotation
-            this.d = d; //Its Diameter
-        };
-        Triangle.prototype.display = function() {
-            pushMatrix();
-            translate(this.pos.x, this.pos.y);
-            rotate(this.r);
-            stroke(85);
-            strokeWeight(3);
-            fill(colors.triangle);
-            triangle(0, 0 - this.d / 1.25, 0 - this.d, 0 + this.d, 0 + this.d, 0 + this.d);
-            popMatrix();
-        };
-
-        var Pentagon = function(x, y, r, d) {
-            this.pos = new PVector(x, y); //Its Position
-            this.r = r; //Its Starting Rotation
-            this.d = d; //Its Diameter
-        };
-        Pentagon.prototype.display = function() {
-            pushMatrix();
-            translate(this.pos.x, this.pos.y);
-            rotate(this.r);
-            stroke(85);
-            strokeWeight(3);
-            fill(colors.pentagon);
-            beginShape();
-            vertex(0, 0 - this.d / 2);
-            vertex(0 + this.d / 2, 0 - this.d / 8);
-            vertex(0 + this.d / 3, 0 + this.d / 2);
-            vertex(0 - this.d / 3, 0 + this.d / 2);
-            vertex(0 - this.d / 2, 0 - this.d / 8);
-            vertex(0, 0 - this.d / 2);
-            endShape();
-            popMatrix();
-        };
-
-        //
         var bullets = [];
 
         socket.on('get players', function(data){
@@ -158,17 +101,17 @@ var sketchProc = function(processingInstance) {
         socket.on('update enemies', function(s, t, p){
             var stuff=[];
             for(var i=0; i<s.length; i++){
-                stuff.push(new Square(s[i].x, s[i].y, s[i].r, s[i].d));
+                stuff.push({x: s[i].x, y: s[i].y, r: s[i].r, d: s[i].d});
             }
             squares=stuff;
             var stuff=[];
             for(var i=0; i<t.length; i++){
-                stuff.push(new Triangle(t[i].x, t[i].y, t[i].r, t[i].d));
+                stuff.push({x: t[i].x, y: t[i].y, r: t[i].r, d: t[i].d});
             }
             triangles=stuff;
             var stuff=[];
             for(var i=0; i<p.length; i++){
-                stuff.push(new Pentagon(p[i].x, p[i].y, p[i].r, p[i].d));
+                stuff.push({x: p[i].x, y: p[i].y, r: p[i].r, d: p[i].d});
             }
             pentagons=stuff;
         });
@@ -176,7 +119,7 @@ var sketchProc = function(processingInstance) {
         socket.on('update bullets', function(data){
             var stuff=[];
             for(var i=0; i<data.length; i++){
-                stuff.push({x: data[i].stats.x, y: data[i].stats.y, d: data[i].stats.d});
+                stuff.push({x: data[i].x, y: data[i].y, d: data[i].d});
             }
             bullets=stuff;
         });
@@ -298,13 +241,42 @@ var sketchProc = function(processingInstance) {
                     }
                 }
                 for(var i=0; i<squares.length; i++){
-                    squares[i].display();
+                    pushMatrix();
+                    translate(squares[i].x, squares[i].y);
+                    rotate(squares[i].r);
+                    stroke(85);
+                    strokeWeight(3);
+                    fill(colors.square);
+                    rect(-squares[i].d / 2, -squares[i].d / 2, squares[i].d, squares[i].d);
+                    popMatrix();
                 }
                 for(var i=0; i<triangles.length; i++){
-                    triangles[i].display();
+                    pushMatrix();
+                    translate(triangles[i].x, triangles[i].y);
+                    rotate(triangles[i].r);
+                    stroke(85);
+                    strokeWeight(3);
+                    fill(colors.triangle);
+                    triangle(0, 0 - triangles[i].d / 1.25, 0 - triangles[i].d, 0 + triangles[i].d, 0 + triangles[i].d, 0 + triangles[i].d);
+                    popMatrix();
                 }
                 for(var i=0; i<pentagons.length; i++){
-                    pentagons[i].display();
+                    pushMatrix();
+                    translate(pentagons[i].x, pentagons[i].y);
+                    rotate(pentagons[i].r);
+                    stroke(85);
+                    strokeWeight(3);
+                    fill(colors.pentagon);
+                    beginShape();
+                    vertex(0, 0 - this.d / 2);
+                    vertex(0 + pentagons[i].d / 2, 0 - pentagons[i].d / 8);
+                    vertex(0 + pentagons[i].d / 3, 0 + pentagons[i].d / 2);
+                    vertex(0 - pentagons[i].d / 3, 0 + pentagons[i].d / 2);
+                    vertex(0 - pentagons[i].d / 2, 0 - pentagons[i].d / 8);
+                    vertex(0, 0 - pentagons[i].d / 2);
+                    vertex(0, 0 - this.d / 2);
+                    endShape();
+                    popMatrix();
                 }
                 for(var i=0; i<bullets.length; i++){
                     stroke(85);
@@ -365,11 +337,11 @@ var sketchProc = function(processingInstance) {
                     if (keys[LEFT] || keys[65]) {
                         socket.emit('move left');
                     }
+                    if(!keys[LEFT]&&!keys[DOWN]&&!keys[RIGHT]&&!keys[LEFT]&&!keys[87]&&!keys[83]&&!keys[68]&&!keys[65]){
+                        socket.emit('stop moving');
+                    }
+                    socket.emit('user update', atan2(mouseY-screeny, mouseX-screenx) - HALF_PI);
                 }
-                if(!keys[LEFT]&&!keys[DOWN]&&!keys[RIGHT]&&!keys[LEFT]&&!keys[87]&&!keys[83]&&!keys[68]&&!keys[65]){
-                    socket.emit('stop moving');
-                }
-                socket.emit('user update', atan2(mouseY-screeny, mouseX-screenx) - HALF_PI);
             } else {
                 background(124,124,124);
                 textSize(16);
@@ -400,8 +372,9 @@ var sketchProc = function(processingInstance) {
                     canType=false;
                 }
             }
-            //fill(0,0,0);
-            //text(__frameRate, 500, 100);
+            textSize(20);
+            fill(0,0,0);
+            text(__frameRate, 500, 100);
         };
         function preventBackspaceHandler(evt) {
             evt = evt || window.event;
@@ -452,7 +425,6 @@ var sketchProc = function(processingInstance) {
               if(players[i].id===myId){
                   var r = atan2(mouseY - height / 2, mouseX - width / 2);
                   socket.emit('new bullet', players[i].x, players[i].y, cos(r), sin(r), 5, 19, 1, 1);
-                  console.log("Sent A New Bullet");
               }
           }
         };

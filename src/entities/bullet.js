@@ -1,26 +1,21 @@
 'use strict';
 
 var bullet = function(x, y, xd, yd, speed, d, damage, penetration){
-    this.stats = {
-        x: x,
-        y: y,
-        xd: xd,
-        yd: yd,
-        speed: speed,
-        d: d,
-        damage: damage,
-        penetration: penetration
-    };
-    this.initiated = false;
+    this.x = x,
+    this.y = y,
+    this.xd = xd,
+    this.yd = yd,
+    this.speed = speed,
+    this.d = d,
+    this.damage = damage,
+    this.penetration = penetration
+
     this.alive = true;
 };
 
-bullet.prototype.init = function() {
-    this.initiated = true;
-};
-
-bullet.prototype.getStats = function() {
-    return this.stats;
+bullet.prototype.update = function() {
+    this.x += this.xd;
+    this.y += this.yd;
 };
 
 module.exports = bullet;
