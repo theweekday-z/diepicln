@@ -41,7 +41,6 @@ var config = configService.getConfig();
 
 var players = playerServer.getPlayers();
 var connections = [];
-var messages = chatServer.getMessages();
 var Id=1;
 var debug=true;
 var chatBanList=[];
@@ -165,7 +164,7 @@ io.on('connection', function (socket) {
         io.sockets.emit('get players', players);
     };
     updateMessages = function(){
-        io.sockets.emit('get messages', messages);
+        io.sockets.emit('get messages', chatServer.getMessages());
     };
     updateWorld = function() {
         io.sockets.emit('update world', config);
