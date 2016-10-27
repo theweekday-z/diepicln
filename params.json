@@ -1,6 +1,6 @@
 {
   "name": "Diepio-multiplayer",
   "tagline": "",
-  "body": "# diep.io Private Server\r\n",
+  "body": "# Diep.io Multiplayer\r\n![Language](https://img.shields.io/badge/language-node.js-yellow.svg)\r\n![Status](https://img.shields.io/badge/Development%20Status-Active%20Development-brightgreen.svg)\r\n\r\nA Diep.io Clone With Alot Of **features**\r\n\r\nBuilt with **socket.io**\r\n## Installation\r\n\r\n1. Go to src\r\n2. Start **installModulles.bat**\r\n3. Once process is done, you can now start **start.bat**\r\n\r\n### Instalation (Manual)\r\n\r\n1. In Project Folder: **npm install**\r\n2. **cd** to **src**\r\n3. do **node server.js**\r\n",
   "note": "Don't delete this file! It's used internally to help with page regeneration."
 }
