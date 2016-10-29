@@ -26,6 +26,7 @@ const chat = require("./entities/chat.js");
 const square = require("./entities/square.js");
 const triangle = require("./entities/triangle.js");
 const pentagon = require("./entities/pentagon.js");
+const player = require("./entities/player.js");
 
 const commandList = require("./modules/commandList.js");
 
@@ -94,8 +95,10 @@ io.on('connection', function (socket) {
     //New User
     socket.on('new user', function(data, Ip, callback){
         callback(true);
-        socket.username = {name: data, x: Math.floor(Math.random() * (config.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), xvel: 0, yvel: 0, moving: false, lvl: 1, score: 0, r: 0, d: 40, id: Id, ip: Ip};
-        players.push(socket.username);
+        //socket.username = {name: data, x: Math.floor(Math.random() * (config.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), xvel: 0, yvel: 0, moving: false, lvl: 1, score: 0, r: 0, d: 40, id: Id, ip: Ip};
+        //players.push(socket.username);
+        socket.username = new player(data, Math.floor(Math.random() * (config.w-100 - 100 + 1) + 100), Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), 0, 0, false, 1, 0, 0, 40, Id, Ip);
+        playerServer.addPlayer(socket.username);
         updateUsernames();
         updateWorld();
         updateMessages();
@@ -260,36 +263,18 @@ var updates = function(){
         if(pentagonServer.getPentagons().length<config.minimumPentagons){
             pentagonServer.addPentagon(new pentagon(Math.floor(Math.random() * (config.w-100 - 100 + 1) + 100), Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), Math.floor(Math.random() * (360 - 0 + 1) + 0), 60));
         }
-        for(var i=0; i<squares.length; i++){
-            squares[i].update();
+        for(var i=0; i<squareServer.getSquares.length; i++){
+            squareServer.getSquares()[i].update();
         }
-        for(var i=0; i<triangles.length; i++){
-            triangles[i].update();
+        for(var i=0; i<triangleServer.getTriangles.length; i++){
+            triangleServer.getTriangles()[i].update();
         }
-        for(var i=0; i<pentagons.length; i++){
-            pentagons[i].update();
+        for(var i=0; i<pentagonServer.getPentagons.length; i++){
+            pentagonServer.getPentagons()[i].update();
         }
         //collisions();
-        for(var i=0; i<players.length; i++){
-            players[i].x+=players[i].xvel;
-            players[i].y+=players[i].yvel;
-            if(!players[i].moving){
-                players[i].xvel/=1.05;
-                players[i].yvel/=1.05;
-            } else {
-                if(players[i].xvel > 1){
-                    players[i].xvel = 1;
-                }
-                if(players[i].yvel > 1){
-                    players[i].yvel = 1;
-                }
-                if(players[i].xvel < -1){
-                    players[i].xvel = -1;
-                }
-                if(players[i].yvel < -1){
-                    players[i].yvel = -1;
-                }
-            }
+        for(var i=0; i<playerServer.getPlayers().length; i++){
+            playerServer.getPlayers()[i].update();
         }
         updatePositions();
         for(var i=0; i<bullets.length; i++){
