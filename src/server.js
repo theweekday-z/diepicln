@@ -82,7 +82,7 @@ io.on('connection', function (socket) {
             updateUsernames();
         }
         connections.splice(connections.indexOf(socket), 1);
-        if(debug){ console.log('Connected: %s players connected', connections.length); }
+        if(debug){ console.log('Disconnected: %s players connected', connections.length); }
     });
 
     //New User
@@ -185,7 +185,7 @@ io.on('connection', function (socket) {
         io.sockets.emit('update bullets', bullets);
     };
     if(updatingStarted===false){
-        setInterval(updateEnemies, 0);
+        //setInterval(updateEnemies, 0); //Calling This Makes Lag
         setInterval(updateMessages, 0);
         updatingStarted = true;
     }
