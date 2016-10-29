@@ -1,3 +1,5 @@
+'use strict';
+
 var square = function(x, y, r, d) {
     this.x = x;
     this.y = y;
@@ -8,3 +10,5 @@ var square = function(x, y, r, d) {
 square.prototype.update = function() {
     this.r+=0.00025;
 };
+
+module.exports = square;

@@ -1,3 +1,5 @@
+'use strict';
+
 var triangle = function(x, y, r, d) {
     this.x = x;
     this.y = y;
@@ -8,3 +10,5 @@ var triangle = function(x, y, r, d) {
 triangle.prototype.update = function() {
     this.r+=0.00025;
 };
+
+module.exports = triangle;

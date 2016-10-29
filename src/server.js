@@ -17,9 +17,15 @@ const chatServer = require("./core/chatServer.js");
 const configService = require("./core/configService.js");
 const playerServer = require("./core/playerServer.js");
 const bulletServer = require("./core/bulletServer.js");
+const squareServer = require("./core/squareServer.js");
+const triangleServer = require("./core/triangleServer.js")
+const pentagonServer = require("./core/pentagonServer.js")
 
 const bullet = require("./entities/bullet.js");
-const chat = require("./entities/chat.js")
+const chat = require("./entities/chat.js");
+const square = require("./entities/square.js");
+const triangle = require("./entities/triangle.js");
+const pentagon = require("./entities/pentagon.js");
 
 const commandList = require("./modules/commandList.js");
 
@@ -179,13 +185,13 @@ io.on('connection', function (socket) {
       }
     };
     updateEnemies = function() {
-        io.sockets.emit('update enemies', squares, triangles, pentagons);
+        io.sockets.emit('update enemies', squareServer.getSquares(), triangleServer.getTriangles(), pentagonServer.getPentagons());
     };
     updateBullets = function() {
         io.sockets.emit('update bullets', bullets);
     };
     if(updatingStarted===false){
-        //setInterval(updateEnemies, 0); //Calling This Makes Lag
+        setInterval(updateEnemies, 0); //Calling This Makes Lag
         setInterval(updateMessages, 0);
         updatingStarted = true;
     }
@@ -245,25 +251,25 @@ var collisions = function() {
 };
 var updates = function(){
     if(players.length!==0){
-        if(squares.length<config.minimumSquares){
-            squares.push({x: Math.floor(Math.random() * (config.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), r: Math.floor(Math.random() * (360 - 0 + 1) + 0), d: 35})
+        if(squareServer.getSquares().length<config.minimumSquares){
+            squareServer.addSquare(new square(Math.floor(Math.random() * (config.w-100 - 100 + 1) + 100), Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), Math.floor(Math.random() * (360 - 0 + 1) + 0), 35));
         }
-        if(triangles.length<config.minimumTriangles){
-            triangles.push({x: Math.floor(Math.random() * (config.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), r: Math.floor(Math.random() * (360 - 0 + 1) + 0), d: 20})
+        if(triangleServer.getTriangles().length<config.minimumTriangles){
+            triangleServer.addTriangle(new triangle(Math.floor(Math.random() * (config.w-100 - 100 + 1) + 100), Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), Math.floor(Math.random() * (360 - 0 + 1) + 0), 20));
         }
-        if(pentagons.length<config.minimumPentagons){
-            pentagons.push({x: Math.floor(Math.random() * (config.w-100 - 100 + 1) + 100), y: Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), r: Math.floor(Math.random() * (360 - 0 + 1) + 0), d: 60})
+        if(pentagonServer.getPentagons().length<config.minimumPentagons){
+            pentagonServer.addPentagon(new pentagon(Math.floor(Math.random() * (config.w-100 - 100 + 1) + 100), Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), Math.floor(Math.random() * (360 - 0 + 1) + 0), 60));
         }
         for(var i=0; i<squares.length; i++){
-            squares[i].r+=0.00025;
+            squares[i].update();
         }
         for(var i=0; i<triangles.length; i++){
-            triangles[i].r+=0.00025;
+            triangles[i].update();
         }
         for(var i=0; i<pentagons.length; i++){
-            pentagons[i].r+=0.00025;
+            pentagons[i].update();
         }
-        collisions();
+        //collisions();
         for(var i=0; i<players.length; i++){
             players[i].x+=players[i].xvel;
             players[i].y+=players[i].yvel;
