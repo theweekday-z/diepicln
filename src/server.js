@@ -59,6 +59,9 @@ var updateWorld;
 var updatePositions;
 var ban;
 var updateEnemies;
+var updateSquares;
+var updateTriangles;
+var updatePentagons;
 var updateBullets;
 var updatingStarted = false;
 
@@ -190,11 +193,23 @@ io.on('connection', function (socket) {
     updateEnemies = function() {
         io.sockets.emit('update enemies', squareServer.getSquares(), triangleServer.getTriangles(), pentagonServer.getPentagons());
     };
+    updateSquares = function() {
+        io.sockets.emit('update squares', squareServer.getSquares());
+    };
+    updateTriangles = function() {
+        io.sockets.emit('update triangles', triangleServer.getTriangles());
+    };
+    updatePentagons = function() {
+        io.sockets.emit('update pentagons', pentagonServer.getPentagons());
+    };
     updateBullets = function() {
         io.sockets.emit('update bullets', bullets);
     };
     if(updatingStarted===false){
-        setInterval(updateEnemies, 0); //Calling This Makes Lag
+        //setInterval(updateEnemies, 0); //Calling This Makes Lag
+        //setInterval(updateSquares, 0);
+        //setInterval(updateTriangles, 0);
+        //setInterval(updatePentagons, 0);
         setInterval(updateMessages, 0);
         updatingStarted = true;
     }
