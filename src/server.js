@@ -30,18 +30,6 @@ const player = require("./entities/player.js");
 
 const commandList = require("./modules/commandList.js");
 
-/*var cmd = "help";
-
-console.log(commandList);
-
-for(var i in commandList){
-    console.log(commandList[i]);
-    if(commandList[i]==="help"){
-        console.log("TEST :D");
-        commandList[i]();
-    }
-}*/
-
 configService.init();
 
 var config = configService.getConfig();
@@ -311,7 +299,13 @@ const rl = readline.createInterface({
 
 rl.on('line', (line) => {
     var l=line.trim();
+    l = l.toString();
     var msg=l.split(" ");
+    for (var i in commandList) {
+        if(i===msg[0]){
+            commandList[i]();
+        }
+    }
     switch(msg[0]){
         case "playerlist":
             console.log("players: ");
