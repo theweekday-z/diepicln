@@ -196,9 +196,9 @@ io.on('connection', function (socket) {
     if(updatingStarted===false){
         // WARNING: THIS IS EXTREMELY EXPERIMENTAL
         setInterval(updateEnemies, 1000 / 60);
-        setInterval(updateSquares, 1000 / 60);
-        setInterval(updateTriangles, 1000 / 60);
-        setInterval(updatePentagons, 1000 / 60);
+        //setInterval(updateSquares, 1000 / 60);
+        //setInterval(updateTriangles, 1000 / 60);
+        //setInterval(updatePentagons, 1000 / 60);
         setInterval(updateMessages, 1000 / 60);
         updatingStarted = true;
     }
