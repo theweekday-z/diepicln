@@ -194,11 +194,12 @@ io.on('connection', function (socket) {
         io.sockets.emit('update bullets', bullets);
     };
     if(updatingStarted===false){
-        //setInterval(updateEnemies, 0); //Calling This Makes Lag
-        //setInterval(updateSquares, 0);
-        //setInterval(updateTriangles, 0);
-        //setInterval(updatePentagons, 0);
-        setInterval(updateMessages, 0);
+        // WARNING: THIS IS EXTREMELY EXPERIMENTAL
+        setInterval(updateEnemies, 1000 / 60);
+        setInterval(updateSquares, 1000 / 60);
+        setInterval(updateTriangles, 1000 / 60);
+        setInterval(updatePentagons, 1000 / 60);
+        setInterval(updateMessages, 1000 / 60);
         updatingStarted = true;
     }
 });
