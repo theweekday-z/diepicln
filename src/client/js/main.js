@@ -115,13 +115,6 @@ var sketchProc = function(processingInstance) {
             }
             pentagons=stuff;
         });
-        socket.on('update squares', function(data){
-          var stuff=[];
-          for(var i=0; i<data.length; i++){
-              stuff.push({x: data[i].x, y: data[i].y, r: data[i].r, d: data[i].d});
-          }
-          squares=stuff;
-        });
 
         socket.on('update bullets', function(data){
             var stuff=[];
