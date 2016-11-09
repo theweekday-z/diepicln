@@ -21,44 +21,28 @@ core.configService.init();
 
 var config = core.configService.getConfig();
 
-var players = core.playerServer.getPlayers();
 var connections = [];
 var Id=1;
 var debug=true;
-var chatBanList=[];
 
 var updateMessages = function(){
     io.sockets.emit('get messages', core.chatServer.getMessages());
 };
 var updateUsernames = function(){
-    io.sockets.emit('get players', players);
+    io.sockets.emit('get players', core.playerServer.getPlayers());
     io.sockets.emit('get id', Id);
 };
 var updateWorld = function() {
     io.sockets.emit('update world', config);
 };
 var updatePositions = function(){
-    for(var i=0; i<players.length; i++){
-        if(players[i].x>config.w){
-            players[i].x=config.w;
-        }
-        if(players[i].y>config.h){
-            players[i].y=config.h;
-        }
-        if(players[i].x<0){
-            players[i].x=0;
-        }
-        if(players[i].y<0){
-            players[i].y=0;
-        }
-    }
-    io.sockets.emit('get players', players);
-};;
+    io.sockets.emit('get players', core.playerServer.getPlayers());
+};
 var ban = function(){
   for(var i=0; i<core.banServer.getBanList().length; i++){
-      for(var u=0; u<players.length; u++){
-          if(players[u].ip===core.banServer.getBanList()[i].ip){
-              io.sockets.emit('banned', players[i].ip);
+      for(var u=0; u<core.playerServer.getPlayers().length; u++){
+          if(core.playerServer.getPlayers()[u].ip===core.banServer.getBanList()[i].ip){
+              io.sockets.emit('banned', core.playerServer.getPlayers()[i].ip);
           }
       }
   }
@@ -67,23 +51,8 @@ var updateEnemies = function() {
     io.sockets.emit('update enemies', core.squareServer.getSquares(), core.triangleServer.getTriangles(), core.pentagonServer.getPentagons());
 };
 var updateBullets = function() {
-    io.sockets.emit('update bullets', bullets);
+    io.sockets.emit('update bullets', core.bulletServer.getBullets());
 };
-
-var squares = [];
-var triangles = [];
-var pentagons = [];
-var bullets = core.bulletServer.getBullets();
-
-var superAwesomeUpdates = function() {
-    if(players !== core.playerServer.getPlayers()){
-        core.playerServer.setPlayers(players);
-    }
-    if(bullets !== core.bulletServer.getBullets()){
-        core.bulletServer.setBullets(bullets);
-    }
-};
-setInterval(superAwesomeUpdates, 0);
 
 io.on('connection', function (socket) {
     connections.push(socket);
@@ -92,7 +61,9 @@ io.on('connection', function (socket) {
     // Disconnect
     socket.on('disconnect', function(data){
         if(socket.username !== undefined){
+            var players = core.playerServer.getPlayers();
             players.splice(players.indexOf(socket.username), 1);
+            core.playerServer.setPlayers(players);
             updateUsernames();
         }
         connections.splice(connections.indexOf(socket), 1);
@@ -102,7 +73,7 @@ io.on('connection', function (socket) {
     //New User
     socket.on('new user', function(data, Ip, callback){
         callback(true);
-        socket.username = new entities.player(data, Math.floor(Math.random() * (config.w-100 - 100 + 1) + 100), Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), 0, 0, false, 1, 0, 0, 40, Id, Ip);
+        socket.username = new entities.player(data, Math.floor(Math.random() * (config.w-100 - 100 + 1) + 100), Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), 0, 0, 5, 1, 0, 0, 40, Id, Ip);
         core.playerServer.addPlayer(socket.username);
         updateUsernames();
         updateWorld();
@@ -112,7 +83,9 @@ io.on('connection', function (socket) {
 
     //
     socket.on('user update', function(r, callback){
+        var players = core.playerServer.getPlayers();
         players[players.indexOf(socket.username)].r=r;
+        core.playerServer.setPlayers(players);
     });
 
     //Send Message
@@ -130,39 +103,31 @@ io.on('connection', function (socket) {
 
     //Movement
     socket.on('move right', function(){
-        players[players.indexOf(socket.username)].moving=true;
+        var players = core.playerServer.getPlayers();
         players[players.indexOf(socket.username)].xvel+=0.01;
+        core.playerServer.setPlayers(players);
     });
     socket.on('move left', function(){
-        players[players.indexOf(socket.username)].moving=true;
+        var players = core.playerServer.getPlayers();
         players[players.indexOf(socket.username)].xvel-=0.01;
+        core.playerServer.setPlayers(players);
     });
     socket.on('move up', function(){
-        players[players.indexOf(socket.username)].moving=true;
+        var players = core.playerServer.getPlayers();
         players[players.indexOf(socket.username)].yvel-=0.01;
+        core.playerServer.setPlayers(players);
     });
     socket.on('move down', function(){
-        players[players.indexOf(socket.username)].moving=true;
+        var players = core.playerServer.getPlayers();
         players[players.indexOf(socket.username)].yvel+=0.01;
-    });
-    socket.on('stop moving', function(){
-        players[players.indexOf(socket.username)].moving=false;
+        core.playerServer.setPlayers(players);
     });
 
     //Bullets
     socket.on('new bullet', function(x, y, xd, yd, speed, d, damage, penetration) {
-        bullets.push(new entities.bullet(x, y, xd, yd, speed, d, damage, penetration));
+        core.bulletServer.addBullet(new entities.bullet(x, y, xd, yd, speed, d, damage, penetration));
     });
 });
-
-var sendStuff = function() {
-    ban();
-    updateEnemies()
-    updatePositions();
-    updateBullets();
-    updateMessages();
-};
-setInterval(sendStuff, 1000/config.fps);
 
 var updates = function(){
     if(core.squareServer.getSquares().length<config.minimumSquares){
@@ -174,7 +139,12 @@ var updates = function(){
     if(core.pentagonServer.getPentagons().length<config.minimumPentagons){
         core.pentagonServer.addPentagon(new entities.pentagon(Math.floor(Math.random() * (config.w-100 - 100 + 1) + 100), Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), Math.floor(Math.random() * (360 - 0 + 1) + 0), 60));
     }
-    if(players.length!==0){
+    if(core.playerServer.getPlayers().length!==0){
+        ban();
+        updateEnemies();
+        updatePositions();
+        updateBullets();
+        updateMessages();
         for(var i=0; i<core.squareServer.getSquares().length; i++){
             core.squareServer.getSquares()[i].update();
         }
@@ -187,9 +157,11 @@ var updates = function(){
         for(var i=0; i<core.playerServer.getPlayers().length; i++){
             core.playerServer.getPlayers()[i].update();
         }
+        var bullets = core.bulletServer.getBullets();
         for(var i=0; i<bullets.length; i++){
             bullets[i].update();
         }
+        core.bulletServer.setBullets(bullets);
     }
 };
 setInterval(updates, 1000/config.fps);

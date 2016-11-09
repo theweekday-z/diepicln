@@ -13,8 +13,8 @@ var bullet = function(x, y, xd, yd, speed, d, damage, penetration){
 };
 
 bullet.prototype.update = function() {
-    this.x += this.xd;
-    this.y += this.yd;
+    this.x += this.xd*this.speed;
+    this.y += this.yd*this.speed;
 };
 
 module.exports = bullet;
