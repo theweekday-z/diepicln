@@ -1,5 +1,4 @@
 'use strict';
-
 var player = function(name, x, y, xvel, yvel, moving, lvl, score, r, d, id, ip){
     this.name = name;
     this.x = x;

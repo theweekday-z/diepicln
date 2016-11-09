@@ -1,6 +1,5 @@
 'use strict';
 var triangles = [];
-
 module.exports = {
     getTriangles: function() {
         return triangles;

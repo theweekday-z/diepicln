@@ -4,10 +4,10 @@ module.exports = function(to, frum,  msg){
     if(to==="all"){
         var message = {msg: msg, user: frum, to: "all"};
         chatServer.addMessage(message);
-        console.log("Message Sent To All!");
+        console.log("[Console] Message Sent To All!");
     } else {
         var message = {msg: msg, user: frum, to: to};
         chatServer.addMessage(message);
-        console.log("Message Sent To "+to);
+        console.log("[Console] Message Sent To "+to);
     }
 };

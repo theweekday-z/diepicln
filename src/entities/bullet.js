@@ -9,7 +9,6 @@ var bullet = function(x, y, xd, yd, speed, d, damage, penetration){
     this.d = d,
     this.damage = damage,
     this.penetration = penetration
-
     this.alive = true;
 };
 

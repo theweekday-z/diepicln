@@ -274,14 +274,12 @@ var sketchProc = function(processingInstance) {
                     strokeWeight(3);
                     fill(colors.pentagon);
                     beginShape();
-                    vertex(0, 0 - this.d / 2);
+                    vertex(0, 0 - pentagons[i].d / 2);
                     vertex(0 + pentagons[i].d / 2, 0 - pentagons[i].d / 8);
                     vertex(0 + pentagons[i].d / 3, 0 + pentagons[i].d / 2);
                     vertex(0 - pentagons[i].d / 3, 0 + pentagons[i].d / 2);
                     vertex(0 - pentagons[i].d / 2, 0 - pentagons[i].d / 8);
-                    vertex(0, 0 - pentagons[i].d / 2);
-                    vertex(0, 0 - this.d / 2);
-                    endShape();
+                    endShape(CLOSE);
                     popMatrix();
                 }
                 for(var i=0; i<bullets.length; i++){
@@ -378,9 +376,9 @@ var sketchProc = function(processingInstance) {
                     canType=false;
                 }
             }
-            textSize(20);
-            fill(0,0,0);
-            text(__frameRate, 500, 100);
+            //textSize(20);
+            //fill(0,0,0);
+            //text(__frameRate, 500, 100);
         };
         function preventBackspaceHandler(evt) {
             evt = evt || window.event;

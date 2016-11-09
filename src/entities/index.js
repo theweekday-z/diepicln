@@ -5,5 +5,6 @@ module.exports = {
     square: require('./square.js'),
     triangle: require('./triangle.js'),
     pentagon: require('./pentagon.js'),
-    chat: require('./chat.js')
+    chat: require('./chat.js'),
+    player: require('./player.js')
 };

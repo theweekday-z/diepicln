@@ -1,42 +1,7 @@
-body {
-    margin: 0px;
-    padding: 0px;
-    background: black;
-}
-
-#gameArea{
+#canvas {
   position: fixed;
   left: 0px;
   top: 0px;
   width: 100%;
   height: 100%;
-}
-
-#canvas {
-  display: block;
-}
-
-#chat{
-  visibility: hidden;
-  position: fixed;
-  bottom: 0px;
-  left: 25px;
-  width: 600px;
-  height: 400px;
-  max-width: 600px;
-  max-height: 400px;
-  margin: 0px;
-  padding: 0px;
-}
-#messages{
-  height: 80%;
-  overflow-x: hidden;
-  overflow-y: auto;
-  color: white;
-  font-family: 'Lalezar', cursive;
-  font-size: 20px;
-  -webkit-text-stroke: 1px black;
-}
-#chatForm{
-  height: 20%;
 }

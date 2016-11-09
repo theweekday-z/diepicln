@@ -3,6 +3,7 @@
 ![Status](https://img.shields.io/badge/Development%20Status-Active%20Development-brightgreen.svg)
 
 A Diep.io Clone With Alot Of **features**
+You May Call This A **Private Server**
 
 Built with **socket.io**
 ## Installation

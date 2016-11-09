@@ -8,7 +8,7 @@ var pentagon = function(x, y, r, d) {
 };
 
 pentagon.prototype.update = function() {
-    this.r+=0.00025;
+    this.r+=0.0025;
 };
 
 module.exports = pentagon;

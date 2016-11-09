@@ -1,6 +1,5 @@
 'use strict';
 var squares = [];
-
 module.exports = {
     getSquares: function() {
         return squares;

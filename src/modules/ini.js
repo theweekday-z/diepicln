@@ -1,4 +1,3 @@
-
 exports.parse = exports.decode = decode;
 exports.stringify = exports.encode = encode;
 

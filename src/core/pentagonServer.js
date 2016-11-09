@@ -1,6 +1,5 @@
 'use strict';
 var pentagons = [];
-
 module.exports = {
     getPentagons: function() {
         return pentagons;
