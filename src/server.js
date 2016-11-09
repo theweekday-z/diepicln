@@ -1,17 +1,16 @@
 'use strict';
-var http = require('http');
-var path = require('path');
+const http = require('http');
+const path = require('path');
+const readline = require('readline');
 
-var socketio = require('socket.io');
-var express = require('express');
+const socketio = require('socket.io');
+const express = require('express');
 
-var router = express();
-var server = http.createServer(router);
-var io = socketio.listen(server);
+const router = express();
+const server = http.createServer(router);
+const io = socketio.listen(server);
 
 router.use(express.static(path.resolve(__dirname, 'client')));
-
-const fs = require("fs");
 
 const core = require("./core/index.js");
 const entities = require("./entities/index.js");
@@ -165,9 +164,7 @@ var updates = function(){
     }
 };
 setInterval(updates, 1000/config.fps);
-//setInterval(updates, 0); // Running This Speeds Everything Up, But Creates A Memory leak
 
-const readline = require('readline');
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -188,6 +185,7 @@ rl.on('line', (line) => {
   console.log('Bye!');
   process.exit(0);
 });
+
 server.listen(process.env.PORT || config.port, process.env.IP || "0.0.0.0", function(){
     var addr = server.address();
       console.log("[Console] Server running On ", addr.address + ":" + addr.port);
