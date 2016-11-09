@@ -34,7 +34,7 @@ module.exports = {
         if (configFiles.length===0) {
           console.log("[\x1b[34mINFO\x1b[0m] No config files found, generating: src/settings/config.ini");
               // Create a new config
-              for(var i=0; i<1; i++){
+              for(var i=0; i<2; i++){
                   request('https://raw.githubusercontent.com/SharkFinProductions/diepio-multiplayer/master/src/settings/config.ini', function (error, response, code) {
                     if (!error && response.statusCode == 200) {
                       fs.writeFileSync(__dirname + '/../settings/config.ini', code);
@@ -45,11 +45,16 @@ module.exports = {
                       fs.writeFileSync(__dirname + '/../settings/clientConfig.ini', code);
                     }
                   });
+                  request('https://raw.githubusercontent.com/SharkFinProductions/diepio-multiplayer/master/src/settings/advConfig.ini', function (error, response, code) {
+                    if (!error && response.statusCode == 200) {
+                      fs.writeFileSync(__dirname + '/../settings/advConfig.ini', code);
+                    }
+                  });
               }
         }
         configFiles.forEach((file)=> {
             try {
-                console.log('Loading ' + file);
+                console.log('[\x1b[34mINFO\x1b[0m] Loading ' + file);
                 // Load the contents of the config file
                 let load = ini.parse(fs.readFileSync(file, 'utf-8'));
                 // Replace all the default config's values with the loaded config's values
