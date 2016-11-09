@@ -1,6 +1,6 @@
 'use strict';
 
-var bullet = function(x, y, xd, yd, speed, d, damage, penetration){
+var bullet = function(x, y, xd, yd, speed, d, damage, penetration, owner){
     this.x = x,
     this.y = y,
     this.xd = xd,
@@ -10,6 +10,7 @@ var bullet = function(x, y, xd, yd, speed, d, damage, penetration){
     this.damage = damage,
     this.penetration = penetration
     this.alive = true;
+    this.owner = owner;
 };
 
 bullet.prototype.update = function() {

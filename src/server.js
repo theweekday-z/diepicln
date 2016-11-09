@@ -124,7 +124,7 @@ io.on('connection', function (socket) {
 
     //Bullets
     socket.on('new bullet', function(x, y, xd, yd, speed, d, damage, penetration) {
-        core.bulletServer.addBullet(new entities.bullet(x, y, xd, yd, speed, d, damage, penetration));
+        core.bulletServer.addBullet(new entities.bullet(x, y, xd, yd, speed, d, damage, penetration, socket.username.id));
     });
 });
 

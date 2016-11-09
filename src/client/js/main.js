@@ -119,7 +119,7 @@ var sketchProc = function(processingInstance) {
         socket.on('update bullets', function(data){
             var stuff=[];
             for(var i=0; i<data.length; i++){
-                stuff.push({x: data[i].x, y: data[i].y, d: data[i].d});
+                stuff.push({x: data[i].x, y: data[i].y, d: data[i].d, owner: data[i].owner});
             }
             bullets=stuff;
         });
@@ -285,7 +285,11 @@ var sketchProc = function(processingInstance) {
                 for(var i=0; i<bullets.length; i++){
                     stroke(85);
                     strokeWeight(2.5);
-                    fill(241, 78, 84);
+                    if(bullets[i].owner===myId){
+                        fill(colors.tank_blue);
+                    } else {
+                        fill(colors.tank_red);
+                    }
                     ellipse(bullets[i].x, bullets[i].y, bullets[i].d, bullets[i].d);
                 }
                 textSize(20);
@@ -425,10 +429,12 @@ var sketchProc = function(processingInstance) {
             }
         };
         mouseClicked = function() {
-          for(var i=0; i<players.length; i++){
-              if(players[i].id===myId){
-                  var r = atan2(mouseY - height / 2, mouseX - width / 2);
-                  socket.emit('new bullet', players[i].x, players[i].y, cos(r), sin(r), 5, 19, 1, 1);
+          if(playing){
+              for(var i=0; i<players.length; i++){
+                  if(players[i].id===myId){
+                      var r = atan2(mouseY - height / 2, mouseX - width / 2);
+                      socket.emit('new bullet', players[i].x, players[i].y, cos(r), sin(r), 5, 19, 1, 1);
+                  }
               }
           }
         };
