@@ -72,7 +72,7 @@ io.on('connection', function (socket) {
     //New User
     socket.on('new user', function(data, Ip, callback){
         callback(true);
-        socket.username = new entities.player(data, Math.floor(Math.random() * (config.w-100 - 100 + 1) + 100), Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), 0, 0, 5, 1, 0, 0, 40, Id, Ip);
+        socket.username = new entities.player(data, ~~(Math.random() * (config.w-100 - 100 + 1) + 100), Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), 0, 0, 5, 1, 0, 0, 40, Id, Ip);
         core.playerServer.addPlayer(socket.username);
         updateUsernames();
         updateWorld();
@@ -96,30 +96,22 @@ io.on('connection', function (socket) {
             }
         }
         if(cc){
-            entities.chat("all", socket.username.name, data)
+            entities.chat("all", socket.username.name, data);
         }
     });
 
     //Movement
     socket.on('move right', function(){
-        var players = core.playerServer.getPlayers();
-        players[players.indexOf(socket.username)].xvel+=0.01;
-        core.playerServer.setPlayers(players);
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].xvel+=0.01;
     });
     socket.on('move left', function(){
-        var players = core.playerServer.getPlayers();
-        players[players.indexOf(socket.username)].xvel-=0.01;
-        core.playerServer.setPlayers(players);
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].xvel-=0.01;
     });
     socket.on('move up', function(){
-        var players = core.playerServer.getPlayers();
-        players[players.indexOf(socket.username)].yvel-=0.01;
-        core.playerServer.setPlayers(players);
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].yvel-=0.01;
     });
     socket.on('move down', function(){
-        var players = core.playerServer.getPlayers();
-        players[players.indexOf(socket.username)].yvel+=0.01;
-        core.playerServer.setPlayers(players);
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].yvel+=0.01;
     });
 
     //Bullets
@@ -130,13 +122,13 @@ io.on('connection', function (socket) {
 
 var updates = function(){
     if(core.squareServer.getSquares().length<config.minimumSquares){
-        core.squareServer.addSquare(new entities.square(Math.floor(Math.random() * (config.w-100 - 100 + 1) + 100), Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), Math.floor(Math.random() * (360 - 0 + 1) + 0), 35));
+        core.squareServer.addSquare(new entities.square(~~(Math.random() * (config.w-100 - 100 + 1) + 100), Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), Math.floor(Math.random() * (360 - 0 + 1) + 0), 35));
     }
     if(core.triangleServer.getTriangles().length<config.minimumTriangles){
-        core.triangleServer.addTriangle(new entities.triangle(Math.floor(Math.random() * (config.w-100 - 100 + 1) + 100), Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), Math.floor(Math.random() * (360 - 0 + 1) + 0), 20));
+        core.triangleServer.addTriangle(new entities.triangle(~~(Math.random() * (config.w-100 - 100 + 1) + 100), Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), Math.floor(Math.random() * (360 - 0 + 1) + 0), 20));
     }
     if(core.pentagonServer.getPentagons().length<config.minimumPentagons){
-        core.pentagonServer.addPentagon(new entities.pentagon(Math.floor(Math.random() * (config.w-100 - 100 + 1) + 100), Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), Math.floor(Math.random() * (360 - 0 + 1) + 0), 60));
+        core.pentagonServer.addPentagon(new entities.pentagon(~~(Math.random() * (config.w-100 - 100 + 1) + 100), Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), Math.floor(Math.random() * (360 - 0 + 1) + 0), 60));
     }
     if(core.playerServer.getPlayers().length!==0){
         ban();
@@ -156,11 +148,9 @@ var updates = function(){
         for(var i=0; i<core.playerServer.getPlayers().length; i++){
             core.playerServer.getPlayers()[i].update();
         }
-        var bullets = core.bulletServer.getBullets();
-        for(var i=0; i<bullets.length; i++){
-            bullets[i].update();
+        for(var i=0; i<core.bulletServer.getBullets().length; i++){
+            core.bulletServer.getBullets()[i].update();
         }
-        core.bulletServer.setBullets(bullets);
     }
 };
 setInterval(updates, 1000/config.fps);

@@ -7,9 +7,7 @@ module.exports = function(msg) {
     }
     for(var i=0; i<playerServer.getPlayers().length; i++){
         if(playerServer.getPlayers()[i].id===parseInt(msg[1])){
-          var players = playerServer.getPlayers();
-          players[i].name=nameW;
-          playerServer.setPlayers(players);
+          playerServer.getPlayers()[i].name=nameW;
           console.log("[Console] Changed player "+parseInt(msg[1])+"'s name to "+playerServer.getPlayers()[i].name);
         }
     }

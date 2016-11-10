@@ -8,7 +8,7 @@ var triangle = function(x, y, r, d) {
 };
 
 triangle.prototype.update = function() {
-    this.r+=0.0025;
+    this.r+=0.01;
 };
 
 module.exports = triangle;

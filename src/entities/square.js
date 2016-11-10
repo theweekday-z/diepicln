@@ -8,7 +8,7 @@ var square = function(x, y, r, d) {
 };
 
 square.prototype.update = function() {
-    this.r+=0.0025;
+    this.r+=0.01;
 };
 
 module.exports = square;

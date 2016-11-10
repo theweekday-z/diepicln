@@ -1,6 +1,5 @@
 var sketchProc = function(processingInstance) {
     with(processingInstance) {
-        size(window.innerWidth, window.innerHeight-3.25);
         frameRate(60); //Set The Frame Rate
         var l = function() {
             return this.Function("gflink", "var f=document.createElement('link');f.setAttribute('rel','stylesheet');f.setAttribute('type','text/css');f.setAttribute('href',gflink);document.head.appendChild(f);");
