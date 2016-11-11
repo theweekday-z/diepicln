@@ -13,6 +13,7 @@ module.exports = {
        console.log("[Console] chatbanlist    : Displays Users That Can't Chat");
        console.log("[Console] removechatban  : Lets A User Chat Again After Being Banned");
        console.log("[Console] chat           : Chat Using The Console");
+       console.log("[Console] tp             : Teleport A Player To Any Location")
     },
     "name": require("./commands/name.js"),
     "playerlist": require("./commands/playerList.js"),
@@ -23,5 +24,6 @@ module.exports = {
     "chatban": require("./commands/chatBan.js"),
     "chatbanlist": require("./commands/chatBanList.js"),
     "removechatban": require("./commands/removeChatBan"),
-    "chat": require("./commands/chat.js")
+    "chat": require("./commands/chat.js"),
+    "tp": require("./commands/tp.js")
 };
