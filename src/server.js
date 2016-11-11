@@ -56,13 +56,17 @@ var updateBullets = function() {
 io.on('connection', function (socket) {
     connections.push(socket);
     if(debug){ console.log('Connected: %s players connected', connections.length); }
+    updateUsernames();
+    socket.username = new entities.player("", 0, 0, 0, 0, 5, 1, 0, 0, 40, Id, "");
+    core.playerServer.addPlayer(socket.username);
+    updateWorld();
+    Id+=1;
+    ban();
 
     // Disconnect
     socket.on('disconnect', function(data){
         if(socket.username !== undefined){
-            var players = core.playerServer.getPlayers();
-            players.splice(players.indexOf(socket.username), 1);
-            core.playerServer.setPlayers(players);
+            core.playerServer.getPlayers().splice(core.playerServer.getPlayers().indexOf(socket.username), 1);
             updateUsernames();
         }
         connections.splice(connections.indexOf(socket), 1);
@@ -72,12 +76,12 @@ io.on('connection', function (socket) {
     //New User
     socket.on('new user', function(data, Ip, callback){
         callback(true);
-        socket.username = new entities.player(data, ~~(Math.random() * (config.w-100 - 100 + 1) + 100), Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), 0, 0, 5, 1, 0, 0, 40, Id, Ip);
-        core.playerServer.addPlayer(socket.username);
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].name=data;
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].ip = Ip;
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].x = ~~(Math.random() * (config.w-100 - 100 + 1) + 100);
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].y = Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100);
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].ip = Ip;
         updateUsernames();
-        updateWorld();
-        Id+=1;
-        ban();
     });
 
     //
@@ -175,8 +179,15 @@ rl.on('line', (line) => {
   console.log('Bye!');
   process.exit(0);
 });
-
+try{
 server.listen(process.env.PORT || config.port, process.env.IP || "0.0.0.0", function(){
-    var addr = server.address();
+      var addr = server.address();
       console.log("[Console] Server running On ", addr.address + ":" + addr.port);
 });
+} catch(e){
+    switch (e.code) {
+        case "EADDRINUSE":
+          console.log("[Error] Server could not bind to port! Please close out of Skype or change 'serverPort' in src/settings to a different number.");
+          break;
+    }
+}
