@@ -17,8 +17,9 @@ const entities = require("./entities/index.js");
 const commandList = require("./modules/commandList.js");
 
 core.configService.init();
-
 var config = core.configService.getConfig();
+
+core.pluginService.init();
 
 var connections = [];
 var Id=1;
@@ -41,7 +42,7 @@ var ban = function(){
   for(var i=0; i<core.banServer.getBanList().length; i++){
       for(var u=0; u<core.playerServer.getPlayers().length; u++){
           if(core.playerServer.getPlayers()[u].ip===core.banServer.getBanList()[i].ip){
-              io.sockets.emit('banned', core.playerServer.getPlayers()[i].ip);
+              io.sockets.emit('banned', core.playerServer.getPlayers()[u].ip);
           }
       }
   }
@@ -54,6 +55,9 @@ var updateBullets = function() {
 };
 
 io.on('connection', function (socket) {
+    core.pluginService.getPlugins().forEach((plugin)=> {
+        plugin.call("beforeNewUser");
+    });
     connections.push(socket);
     if(debug){ console.log('Connected: %s players connected', connections.length); }
     updateUsernames();
@@ -74,13 +78,11 @@ io.on('connection', function (socket) {
     });
 
     //New User
-    socket.on('new user', function(data, Ip, callback){
-        callback(true);
+    socket.on('new user', function(data, callback){
+        callback(true); 
         core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].name=data;
-        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].ip = Ip;
         core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].x = ~~(Math.random() * (config.w-100 - 100 + 1) + 100);
         core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].y = Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100);
-        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].ip = Ip;
         updateUsernames();
     });
 
@@ -94,8 +96,8 @@ io.on('connection', function (socket) {
     //Send Message
     socket.on('send message', function(data){
         var cc=true;
-        for(var i=0; i<core.chatBanServer.getChatBanList().length; i++){
-            if(socket.username.id===core.chatBanServer.getChatBanList()[i]){
+        for(var i=0; i<core.muteServer.getMuteList().length; i++){
+            if(socket.username.id===core.muteServer.getMuteList()[i]){
                 cc=false;
             }
         }
@@ -122,9 +124,18 @@ io.on('connection', function (socket) {
     socket.on('new bullet', function(x, y, xd, yd, speed, d, damage, penetration) {
         core.bulletServer.addBullet(new entities.bullet(x, y, xd, yd, speed, d, damage, penetration, socket.username.id));
     });
+    
+    socket.on('ip update', function(ip){
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].ip = ip;
+    });
 });
 
-var updates = function(){
+var updates = ()=> {
+    core.pluginService.getPlugins().forEach((plugin)=> {
+        if(plugin.run){
+            plugin.run();
+        }
+    });
     if(core.squareServer.getSquares().length<config.minimumSquares){
         core.squareServer.addSquare(new entities.square(~~(Math.random() * (config.w-100 - 100 + 1) + 100), Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), Math.floor(Math.random() * (360 - 0 + 1) + 0), 35));
     }
@@ -179,15 +190,8 @@ rl.on('line', (line) => {
   console.log('Bye!');
   process.exit(0);
 });
-try{
+
 server.listen(process.env.PORT || config.port, process.env.IP || "0.0.0.0", function(){
-      var addr = server.address();
-      console.log("[Console] Server running On ", addr.address + ":" + addr.port);
+    var addr = server.address();
+    console.log("[\x1b[36mConsole\x1b[0m] Server running On ", addr.address + ":" + addr.port);
 });
-} catch(e){
-    switch (e.code) {
-        case "EADDRINUSE":
-          console.log("[Error] Server could not bind to port! Please close out of Skype or change 'serverPort' in src/settings to a different number.");
-          break;
-    }
-}

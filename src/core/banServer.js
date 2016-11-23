@@ -9,6 +9,9 @@ module.exports = {
         banList = ips;
     },
     addBan: function(ip){
+        require('./pluginService.js').getPlugins().forEach((plugin)=> {
+            plugin.call('beforeBan');
+        });
         banList.push(ip);
     },
     delBan: function(ip){

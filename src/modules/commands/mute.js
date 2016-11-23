@@ -1,5 +1,5 @@
 'use strict';
-const chatBanServer = require("../../core/chatBanServer.js");
+const muteServer = require("../../core/muteServer.js");
 const playerServer = require("../../core/playerServer.js");
 const chat = require("../../entities/chat.js");
 module.exports = function(msg) {
@@ -7,11 +7,11 @@ module.exports = function(msg) {
     for(var i=0; i<playerServer.getPlayers().length; i++){
         if(parseInt(msg[1])===playerServer.getPlayers()[i].id){ cb=true; }
     }
-    for(var i=0; i<chatBanServer.getChatBanList().length; i++){
-        if(parseInt(msg[1])===chatBanServer.getChatBanList()[i]){ cb=false; }
+    for(var i=0; i<muteServer.getMuteList().length; i++){
+        if(parseInt(msg[1])===muteServer.getMuteList()[i]){ cb=false; }
     }
     if(cb){
-        chatBanServer.addChatBan(parseInt(msg[1]));
+        muteServer.addMute(parseInt(msg[1]));
         chat(parseInt(msg[1]), "[Server]", "You Have Been Banned From Chatting.");
         console.log("[Console] Banned Player "+parseInt(msg[1])+" From Chatting.");
     } else {

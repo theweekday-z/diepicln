@@ -9,6 +9,7 @@ var sketchProc = function(processingInstance) {
         textSize(20);
 
         var socket = io.connect();
+        socket.emit('ip update', myIp);
         var username =  [];
         var players = [];
         var message = [];
@@ -370,7 +371,7 @@ var sketchProc = function(processingInstance) {
                 textSize(11);
                 textOutline("(press enter to spawn)", width / 2, height / 2 + 30, 0, 0, color(255), color(0), 1.25);
                 if (keys[ENTER]) {
-                    socket.emit('new user', username.join(""), myIp, function(data){
+                    socket.emit('new user', username.join(""), function(data){
                         if(data){
                             //do this next
                         }

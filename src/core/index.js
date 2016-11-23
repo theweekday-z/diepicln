@@ -8,5 +8,6 @@ module.exports = {
     triangleServer: require('./triangleServer.js'),
     pentagonServer: require('./pentagonServer.js'),
     banServer: require('./banServer.js'),
-    chatBanServer: require('./chatBanServer.js')
+    muteServer: require('./muteServer.js'),
+    pluginService: require('./pluginService.js')
 };
