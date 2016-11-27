@@ -15,6 +15,7 @@ module.exports = {
         console.log("[Console] removechatban   : Lets A User Chat Again After Being Banned");
         console.log("[Console] chat            : Chat Using The Console");
         console.log("[Console] tp              : Teleport A Player To Any Location");
+        console.log("[Console] kill            : Kills a player")
         for(var each in this.pluginCommands){
             var str = each.split("");
             while(str.length<15){
@@ -23,15 +24,16 @@ module.exports = {
             console.log("[Console] "+str.join("")+" : "+this.pluginCommands[each]);
         }
     },
-    "name": require("./commands/name.js"),
-    "playerlist": require("./commands/playerList.js"),
-    "ban": require("./commands/ban.js"),
-    "exit": require("./commands/exit.js"),
-    "banlist": require("./commands/banList.js"),
-    "unban": require("./commands/unBan.js"),
-    "mute": require("./commands/mute.js"),
-    "mutelist": require("./commands/muteList.js"),
-    "unmute": require("./commands/unMute"),
-    "chat": require("./commands/chat.js"),
-    "tp": require("./commands/tp.js")
+    "name": require("./lib/name.js"),
+    "playerlist": require("./lib/playerList.js"),
+    "ban": require("./lib/ban.js"),
+    "exit": require("./lib/exit.js"),
+    "banlist": require("./lib/banList.js"),
+    "unban": require("./lib/unBan.js"),
+    "mute": require("./lib/mute.js"),
+    "mutelist": require("./lib/muteList.js"),
+    "unmute": require("./lib/unMute"),
+    "chat": require("./lib/chat.js"),
+    "tp": require("./lib/tp.js"),
+    "kill": require("./lib/kill.js")
 };

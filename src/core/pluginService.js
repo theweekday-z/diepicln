@@ -16,7 +16,7 @@ module.exports = {
             fs.mkdir('./plugins');
             console.log('[\x1b[32mINFO\x1b[0m] plugins Folder Generated!');
         }
-        
+
         // try running
         let plgns = glob.sync(__dirname + "/../plugins/*/index.js");
         console.log("[\x1b[34mINFO\x1b[0m] Loading Plugins...");
@@ -34,7 +34,7 @@ module.exports = {
         });
         //
         plugins.forEach((plugin)=> {
-            const commandList = require('../modules/commandList.js');
+            const commandList = require('../commands/index.js');
             for(var each in plugin.addToHelp){
                 commandList.pluginCommands[each] = plugin.addToHelp[each];
             }
@@ -53,14 +53,14 @@ module.exports = {
             var configs = {};
             configFiles.forEach((file)=> {
                 try {
-                    console.log('[\x1b[34mINFO\x1b[0m] Loading ' + file);
+                    //console.log('[\x1b[34mINFO\x1b[0m] Loading ' + file);
                     let load = ini.parse(fs.readFileSync(file, 'utf-8'));
                     for (let obj in load) {
                         configs[obj] = load[obj];
                     }
                     //console.log(load);
                 } catch (err) {
-                    console.warn("Error while loading: " + file + " error: " + err);
+                    //console.warn("Error while loading: " + file + " error: " + err);
                 }
             });
             plugin.config = configs;

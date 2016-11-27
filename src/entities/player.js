@@ -1,5 +1,5 @@
 'use strict';
-var player = function(name, x, y, xvel, yvel, speed, lvl, score, r, d, id, ip){
+var player = function(name, x, y, xvel, yvel, speed, lvl, score, r, d, id, ip, sid){
     this.name = name;
     this.x = x;
     this.y = y;
@@ -12,6 +12,10 @@ var player = function(name, x, y, xvel, yvel, speed, lvl, score, r, d, id, ip){
     this.d = d;
     this.id = id;
     this.ip = ip;
+
+    this.playing = false;
+
+    this.sid = sid;
 };
 
 player.prototype.update = function() {

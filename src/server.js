@@ -14,87 +14,90 @@ router.use(express.static(path.resolve(__dirname, 'client')));
 
 const core = require("./core/index.js");
 const entities = require("./entities/index.js");
-const commandList = require("./modules/commandList.js");
+const commandList = require("./commands/index.js");
 
 core.configService.init();
 var config = core.configService.getConfig();
 
 core.pluginService.init();
 
+var version = "1.0.0";
 var connections = [];
 var Id=1;
-var debug=true;
+var debug=false;
 
-var updateMessages = function(){
+var updateMessages = () => {
     io.sockets.emit('get messages', core.chatServer.getMessages());
 };
-var updateUsernames = function(){
+var updateUsernames = () => {
     io.sockets.emit('get players', core.playerServer.getPlayers());
     io.sockets.emit('get id', Id);
 };
-var updateWorld = function() {
+var updateWorld = () => {
     io.sockets.emit('update world', config);
 };
-var updatePositions = function(){
+var updatePositions = () => {
     io.sockets.emit('get players', core.playerServer.getPlayers());
 };
-var ban = function(){
-  for(var i=0; i<core.banServer.getBanList().length; i++){
-      for(var u=0; u<core.playerServer.getPlayers().length; u++){
-          if(core.playerServer.getPlayers()[u].ip===core.banServer.getBanList()[i].ip){
-              io.sockets.emit('banned', core.playerServer.getPlayers()[u].ip);
-          }
-      }
-  }
+var ban = () => {
+    for(var i=0; i<core.banServer.getBanList().length; i++){
+        for(var u=0; u<connections.length; u++){
+            if(connections[u].request.client._peername.address===core.banServer.getBanList()[i].ip){
+                connections[u].disconnect();
+            }
+        }
+    }
 };
-var updateEnemies = function() {
+var updateEnemies = () => {
     io.sockets.emit('update enemies', core.squareServer.getSquares(), core.triangleServer.getTriangles(), core.pentagonServer.getPentagons());
 };
-var updateBullets = function() {
+var updateBullets = () => {
     io.sockets.emit('update bullets', core.bulletServer.getBullets());
 };
 
-io.on('connection', function (socket) {
-    core.pluginService.getPlugins().forEach((plugin)=> {
+io.on('connection', (socket) => {
+    for(var each in core.banServer.getBanList()){
+        if(socket.request.client._peername.address === core.banServer.getBanList()[each].ip){ socket.disconnect(); }
+    }
+    core.pluginService.getPlugins().forEach((plugin) => {
         plugin.call("beforeNewUser");
     });
     connections.push(socket);
     if(debug){ console.log('Connected: %s players connected', connections.length); }
     updateUsernames();
-    socket.username = new entities.player("", 0, 0, 0, 0, 5, 1, 0, 0, 40, Id, "");
+    socket.username = new entities.player("", 0, 0, 0, 0, 5, 1, 0, 0, 40, Id, socket.request.client._peername.address, socket.id);
     core.playerServer.addPlayer(socket.username);
     updateWorld();
     Id+=1;
     ban();
-
     // Disconnect
-    socket.on('disconnect', function(data){
+    socket.on('disconnect', (data) => {
         if(socket.username !== undefined){
             core.playerServer.getPlayers().splice(core.playerServer.getPlayers().indexOf(socket.username), 1);
             updateUsernames();
         }
         connections.splice(connections.indexOf(socket), 1);
         if(debug){ console.log('Disconnected: %s players connected', connections.length); }
+        socket.disconnect();
     });
 
     //New User
-    socket.on('new user', function(data, callback){
-        callback(true); 
+    socket.on('join game', (data, callback) => {
+        callback(true);
         core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].name=data;
         core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].x = ~~(Math.random() * (config.w-100 - 100 + 1) + 100);
-        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].y = Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100);
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].y = ~~(Math.random() * (config.h-100 - 100 + 1) + 100);
+core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].playing = true;
         updateUsernames();
     });
 
     //
-    socket.on('user update', function(r, callback){
-        var players = core.playerServer.getPlayers();
-        players[players.indexOf(socket.username)].r=r;
-        core.playerServer.setPlayers(players);
+    socket.on('user update', (r, callback) => {
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].r=r;
     });
 
     //Send Message
-    socket.on('send message', function(data){
+    socket.on('send message', (data) => {
         var cc=true;
         for(var i=0; i<core.muteServer.getMuteList().length; i++){
             if(socket.username.id===core.muteServer.getMuteList()[i]){
@@ -106,17 +109,21 @@ io.on('connection', function (socket) {
         }
     });
 
+    socket.on('player request', () => {
+        updateUsernames();
+    });
+
     //Movement
-    socket.on('move right', function(){
+    socket.on('move right', () => {
         core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].xvel+=0.01;
     });
-    socket.on('move left', function(){
+    socket.on('move left', () => {
         core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].xvel-=0.01;
     });
-    socket.on('move up', function(){
+    socket.on('move up', () => {
         core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].yvel-=0.01;
     });
-    socket.on('move down', function(){
+    socket.on('move down', () => {
         core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].yvel+=0.01;
     });
 
@@ -124,33 +131,35 @@ io.on('connection', function (socket) {
     socket.on('new bullet', function(x, y, xd, yd, speed, d, damage, penetration) {
         core.bulletServer.addBullet(new entities.bullet(x, y, xd, yd, speed, d, damage, penetration, socket.username.id));
     });
-    
-    socket.on('ip update', function(ip){
-        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].ip = ip;
+
+    socket.on('die', function(callback) {
+        callback(true);
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].x = 0;
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].y = 0;
+core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].playing = false;
+        updateUsernames();
     });
 });
 
-var updates = ()=> {
-    core.pluginService.getPlugins().forEach((plugin)=> {
-        if(plugin.run){
-            plugin.run();
-        }
-    });
-    if(core.squareServer.getSquares().length<config.minimumSquares){
-        core.squareServer.addSquare(new entities.square(~~(Math.random() * (config.w-100 - 100 + 1) + 100), Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), Math.floor(Math.random() * (360 - 0 + 1) + 0), 35));
-    }
-    if(core.triangleServer.getTriangles().length<config.minimumTriangles){
-        core.triangleServer.addTriangle(new entities.triangle(~~(Math.random() * (config.w-100 - 100 + 1) + 100), Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), Math.floor(Math.random() * (360 - 0 + 1) + 0), 20));
-    }
-    if(core.pentagonServer.getPentagons().length<config.minimumPentagons){
-        core.pentagonServer.addPentagon(new entities.pentagon(~~(Math.random() * (config.w-100 - 100 + 1) + 100), Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), Math.floor(Math.random() * (360 - 0 + 1) + 0), 60));
-    }
+var updates = () => {
     if(core.playerServer.getPlayers().length!==0){
-        ban();
+        core.pluginService.getPlugins().forEach((plugin) => {
+            if(plugin.run){
+                plugin.run();
+            }
+        });
+        if(core.squareServer.getSquares().length<config.minimumSquares){
+            core.squareServer.addSquare(new entities.square(~~(Math.random() * (config.w-100 - 100 + 1) + 100), Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), Math.floor(Math.random() * (360 - 0 + 1) + 0), 35));
+        }
+        if(core.triangleServer.getTriangles().length<config.minimumTriangles){
+            core.triangleServer.addTriangle(new entities.triangle(~~(Math.random() * (config.w-100 - 100 + 1) + 100), Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), Math.floor(Math.random() * (360 - 0 + 1) + 0), 20));
+        }
+        if(core.pentagonServer.getPentagons().length<config.minimumPentagons){
+            core.pentagonServer.addPentagon(new entities.pentagon(~~(Math.random() * (config.w-100 - 100 + 1) + 100), Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), Math.floor(Math.random() * (360 - 0 + 1) + 0), 60));
+        }
         updateEnemies();
         updatePositions();
         updateBullets();
-        updateMessages();
         for(var i=0; i<core.squareServer.getSquares().length; i++){
             core.squareServer.getSquares()[i].update();
         }
@@ -177,9 +186,7 @@ const rl = readline.createInterface({
 });
 
 rl.on('line', (line) => {
-    var l=line.trim();
-    l = l.toString();
-    var msg=l.split(" ");
+    var msg=line.trim().toString().split(" ");
     for (var i in commandList) {
         if(i===msg[0]){
             commandList[i](msg);
@@ -187,11 +194,23 @@ rl.on('line', (line) => {
     }
     rl.prompt();
 }).on('close', () => {
-  console.log('Bye!');
-  process.exit(0);
+    process.exit(0);
+});
+console.log("[\x1b[36mReady\x1b[0m] Loading server...");
+server.listen(process.env.PORT || config.port, process.env.IP || "0.0.0.0", () => {
+    var addr = server.address();
+    console.log("");
+    console.log("|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|");
+    console.log("|              \x1b[32mDiep.io\x1b[0m \x1b[36mPrivate Server\x1b[0m              |");
+    console.log("|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|");
+    console.log("| Version    : "+version+"                               |");
+    console.log("| Status     : In Development                      |");
+    console.log("|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|");
+    console.log("");
+    console.log("[Console] Server running node " + process.version + " On " + addr.address + ":" + addr.port);
+    process.title = "diepio private server";
+    rl.prompt();
 });
 
-server.listen(process.env.PORT || config.port, process.env.IP || "0.0.0.0", function(){
-    var addr = server.address();
-    console.log("[\x1b[36mConsole\x1b[0m] Server running On ", addr.address + ":" + addr.port);
-});
+exports.ban = ban;
+exports.updateMessages = updateMessages;

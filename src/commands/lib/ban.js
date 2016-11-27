@@ -7,12 +7,8 @@ module.exports = function(msg) {
         if(msg[1]===banServer.getBanList()[i].ip){ cb=false; }
     }
     if(cb){
-        for(var i=0; i<playerServer.getPlayers().length; i++){
-            if(playerServer.getPlayers()[i].ip===msg[1]){
-                banServer.addBan({ip: playerServer.getPlayers()[i].ip});
-                console.log("[Console] Banned IP "+msg[1]);
-            }
-        }
+        banServer.addBan({ip: msg[1]});
+        console.log("[Console] Banned IP "+msg[1]);
     } else {
         console.log("[Console] Failed To Ban IP "+msg[1]);
     }
