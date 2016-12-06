@@ -2,8 +2,7 @@
 ![Language](https://img.shields.io/badge/language-node.js-yellow.svg)
 ![Status](https://img.shields.io/badge/Development%20Status-Active%20Development-brightgreen.svg)
 
-A Diep.io Clone With Alot Of **features**
-You May Call This A **Private Server**
+A Diep.io Clone With A lot Of **features**
 
 Built with **socket.io**
 ## Installation

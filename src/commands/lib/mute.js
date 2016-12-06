@@ -12,9 +12,9 @@ module.exports = function(msg) {
     }
     if(cb){
         muteServer.addMute(parseInt(msg[1]));
-        chat(parseInt(msg[1]), "[Server]", "You Have Been Banned From Chatting.");
-        console.log("[Console] Banned Player "+parseInt(msg[1])+" From Chatting.");
+        chat(parseInt(msg[1]), "[Server]", "You Have Been muted.");
+        console.log("[Console] Muted Player "+parseInt(msg[1]));
     } else {
-        console.log("[Console] Failed To Ban Player "+parseInt(msg[1])+" From Chatting.");
+        console.log("[Console] Failed To Mute Player "+parseInt(msg[1]));
     }
 };

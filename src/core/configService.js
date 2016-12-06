@@ -1,6 +1,6 @@
 'use strict';
 const glob = require('glob');
-const request = require('request');
+const request = require('minirequest');
 const fs = require('fs');
 const ini = require('../modules/ini.js');
 

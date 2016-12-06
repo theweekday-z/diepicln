@@ -1,5 +1,5 @@
 'use strict';
-var player = function(name, x, y, id, ip, sid){
+var fakePlayer = function(name, x, y, id, brain){
     this.name = name;
     this.x = x;
     this.y = y;
@@ -11,17 +11,18 @@ var player = function(name, x, y, id, ip, sid){
     this.r = 0;
     this.d = 40;
     this.id = id;
-    this.ip = ip;
+    this.ip = "BOT";
     this.keyMap = {};
-    this.chatting = false;
 
     this.playing = false;
 
-    this.sid = sid;
+    this.sid = "BOT";
     this.config = require("../core/configService.js").getConfig();
+    
+    this.brain = brain;
 };
 
-player.prototype.update = function() {
+fakePlayer.prototype.update = function() {
     this.x+=this.xvel*2;
     this.y+=this.yvel*2;
     this.xvel/=1.015;
@@ -50,20 +51,19 @@ player.prototype.update = function() {
     if(this.y<0){
         this.y=0;
     }
-    if (!this.chatting){
-        if (this.keyMap[38] || this.keyMap[87]) {
-            this.yvel -= 0.025;
-        }
-        if (this.keyMap[40] || this.keyMap[83]) {
-            this.yvel += 0.025;
-        }
-        if (this.keyMap[39] || this.keyMap[68]) {
-            this.xvel += 0.025;
-        }
-        if (this.keyMap[37] || this.keyMap[65]) {
-            this.xvel -= 0.025;
-        }
+    if (this.keyMap[38] || this.keyMap[87]) {
+        this.yvel -= 0.025;
     }
+    if (this.keyMap[40] || this.keyMap[83]) {
+        this.yvel += 0.025;
+    }
+    if (this.keyMap[39] || this.keyMap[68]) {
+        this.xvel += 0.025;
+    }
+    if (this.keyMap[37] || this.keyMap[65]) {
+        this.xvel -= 0.025;
+    }
+    this.brain(this.id);
 };
 
-module.exports = player;
+module.exports = fakePlayer;

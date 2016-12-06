@@ -6,7 +6,7 @@ module.exports = function() {
     } else {
         console.log("Showing "+players.length+" Players");
         for(var i=0; i<players.length; i++){
-            console.log("|" + "ID: " + players[i].id + " | " + "Name: " + players[i].name + " | " + "x: " + players[i].x + " | "+ "y: " + players[i].y + " | " + "IP: " + players[i].ip + " | " + "SID: " + players[i].sid);
+            console.log("|" + "ID: " + players[i].id + " | Name: " + players[i].name + " | x: " + Math.round(players[i].x) + " | y: " + Math.round(players[i].y) + " | IP: " + players[i].ip + "| Playing: " + players[i].playing);
         }
     }
 };

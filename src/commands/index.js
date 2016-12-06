@@ -3,26 +3,44 @@
 module.exports = {
     "pluginCommands": {},
     "help": function() {
-        console.log("[Console] ============================== HELP ============================");
-        console.log("[Console] help            : Shows help");
-        console.log("[Console] name            : Changes a player's name");
-        console.log("[Console] ban             : Bans An IP");
-        console.log("[Console] exit            : Closes The Server");
-        console.log("[Console] banlist         : Displays All Bans");
-        console.log("[Console] unban           : Removes A Ban");
-        console.log("[Console] mute            : Bans A User From Chatting");
-        console.log("[Console] mutelist        : Displays muted users");
-        console.log("[Console] removechatban   : Lets A User Chat Again After Being Banned");
-        console.log("[Console] chat            : Chat Using The Console");
-        console.log("[Console] tp              : Teleport A Player To Any Location");
-        console.log("[Console] kill            : Kills a player")
+        console.log("                       ╭────────────────────────────╮                       ");
++       console.log("                       │ LIST OF AVAILABLE COMMANDS │                       ");
++       console.log("╭──────────────────────┴────────────────────────────┴──────────────────────╮");
++       console.log("|                                                                          |");
+        console.log("|                                 Vanilla                                  |");
+        console.log("|                                ─────────                                 |");
+        console.log("|                                                                          |");
++       console.log("│ help                         │ Shows help                                |");
+        console.log("| name                         | Changes a player's name                   |");
+        console.log("| ban                          | Bans an IP                                |");
+        console.log("| exit                         | Closes the server                         |");
+        console.log("| banlist                      | Displays banned IPs                       |");
+        console.log("| unban                        | Removes a ban                             |");
+        console.log("| mute                         | Mutes a user                              |");
+        console.log("| mutelist                     | Displays muted users                      |");
+        console.log("| unmute                       | unmutes a user                            |");
+        console.log("| chat                         | Chat using the console                    |");
+        console.log("| tp                           | Teleport a player to any location         |");
+        console.log("| kill                         | Kills a player                            |");
++       console.log("|                                                                          |");
+        console.log("|                                 Plugins                                  |");
+        console.log("|                                ─────────                                 |");
+        console.log("|                                                                          |");
         for(var each in this.pluginCommands){
             var str = each.split("");
-            while(str.length<15){
+            while(str.length<29){
                 str.push(" ");
             }
-            console.log("[Console] "+str.join("")+" : "+this.pluginCommands[each]);
+            var str2 = this.pluginCommands[each].split("");
+            while(str2.length<41){
+                str2.push(" ");
+            }
+            console.log("| "+str.join("")+"| "+str2.join("")+" |");
         }
+        console.log("|                                                                          |");
++       console.log("├──────────────────────────────────────────────────────────────────────────┤");
++       console.log('│                             Diepio commands                              |');
++       console.log("╰──────────────────────────────────────────────────────────────────────────╯");
     },
     "name": require("./lib/name.js"),
     "playerlist": require("./lib/playerList.js"),
@@ -35,5 +53,7 @@ module.exports = {
     "unmute": require("./lib/unMute"),
     "chat": require("./lib/chat.js"),
     "tp": require("./lib/tp.js"),
-    "kill": require("./lib/kill.js")
+    "kill": require("./lib/kill.js"),
+    "addbot": require("./lib/addBot.js"),
+    "kickbot": require("./lib/kickBot.js")
 };
