@@ -1,11 +1,10 @@
 'use strict';
-const http = require('http');
 const path = require('path');
 const asyncconsole = require('asyncconsole');
 const socketio = require('socket.io');
 const express = require('express');
 const router = express();
-const server = http.createServer(router);
+const server = require('http').createServer(router);
 const io = socketio.listen(server);
 router.use(express.static(path.resolve(__dirname, 'client')));
 

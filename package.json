@@ -5,12 +5,12 @@
   "main": "server.js",
   "repository": "https://github.com/SharkFinProductions/diepio-multiplayer",
   "dependencies": {
-    "asyncconsole": "^1.3.8",
-    "express": "^3.2.6",
-    "glob": "^7.1.1",
-    "minirequest": "^1.3.0",
-    "quickmap": "^1.2.9",
-    "socket.io": "^1.7.1"
+    "asyncconsole": "latest",
+    "express": "latest",
+    "glob": "latest",
+    "minirequest": "latest",
+    "quickmap": "latest",
+    "socket.io": "latest"
   },
   "devDependencies": {},
   "scripts": {

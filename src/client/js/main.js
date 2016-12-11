@@ -16,6 +16,7 @@ var sketchProc = function(processingInstance) {
         var canType = true;
         var myId="";
         var myNum="";
+        var zoom = 0;
 
         var gameMode = "ffa";
 
@@ -103,6 +104,7 @@ var sketchProc = function(processingInstance) {
                     nmsgs.push({user: data[i].user, msg: data[i].msg});
                 }
             }
+            nmsgs.reverse();
             messages = nmsgs;
         });
 
@@ -161,8 +163,8 @@ var sketchProc = function(processingInstance) {
                         this.x = constrain(this.x + (width / 2 - players[i].x - this.x), this.right, this.left);
                         this.y = constrain(this.y + (height / 2 - players[i].y - this.y), this.bottom, this.top);
                         translate(this.x, this.y);
-                        screenx = players[i].x + this.x;
-                        screeny = players[i].y + this.y;
+                        screenx = players[i].x + this.x - zoom/2;
+                        screeny = players[i].y + this.y - zoom/2;
                     }
                 }
             }
@@ -228,13 +230,6 @@ var sketchProc = function(processingInstance) {
                 textSize(32.5);
                 textOutline(players[myNum].name, width / 2, height - 80, 0, 0, color(240), color(61), 3.5);
             }
-
-
-
-            /* Leaderboard */
-            for (var i = 0; i < 10; i += 1) {
-
-            }
         };
 
         var menuButton = function(txt, x, y, c1, c2, c3){
@@ -260,20 +255,19 @@ var sketchProc = function(processingInstance) {
             vertex(x, y+15);
             endShape();
             strokeWeight(3);
-            stroke(51);
+            stroke(41);
             noFill();
             rect(x, y,75,25,2);
             textSize(12);
             textOutline(txt, x+38, y+12.5, 0, 0, color(255), color(0), 1.25);
         };
         var draw = function() {
-            size(window.innerWidth, window.innerHeight-3.25);
-            textAlign(CENTER,CENTER);
             try {
                 if(players.length === 0){ return; }
                 for(each in players){
                     if(players[each].id === myId){
                         if(players[each].playing){
+                            size(window.innerWidth+zoom, window.innerHeight+zoom);
                             background(colors.gameBackground);
                             pushMatrix();
                             mapCamera.run();
@@ -375,11 +369,42 @@ var sketchProc = function(processingInstance) {
                             text(message.join(""), 30,height-60);
                             fill(0);
                             textSize(25);
-                            for(var i=0; i<messages.length; i++){
-                                text(messages[i].user+": "+messages[i].msg, 50,50+i*25);
+                            if(messages.length > 10){
+                              for(var i=0; i<10; i++){
+                                  text(messages[i].user+": "+messages[i].msg, 50,height-120-i*25);
+                              }
+                            } else {
+                                for(var i=0; i<messages.length; i++){
+                                    text(messages[i].user+": "+messages[i].msg, 50,height-120-i*25);
+                                }
+                            }
+                            var plyrs = [];
+                            for(var i=0; i<players.length; i++){
+                                plyrs.push(players[i]);
+                            }
+                            plyrs.sort(function(a, b){return b.score-a.score;});
+                            if(plyrs.length > 10){
+                              for(var i=0; i<10; i++){
+                                  text(plyrs[i].name+": "+plyrs[i].score, width-200, 120+i*25);
+                              }
+                            } else {
+                                for(var i=0; i<plyrs.length; i++){
+                                    fill(22, 22, 22, 200);
+                                    rect(width-190,175,175,16,100);
+                                    fill(108, 240, 162);
+                                    //println(plyrs[i].score % plyrs[0].score);
+                                    println(0%0);
+                                    if(plyrs[0].score===0){
+                                        
+                                    }
+                                    rect(width-190+1,175+1, 14, 14+(plyrs[i].score%plyrs[0].score)*100, 100);
+                                    fill(0);
+                                    text(plyrs[i].name+": "+plyrs[i].score, width-200, 120+i*25);
+                                }
                             }
                             socket.emit('user update', atan2(mouseY-screeny, mouseX-screenx) - HALF_PI, keys);
                         } else {
+                            size(window.innerWidth, window.innerHeight);
                             background(124,124,124);
                             textSize(16);
                             textOutline("Game mode", width / 2, 18, 0, 0, color(255), color(0), 1.75);
@@ -487,7 +512,8 @@ var sketchProc = function(processingInstance) {
                     if(players[each].playing){
                         for(var i=0; i<players.length; i++){
                             if(players[i].id===myId){
-                                var r = atan2(mouseY - height / 2, mouseX - width / 2);
+                                //var r = atan2(mouseY - height / 2, mouseX - width / 2);
+                                var r = atan2(mouseY-screeny, mouseX-screenx);
                                 socket.emit('new bullet', players[i].x, players[i].y, cos(r), sin(r), 5, 19, 1, 1);
                             }
                         }

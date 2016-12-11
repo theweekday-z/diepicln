@@ -175,19 +175,19 @@ module.exports = {
                         return;
                     }
                     if(square.y < bullet.y && !d) {
-                        //this.bounceUp(square);
+                        this.bounceUp(square);
                         this.bounceLeft(square);
                         u=true;
                         return;
                     }
                     if(square.x > bullet.x && !l) {
-                        //this.bounceRight(square);
+                        this.bounceRight(square);
                         this.bounceLeft(square);
                         r=true;
                         return;
                     }
                     if(square.y > bullet.y && !u) {
-                        //this.bounceDown(square);
+                        this.bounceDown(square);
                         this.bounceLeft(square);
                         d=true;
                         return;
