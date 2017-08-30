@@ -1,19 +1,9 @@
 'use strict';
 var players = [];
 module.exports = {
-    getPlayers: function() {
-        return players;
-    },
-    setPlayers: function(plyrs) {
-        players = plyrs;
-    },
-    addPlayer: function(plyr){
-        players.push(plyr);
-    },
-    addPlayers: function(plyrs){
-        players.push(plyrs);
-    },
-    delPlayer: function(plyr){
-        players.splice(plyr, 1);
-    }
+    getPlayers: () => {return players},
+    setPlayers: plyrs => players = plyrs,
+    addPlayer: plyr => players.push(plyr),
+    addPlayers: plyrs => players.push(plyrs),
+    delPlayer: plyr => players.splice(plyr, 1)
 };

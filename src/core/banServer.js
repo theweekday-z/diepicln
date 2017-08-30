@@ -1,22 +1,19 @@
 'use strict';
 var banList = [];
-const server = require("../server.js");
+const server = require("../server.js"),
+    pluginService = require('./pluginService.js');
 module.exports = {
-    getBanList: function() {
-        return banList;
-    },
-    setBanList: function(ips) {
+    getBanList: () => {return banList},
+    setBanList: ips => {
         banList = ips;
         server.ban();
     },
-    addBan: function(ip){
-        require('./pluginService.js').getPlugins().forEach((plugin)=> {
+    addBan: ip =>{
+        pluginService.getPlugins().forEach(plugin => {
             plugin.call('beforeBan');
         });
         banList.push(ip);
         server.ban();
     },
-    delBan: function(ip){
-        banList.splice(ip, 1);
-    }
+    delBan: ip => banList.splice(ip, 1)
 };

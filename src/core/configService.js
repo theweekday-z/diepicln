@@ -31,36 +31,28 @@ module.exports = {
     },
     loadConfig: function() {
         let configFiles = glob.sync(__dirname + "/../settings/*.ini");
-        if (configFiles.length===0) {
+        if (configFiles.length === 0) {
           console.log("[\x1b[34mINFO\x1b[0m] No config files found, generating: src/settings/config.ini");
               // Create a new config
               for(var i=0; i<2; i++){
-                  request('https://raw.githubusercontent.com/SharkFinProductions/diepio-multiplayer/master/src/settings/config.ini', function (error, response, code) {
-                    if (!error && response.statusCode == 200) {
-                      fs.writeFileSync(__dirname + '/../settings/config.ini', code);
-                    }
+                  request('https://raw.githubusercontent.com/SharkFinProductions/diepio-multiplayer/master/src/settings/config.ini', (error, response, code) => {
+                    if (!error && response.statusCode == 200) fs.writeFileSync(__dirname + '/../settings/config.ini', code);
                   });
-                  request('https://raw.githubusercontent.com/SharkFinProductions/diepio-multiplayer/master/src/settings/clientConfig.ini', function (error, response, code) {
-                    if (!error && response.statusCode == 200) {
-                      fs.writeFileSync(__dirname + '/../settings/clientConfig.ini', code);
-                    }
+                  request('https://raw.githubusercontent.com/SharkFinProductions/diepio-multiplayer/master/src/settings/clientConfig.ini', (error, response, code) => {
+                    if (!error && response.statusCode == 200) fs.writeFileSync(__dirname + '/../settings/clientConfig.ini', code);
                   });
-                  request('https://raw.githubusercontent.com/SharkFinProductions/diepio-multiplayer/master/src/settings/advConfig.ini', function (error, response, code) {
-                    if (!error && response.statusCode == 200) {
-                      fs.writeFileSync(__dirname + '/../settings/advConfig.ini', code);
-                    }
+                  request('https://raw.githubusercontent.com/SharkFinProductions/diepio-multiplayer/master/src/settings/advConfig.ini', (error, response, code) => {
+                    if (!error && response.statusCode == 200) fs.writeFileSync(__dirname + '/../settings/advConfig.ini', code);
                   });
               }
         }
-        configFiles.forEach((file)=> {
+        configFiles.forEach(file => {
             try {
                 console.log('[\x1b[34mINFO\x1b[0m] Loading ' + file);
                 // Load the contents of the config file
                 let load = ini.parse(fs.readFileSync(file, 'utf-8'));
                 // Replace all the default config's values with the loaded config's values
-                for (let obj in load) {
-                    config[obj] = load[obj];
-                }
+                for (let obj in load) config[obj] = load[obj];
             } catch (err) {
                 console.warn("Error while loading: " + file + " error: " + err);
             }

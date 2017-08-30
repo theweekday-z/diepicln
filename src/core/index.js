@@ -10,7 +10,6 @@ module.exports = {
     banServer: require('./banServer.js'),
     muteServer: require('./muteServer.js'),
     pluginService: require('./pluginService.js'),
-    updates: require('./updates.js'),
     physics: require('./physics.js'),
     plugin: require('./plugin.js')
 };

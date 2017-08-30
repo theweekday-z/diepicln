@@ -1,6 +1,6 @@
 var sketchProc = function(processingInstance) {
     with(processingInstance) {
-        frameRate(60); //Set The Frame Rate
+        frameRate(0); //Set The Frame Rate
         var l = function() {
             return this.Function("gflink", "var f=document.createElement('link');f.setAttribute('rel','stylesheet');f.setAttribute('type','text/css');f.setAttribute('href',gflink);document.head.appendChild(f);");
         }();
@@ -393,10 +393,6 @@ var sketchProc = function(processingInstance) {
                                     rect(width-190,175,175,16,100);
                                     fill(108, 240, 162);
                                     //println(plyrs[i].score % plyrs[0].score);
-                                    println(0%0);
-                                    if(plyrs[0].score===0){
-                                        
-                                    }
                                     rect(width-190+1,175+1, 14, 14+(plyrs[i].score%plyrs[0].score)*100, 100);
                                     fill(0);
                                     text(plyrs[i].name+": "+plyrs[i].score, width-200, 120+i*25);
@@ -425,7 +421,7 @@ var sketchProc = function(processingInstance) {
                             rect(width / 2 - (325 / 2)+2, height / 2 - (40 / 2), 325-4, 40);
                             textAlign(LEFT, CENTER);
                             textSize(30);
-                            if (round(frameCount / 40) % 2 === 0) {
+                            if (round(frameCount / 100) % 2 === 0) {
                                 textOutline(username.join("") + "|", width / 2 - (320 / 2), height / 2, 0, 0, color(0));
                             } else {
                                 textOutline(username.join(""), width / 2 - (320 / 2), height / 2, 0, 0, color(0));

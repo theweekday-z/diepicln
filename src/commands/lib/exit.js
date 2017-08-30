@@ -1,4 +1,2 @@
 'use strict';
-module.exports = function() {
-    process.exit(0);
-};
+module.exports = () => process.exit(0);

@@ -1,19 +1,9 @@
 'use strict';
 var squares = [];
 module.exports = {
-    getSquares: function() {
-        return squares;
-    },
-    setSquares: function(sqrs) {
-        squares = sqrs;
-    },
-    addSquare: function(sqr){
-        squares.push(sqr);
-    },
-    addSquares: function(sqrs){
-        squares.push(sqrs);
-    },
-    delSquare: function(sqr){
-        squares.splice(sqr, 1);
-    }
+    getSquares: () => {return squares},
+    setSquares: sqrs => squares = sqrs,
+    addSquare: sqr => squares.push(sqr),
+    addSquares: sqrs => squares.push(sqrs),
+    delSquare: sqr => squares.splice(sqr, 1)
 };

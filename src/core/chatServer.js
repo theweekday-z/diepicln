@@ -2,22 +2,20 @@
 var messages = [];
 const server = require("../server.js");
 module.exports = {
-    getMessages: function() {
-        return messages;
-    },
-    setMessages: function(msgs) {
+    getMessages: () => {return messages;},
+    setMessages: msgs => {
         messages = msgs;
         server.updateMessages();
     },
-    addMessage: function(msg){
+    addMessage: msg => {
         messages.push(msg);
         server.updateMessages();
     },
-    addMessages: function(msgs){
+    addMessages: msgs => {
         messages.push(msgs);
         server.updateMessages();
     },
-    delMessage: function(msg){
+    delMessage: msg => {
         messages.splice(msg, 1);
         server.updateMessages();
     }
