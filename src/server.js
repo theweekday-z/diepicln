@@ -1,17 +1,16 @@
 'use strict';
-const https = require('https');
-const path = require('path');
-const asyncconsole = require('asyncconsole');
-const socketio = require('socket.io');
-const express = require('express');
-const router = express();
-const server = require('http').createServer(router);
-const io = socketio.listen(server);
+const https = require('https'),
+    path = require('path'),
+    asyncconsole = require('asyncconsole'),
+    socketio = require('socket.io'),
+    express = require('express'),
+    router = express(),
+    server = require('http').createServer(router),
+    io = socketio.listen(server),
+    core = require("./core/index.js"),
+    entities = require("./entities/index.js"),
+    commandList = require("./commands/index.js");
 router.use(express.static(path.resolve(__dirname, 'client')));
-
-const core = require("./core/index.js");
-const entities = require("./entities/index.js");
-const commandList = require("./commands/index.js");
 
 core.configService.init();
 var config = core.configService.getConfig();
@@ -26,40 +25,24 @@ var updateIds = () => {
     Id += 1;
     exports.Id = Id;
 };
-var updateMessages = () => {
-    io.sockets.emit('get messages', core.chatServer.getMessages());
-};
+var updateMessages = () => io.sockets.emit('get messages', core.chatServer.getMessages());
 var updateUsernames = () => {
     io.sockets.emit('get players', core.playerServer.getPlayers());
     io.sockets.emit('get id', Id);
 };
-var updateWorld = () => {
-    io.sockets.emit('update world', config);
-};
-var updatePositions = () => {
-    io.sockets.emit('get players', core.playerServer.getPlayers());
-};
+var updateWorld = () => io.sockets.emit('update world', config);
+var updatePositions = () => io.sockets.emit('get players', core.playerServer.getPlayers());
 var ban = () => {
     for(var i=0; i<core.banServer.getBanList().length; i++){
-        for(var u=0; u<connections.length; u++){
-            if(connections[u].request.client._peername.address===core.banServer.getBanList()[i].ip) connections[u].disconnect();
-        }
+        for(var u=0; u<connections.length; u++) if(connections[u].request.client._peername.address===core.banServer.getBanList()[i].ip) connections[u].disconnect();
     }
 };
-var updateEnemies = () => {
-    io.sockets.emit('update enemies', core.squareServer.getSquares(), core.triangleServer.getTriangles(), core.pentagonServer.getPentagons());
-};
-var updateBullets = () => {
-    io.sockets.emit('update bullets', core.bulletServer.getBullets());
-};
+var updateEnemies = () => io.sockets.emit('update enemies', core.squareServer.getSquares(), core.triangleServer.getTriangles(), core.pentagonServer.getPentagons());
+var updateBullets = () => io.sockets.emit('update bullets', core.bulletServer.getBullets());
 
 io.on('connection', socket => {
-    for(var each in core.banServer.getBanList()){
-        if(socket.request.client._peername.address === core.banServer.getBanList()[each].ip) socket.disconnect();
-    }
-    core.pluginService.getPlugins().forEach((plugin) => {
-        plugin.call("beforeNewUser");
-    });
+    for(var each in core.banServer.getBanList()) if(socket.request.client._peername.address === core.banServer.getBanList()[each].ip) socket.disconnect();
+    core.pluginService.getPlugins().forEach(plugin => plugin.call("beforeNewUser"));
     connections.push(socket);
     if(debug) console.log('Connected: %s players connected', connections.length);
     updateUsernames();
@@ -74,7 +57,7 @@ io.on('connection', socket => {
             updateUsernames();
         }
         connections.splice(connections.indexOf(socket), 1);
-        if(debug){ console.log('Disconnected: %s players connected', connections.length); }
+        if(debug) console.log('Disconnected: %s players connected', connections.length);
     });
 
     socket.on('join game', (data, callback) => {
@@ -139,9 +122,7 @@ server.listen(process.env.PORT || config.port, process.env.IP || "0.0.0.0", () =
     process.title = "diepio private server";
     var cmds = new asyncconsole(' > ', data => {
         var msg = data.trim().toString().split(" ");
-        for (var i in commandList) {
-            if(i === msg[0]) commandList[i](msg);
-        }
+        for (var i in commandList) if(i === msg[0]) commandList[i](msg);
     });
 });
 

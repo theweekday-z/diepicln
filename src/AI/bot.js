@@ -18,15 +18,11 @@ module.exports = id => {
             }
             playerServer.getPlayers().forEach(player => {
                 if(dist(player.x, player.y, bot.x, bot.y) <= 200 && player.id !== id){
-                    bot.r+=0.025;
-                    if(player.x < bot.x) bot.keyMap[39] = true;
-                    else bot.keyMap[39] = false;
-                    if(player.y < bot.y) bot.keyMap[40] = true;
-                    else bot.keyMap[40] = false;
-                    if(player.x > bot.x) bot.keyMap[37] = true;
-                    else bot.keyMap[37] = false;
-                    if(player.y > bot.y) bot.keyMap[38] = true;
-                    else bot.keyMap[38] = false;
+                    bot.r+=0.1;
+                    bot.keyMap[39] = (player.x < bot.x);
+                    bot.keyMap[40] = (player.y < bot.y);
+                    bot.keyMap[37] = (player.x > bot.x);
+                    bot.keyMap[38] = (player.y > bot.y);
                 } else {
                     bot.keyMap[37] = false;
                     bot.keyMap[38] = false;
