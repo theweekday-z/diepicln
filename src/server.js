@@ -16,10 +16,10 @@ core.configService.init();
 var config = core.configService.getConfig();
 core.pluginService.init();
 
-var version = "1.0.0";
-var connections = [];
-var Id=1;
-var debug=false;
+var version = "1.0.0",
+    connections = [],
+    Id=1,
+    debug=false;
 
 var updateIds = () => {
     Id += 1;
@@ -33,9 +33,9 @@ var updateUsernames = () => {
 var updateWorld = () => io.sockets.emit('update world', config);
 var updatePositions = () => io.sockets.emit('get players', core.playerServer.getPlayers());
 var ban = () => {
-    for(var i=0; i<core.banServer.getBanList().length; i++){
-        for(var u=0; u<connections.length; u++) if(connections[u].request.client._peername.address===core.banServer.getBanList()[i].ip) connections[u].disconnect();
-    }
+    core.banServer.getBanList().forEach(ban => {
+        for(var u=0; u<connections.length; u++) if(connections[u].request.client._peername.address===ban.ip) connections[u].disconnect();
+    });
 };
 var updateEnemies = () => io.sockets.emit('update enemies', core.squareServer.getSquares(), core.triangleServer.getTriangles(), core.pentagonServer.getPentagons());
 var updateBullets = () => io.sockets.emit('update bullets', core.bulletServer.getBullets());
@@ -75,13 +75,9 @@ io.on('connection', socket => {
         core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].keyMap = km;
     });
 
-    socket.on('start chatting', () => {
-        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].chatting = true;
-    });
+    socket.on('start chatting', () => core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].chatting = true);
 
-    socket.on('stop chatting', () => {
-        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].chatting = false;
-    });
+    socket.on('stop chatting', () => core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].chatting = false);
 
     socket.on('send message', (data) => {
         var cc=true;
@@ -91,9 +87,7 @@ io.on('connection', socket => {
         if(cc) entities.chat("all", socket.username.name, data);
     });
 
-    socket.on('new bullet', (x, y, xd, yd, speed, d, damage, penetration) => {
-        core.bulletServer.addBullet(new entities.bullet(x, y, xd, yd, speed, d, damage, penetration, socket.username.id));
-    });
+    socket.on('new bullet', (x, y, xd, yd, speed, d, damage, penetration) => core.bulletServer.addBullet(new entities.bullet(x, y, xd, yd, speed, d, damage, penetration, socket.username.id)));
 });
 
 var updates = () => {
