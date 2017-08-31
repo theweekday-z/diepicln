@@ -18,8 +18,7 @@ core.pluginService.init();
 
 var version = "1.0.0",
     connections = [],
-    Id=1,
-    debug=false;
+    Id=1;
 
 var updateIds = () => {
     Id += 1;
@@ -44,7 +43,6 @@ io.on('connection', socket => {
     for(var each in core.banServer.getBanList()) if(socket.request.client._peername.address === core.banServer.getBanList()[each].ip) socket.disconnect();
     core.pluginService.getPlugins().forEach(plugin => plugin.call("beforeNewUser"));
     connections.push(socket);
-    if(debug) console.log('Connected: %s players connected', connections.length);
     updateUsernames();
     socket.username = new entities.player("", 0, 0, Id, socket.request.client._peername.address, socket.id);
     core.playerServer.addPlayer(socket.username);
@@ -57,7 +55,6 @@ io.on('connection', socket => {
             updateUsernames();
         }
         connections.splice(connections.indexOf(socket), 1);
-        if(debug) console.log('Disconnected: %s players connected', connections.length);
     });
 
     socket.on('join game', (data, callback) => {
@@ -79,11 +76,9 @@ io.on('connection', socket => {
 
     socket.on('stop chatting', () => core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].chatting = false);
 
-    socket.on('send message', (data) => {
+    socket.on('send message', data => {
         var cc=true;
-        for(var i=0; i<core.muteServer.getMuteList().length; i++){
-            if(socket.username.id===core.muteServer.getMuteList()[i]) cc=false;
-        }
+        for(var i=0; i<core.muteServer.getMuteList().length; i++) if(socket.username.id===core.muteServer.getMuteList()[i]) cc=false;
         if(cc) entities.chat("all", socket.username.name, data);
     });
 
@@ -111,8 +106,7 @@ var updates = () => {
 var interval = setInterval(updates, 1000/config.fps);
 console.log("[\x1b[36mReady\x1b[0m] Loading server...");
 server.listen(process.env.PORT || config.port, process.env.IP || "0.0.0.0", () => {
-    var addr = server.address();
-    console.log("[Console] Server running node " + process.version + " On " + addr.address + ":" + addr.port);
+    console.log("[Console] Server running node " + process.version + " On " + server.address().address + ":" + server.address().port);
     process.title = "diepio private server";
     var cmds = new asyncconsole(' > ', data => {
         var msg = data.trim().toString().split(" ");

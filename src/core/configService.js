@@ -6,7 +6,7 @@ const ini = require('../modules/ini.js');
 
 var config = {
     port: 3000, //Game Port
-    fps: 20, //Frames Per Second
+    fps: 60, //Frames Per Second
     w: 6000, //World Width
     h: 6000, //World Height
     minimumSquares: 75, //Minimum Amount Of Squares

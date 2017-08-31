@@ -1,5 +1,5 @@
 'use strict';
-class pentagon {
+module.exports = class pentagon {
     constructor(x, y, r, d) {
         this.x = x;
         this.y = y;
@@ -15,6 +15,4 @@ class pentagon {
         this.vel[0] -= this.vel[0] / 20;
         this.vel[1] -= this.vel[1] / 20;
     }
-};
-
-module.exports = pentagon;
+}

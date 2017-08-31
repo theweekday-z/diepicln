@@ -1,5 +1,5 @@
 'use strict';
-class fakePlayer {
+module.exports = class fakePlayer {
     constructor(name, x, y, id, brain) {
         this.name = name;
         this.x = x;
@@ -39,5 +39,3 @@ class fakePlayer {
         this.brain(this.id);
     }
 }
-
-module.exports = fakePlayer;

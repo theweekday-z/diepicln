@@ -1,5 +1,5 @@
 'use strict';
-class triangle {
+module.exports = class triangle {
     constructor(x, y, r, d) {
         this.x = x;
         this.y = y;
@@ -15,6 +15,4 @@ class triangle {
         this.vel[0] -= this.vel[0] / 20;
         this.vel[1] -= this.vel[1] / 20;
     }
-};
-
-module.exports = triangle;
+}

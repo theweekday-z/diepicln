@@ -1,6 +1,6 @@
 'use strict';
 const chat = require('../entities/chat.js');
-class plugin {
+module.exports = class plugin {
     constructor(config) {
         this.name = config.name;
         this.author = config.author;
@@ -48,5 +48,3 @@ class plugin {
         this.commands.push({name: name, callback: callback});
     }
 }
-
-module.exports = plugin;

@@ -1,5 +1,5 @@
 'use strict';
-class player {
+module.exports = class player {
     constructor(name, x, y, id, ip, sid) {
         this.name = name;
         this.x = x;
@@ -38,6 +38,4 @@ class player {
         if (this.keyMap[39] || this.keyMap[68]) this.vel[0] += 0.025;
         if (this.keyMap[37] || this.keyMap[65]) this.vel[0] -= 0.025;
     }
-};
-
-module.exports = player;
+}

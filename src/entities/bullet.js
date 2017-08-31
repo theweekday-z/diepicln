@@ -1,6 +1,6 @@
 'use strict';
 const bulletServer = require('../core/bulletServer.js');
-class bullet {
+module.exports = class bullet {
     constructor(x, y, xd, yd, speed, d, damage, penetration, owner) {
       this.x = x;
       this.y = y;
@@ -21,6 +21,4 @@ class bullet {
         this.t++;
         if(this.t>=500) bulletServer.getBullets().splice(bulletServer.getBullets().indexOf(this), 1);
     }
-};
-
-module.exports = bullet;
+}
