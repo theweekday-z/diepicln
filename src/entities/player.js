@@ -4,8 +4,7 @@ class player {
         this.name = name;
         this.x = x;
         this.y = y;
-        this.xvel = 0;
-        this.yvel = 0;
+        this.vel = [0, 0];
         this.lvl = 0;
         this.score = 1000;
         this.speed = 5;
@@ -21,23 +20,23 @@ class player {
     }
 
     update() {
-        this.x+=this.xvel*2;
-        this.y+=this.yvel*2;
-        this.xvel/=1.015;
-        this.yvel/=1.015;
-        if(this.xvel > 1) this.xvel = 1;
-        if(this.yvel > 1) this.yvel = 1;
-        if(this.xvel < -1) this.xvel = -1;
-        if(this.yvel < -1) this.yvel = -1;
+        this.x+=this.vel[0]*2;
+        this.y+=this.vel[1]*2;
+        this.vel[0]/=1.015;
+        this.vel[1]/=1.015;
+        if(this.vel[0] > 1) this.vel[0] = 1;
+        if(this.vel[1] > 1) this.vel[1] = 1;
+        if(this.vel[0] < -1) this.vel[0] = -1;
+        if(this.vel[1] < -1) this.vel[1] = -1;
         if(this.x>this.config.w) this.x=this.config.w;
         if(this.y>this.config.h) this.y=this.config.h;
         if(this.x<0) this.x=0;
         if(this.y<0) this.y=0;
         if (this.chatting) return;
-        if (this.keyMap[38] || this.keyMap[87]) this.yvel -= 0.025;
-        if (this.keyMap[40] || this.keyMap[83]) this.yvel += 0.025;
-        if (this.keyMap[39] || this.keyMap[68]) this.xvel += 0.025;
-        if (this.keyMap[37] || this.keyMap[65]) this.xvel -= 0.025;
+        if (this.keyMap[38] || this.keyMap[87]) this.vel[1] -= 0.025;
+        if (this.keyMap[40] || this.keyMap[83]) this.vel[1] += 0.025;
+        if (this.keyMap[39] || this.keyMap[68]) this.vel[0] += 0.025;
+        if (this.keyMap[37] || this.keyMap[65]) this.vel[0] -= 0.025;
     }
 };
 
