@@ -83,7 +83,10 @@ var sketchProc = processingInstance => {
         socket.on('get id', data => {if(myId === "") myId = data});
         socket.on('get messages', data => {
             var nmsgs = [];
-            for(var i=0; i<data.length; i++) if(data[i].to.toString() === myId.toString() || data[i].to === "all") nmsgs.push({user: data[i].user, msg: data[i].msg});
+            for(var i=0; i<data.length; i++) {
+                if(data[i].to === "all") nmsgs.push({user: data[i].user, msg: data[i].msg});
+                else if(data[i].to.toString() === myId.toString()) nmsgs.push({user: data[i].user, msg: data[i].msg});
+            }
             nmsgs.reverse();
             messages = nmsgs;
         });

@@ -13,12 +13,12 @@ const https = require('https'),
 router.use(express.static(path.resolve(__dirname, 'client')));
 
 core.configService.init();
-var config = core.configService.getConfig();
-core.pluginService.init();
 
-var version = "1.0.0",
+var config = core.configService.getConfig(),
     connections = [],
     Id=1;
+
+core.pluginService.init();
 
 var updateIds = () => {
     Id += 1;
@@ -78,7 +78,8 @@ io.on('connection', socket => {
     socket.on('send message', data => {
         var cc=true;
         for(var i=0; i<core.muteServer.getMuteList().length; i++) if(socket.username.id===core.muteServer.getMuteList()[i]) cc=false;
-        if(cc) entities.chat("all", socket.username.name, data);
+        if(cc) entities.chat('all', socket.username.name, data)
+        else entities.chat(socket.username.id, '[Server]', 'You are muted and cannot chat!')
     });
 
     socket.on('new bullet', (x, y, xd, yd, speed, d, damage, penetration) => core.bulletServer.addBullet(new entities.bullet(x, y, xd, yd, speed, d, damage, penetration, socket.username.id)));
@@ -105,7 +106,7 @@ var updates = () => {
 var interval = setInterval(updates, 1000/config.fps);
 console.log("[\x1b[36mReady\x1b[0m] Loading server...");
 server.listen(process.env.PORT || config.port, process.env.IP || "0.0.0.0", () => {
-    console.log("[Console] Server running node " + process.version + " On " + server.address().address + ":" + server.address().port);
+    console.log(`[Console] Server running node ${process.version} On ${server.address().address}:${server.address().port}`);
     process.title = "diepio private server";
     var cmds = new asyncconsole(' > ', data => {
         var msg = data.trim().toString().split(" ");

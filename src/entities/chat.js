@@ -3,5 +3,5 @@ const chatServer = require("../core/chatServer.js");
 module.exports = (to, frum,  msg) => {
     pluginService.getPlugins().forEach(plugin => plugin.call('beforeChat'));
     if(to === "all") chatServer.addMessage({msg: msg, user: frum, to: "all"});
-    else chatServer.addMessage({msg: msg, user: frum, to: to});
+    else chatServer.addMessage({msg: msg, user: frum+' --> You', to: to});
 };
