@@ -218,7 +218,7 @@ var sketchProc = processingInstance => {
                     noStroke();
                     rect(width/4,height/4,world.w-width/4*2,world.h-height/4*2);
                     stroke(170);
-                    strokeWeight(0.75);
+                    strokeWeight(0.5);
                     if(!hideGrid) {
                         for (var w = -width*2; w < world.w+width*2; w += 22.5) line(w, -width*2, w, world.w*2);
                         for (var h = -height*2; h < world.h+height*2; h += 22.5) line(-height*2, h, world.h*2, h);

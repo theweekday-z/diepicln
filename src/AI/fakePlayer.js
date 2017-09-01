@@ -1,5 +1,6 @@
 'use strict';
-const config = require('../core/configService.js').getConfig();
+const config = require('../core/configService.js').getConfig(),
+    bot = require('./bot.js');
 module.exports = class fakePlayer {
     constructor(name, x, y, id, brain) {
         this.name = name;
@@ -16,7 +17,6 @@ module.exports = class fakePlayer {
         this.keyMap = {};
         this.playing = false;
         this.sid = "BOT";
-        this.brain = brain;
     }
 
     update() {
@@ -36,6 +36,6 @@ module.exports = class fakePlayer {
         if (this.keyMap[40] || this.keyMap[83]) this.vel[1] += 0.025;
         if (this.keyMap[39] || this.keyMap[68]) this.vel[0] += 0.025;
         if (this.keyMap[37] || this.keyMap[65]) this.vel[0] -= 0.025;
-        this.brain(this.id);
+        bot(this.id);
     }
 }
