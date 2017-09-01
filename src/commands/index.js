@@ -2,30 +2,31 @@
 
 module.exports = {
     "pluginCommands": {},
-    "help": function() {
-        console.log("                       ╭────────────────────────────╮                       ");
-+       console.log("                       │ LIST OF AVAILABLE COMMANDS │                       ");
-+       console.log("╭──────────────────────┴────────────────────────────┴──────────────────────╮");
-+       console.log("|                                                                          |");
-        console.log("|                                 Vanilla                                  |");
-        console.log("|                                ─────────                                 |");
-        console.log("|                                                                          |");
-+       console.log("│ help                         │ Shows help                                |");
-        console.log("| name                         | Changes a player's name                   |");
-        console.log("| ban                          | Bans an IP                                |");
-        console.log("| exit                         | Closes the server                         |");
-        console.log("| banlist                      | Displays banned IPs                       |");
-        console.log("| unban                        | Removes a ban                             |");
-        console.log("| mute                         | Mutes a user                              |");
-        console.log("| mutelist                     | Displays muted users                      |");
-        console.log("| unmute                       | unmutes a user                            |");
-        console.log("| chat                         | Chat using the console                    |");
-        console.log("| tp                           | Teleport a player to any location         |");
-        console.log("| kill                         | Kills a player                            |");
-+       console.log("|                                                                          |");
-        console.log("|                                 Plugins                                  |");
-        console.log("|                                ─────────                                 |");
-        console.log("|                                                                          |");
+    "help": () => {
+        console.log("\n"+
+        "                       ╭────────────────────────────╮                       \n"+
+        "                       │ LIST OF AVAILABLE COMMANDS │                       \n"+
+        "╭──────────────────────┴────────────────────────────┴──────────────────────╮\n"+
+        "|                                                                          |\n"+
+        "|                                 Vanilla                                  |\n"+
+        "|                                ─────────                                 |\n"+
+        "|                                                                          |\n"+
+        "│ help                         │ Shows help                                |\n"+
+        "| name                         | Changes a player's name                   |\n"+
+        "| ban                          | Bans an IP                                |\n"+
+        "| exit                         | Closes the server                         |\n"+
+        "| banlist                      | Displays banned IPs                       |\n"+
+        "| unban                        | Removes a ban                             |\n"+
+        "| mute                         | Mutes a user                              |\n"+
+        "| mutelist                     | Displays muted users                      |\n"+
+        "| unmute                       | unmutes a user                            |\n"+
+        "| chat                         | Chat using the console                    |\n"+
+        "| tp                           | Teleport a player to any location         |\n"+
+        "| kill                         | Kills a player                            |\n"+
+        "|                                                                          |\n"+
+        "|                                 Plugins                                  |\n"+
+        "|                                ─────────                                 |\n"+
+        "|                                                                          |");
         for(var each in this.pluginCommands){
             var str = each.split("");
             while(str.length<29){
@@ -35,17 +36,17 @@ module.exports = {
             while(str2.length<41){
                 str2.push(" ");
             }
-            console.log("| "+str.join("")+"| "+str2.join("")+" |");
+            console.log(`| ${str.join("")}| ${str2.join("")} |`);
         }
-        console.log("|                                                                          |");
-+       console.log("├──────────────────────────────────────────────────────────────────────────┤");
-+       console.log('│                             Diepio commands                              |');
-+       console.log("╰──────────────────────────────────────────────────────────────────────────╯");
+        console.log("|                                                                          |\n"+
+        "├──────────────────────────────────────────────────────────────────────────┤\n"+
+        "│                             Diepio commands                              |\n"+
+        "╰──────────────────────────────────────────────────────────────────────────╯");
     },
     "name": require("./lib/name.js"),
     "playerlist": require("./lib/playerList.js"),
     "ban": require("./lib/ban.js"),
-    "exit": require("./lib/exit.js"),
+    "exit": () => process.exit(0),
     "banlist": require("./lib/banList.js"),
     "unban": require("./lib/unBan.js"),
     "mute": require("./lib/mute.js"),
