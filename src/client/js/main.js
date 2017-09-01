@@ -22,7 +22,7 @@ var sketchProc = processingInstance => {
 
         /** Colors **/
         var colors = {
-            square: color(255,232,105),
+            square: color(254,231,105),
             triangle: color(252,118,119),
             pentagon: color(118,141,252),
             tank_red: color(241,78,84),
@@ -217,14 +217,14 @@ var sketchProc = processingInstance => {
                     fill(colors.gameBackgroundMain);
                     noStroke();
                     rect(width/4,height/4,world.w-width/4*2,world.h-height/4*2);
-                    if(!hideGrid){
-                        stroke(170);
-                        strokeWeight(1);
+                    stroke(170);
+                    strokeWeight(0.75);
+                    if(!hideGrid) {
                         for (var w = -width*2; w < world.w+width*2; w += 22.5) line(w, -width*2, w, world.w*2);
                         for (var h = -height*2; h < world.h+height*2; h += 22.5) line(-height*2, h, world.h*2, h);
                     }
-                    stroke(85);
                     strokeWeight(3);
+                    stroke(204,186,83);
                     for(var i=0; i<squares.length; i++){
                         pushMatrix();
                         translate(squares[i].x, squares[i].y);
@@ -233,6 +233,7 @@ var sketchProc = processingInstance => {
                         rect(-squares[i].d / 2, -squares[i].d / 2, squares[i].d, squares[i].d);
                         popMatrix();
                     }
+                    stroke(189,88,89);
                     for(var i=0; i<triangles.length; i++){
                         pushMatrix();
                         translate(triangles[i].x, triangles[i].y);
@@ -241,6 +242,7 @@ var sketchProc = processingInstance => {
                         triangle(0, 0 - triangles[i].d / 1.25, 0 - triangles[i].d, 0 + triangles[i].d, 0 + triangles[i].d, 0 + triangles[i].d);
                         popMatrix();
                     }
+                    stroke(88,105,189);
                     for(var i=0; i<pentagons.length; i++){
                         pushMatrix();
                         translate(pentagons[i].x, pentagons[i].y);
@@ -257,26 +259,36 @@ var sketchProc = processingInstance => {
                     }
                     strokeWeight(2.5);
                     for(var i=0; i<bullets.length; i++){
-                        if(bullets[i].owner === myId) fill(colors.tank_blue);
-                        else fill(colors.tank_red);
+                        if(bullets[i].owner === myId) {
+                            fill(0,178,225);
+                            stroke(0,133,168);
+                        } else {
+                            fill(241, 78, 84);
+                            stroke(180, 58, 63);
+                        }
                         ellipse(bullets[i].x, bullets[i].y, bullets[i].d, bullets[i].d);
                     }
                     textSize(20);
-                    stroke(62);
                     strokeWeight(2.5);
                     for(var i=0; i<players.length; i++){
                         if(!players[i].playing) break;
                         pushMatrix();
                         translate(players[i].x, players[i].y);
                         rotate(players[i].r);
+                        stroke(114);
                         fill(colors.tank_barrel);
                         rect(-8.75, 5, 17.5, 35);
                         popMatrix();
-                        if(players[i].id === myId) fill(colors.tank_blue);
-                        else fill(colors.tank_red);
+                        if(players[i].id === myId) {
+                            fill(colors.tank_blue);
+                            stroke(0, 133, 168);
+                        } else {
+                            fill(colors.tank_red);
+                            stroke(180, 58, 63)
+                        }
                         ellipse(players[i].x, players[i].y, players[i].d, players[i].d);
                         if(players[i].id!==myId){
-                            fill(255, 255, 255);
+                            fill(255);
                             text(players[i].name, players[i].x, players[i].y);
                         }
                     }
@@ -345,7 +357,7 @@ var sketchProc = processingInstance => {
             }
             textAlign(CENTER,CENTER);
             textSize(20);
-            fill(0,0,0);
+            fill(0);
             text("Framerate: "+round(__frameRate), width-125, 50);
         };
         var preventKeyHandlers = evt => {
