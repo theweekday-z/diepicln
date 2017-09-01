@@ -15,7 +15,7 @@ module.exports = {
     collisions: function() {
         squareServer.getSquares().forEach(square => {
             bulletServer.getBullets().forEach((bullet, index) => {
-                if (this.dist(bullet.x, bullet.y, square.x, square.y) < square.d/2) {
+                if (this.dist(bullet.x, bullet.y, square.x, square.y) < square.d/1.5) {
                     square.vel[0] += bullet.xd * 1.5;
                     square.vel[1] += bullet.yd * 1.5;
                     bulletServer.getBullets().splice(index, 1);
@@ -24,7 +24,7 @@ module.exports = {
         });
         triangleServer.getTriangles().forEach(triangle => {
             bulletServer.getBullets().forEach((bullet, index) => {
-                if (this.dist(bullet.x, bullet.y, triangle.x, triangle.y) < triangle.d/2) {
+                if (this.dist(bullet.x, bullet.y, triangle.x, triangle.y) < triangle.d) {
                     triangle.vel[0] += bullet.xd * 1.5;
                     triangle.vel[1] += bullet.yd * 1.5;
                     bulletServer.getBullets().splice(index, 1);
@@ -33,7 +33,7 @@ module.exports = {
         });
         pentagonServer.getPentagons().forEach(pentagon => {
             bulletServer.getBullets().forEach((bullet, index) => {
-                if (this.dist(bullet.x, bullet.y, pentagon.x, pentagon.y) < pentagon.d/2) {
+                if (this.dist(bullet.x, bullet.y, pentagon.x, pentagon.y) < pentagon.d/1.5) {
                     pentagon.vel[0] += bullet.xd * 1.5;
                     pentagon.vel[1] += bullet.yd * 1.5;
                     bulletServer.getBullets().splice(index, 1);
@@ -44,7 +44,7 @@ module.exports = {
             if(!player.playing) return;
             bulletServer.getBullets().forEach((bullet, index) => {
                 if(bullet.owner === player.id) return;
-                if (this.dist(bullet.x, bullet.y, player.x, player.y) < player.d/2) {
+                if (this.dist(bullet.x, bullet.y, player.x, player.y) < player.d/1.5) {
                     player.vel[0] += bullet.xd * 1.5;
                     player.vel[1] += bullet.yd * 1.5;
                     bulletServer.getBullets().splice(index, 1);
