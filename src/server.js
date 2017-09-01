@@ -49,7 +49,7 @@ io.on('connection', socket => {
     updateWorld();
     updateIds();
 
-    socket.on('disconnect', (data) => {
+    socket.on('disconnect', data => {
         if(socket.username !== undefined){
             core.playerServer.getPlayers().splice(core.playerServer.getPlayers().indexOf(socket.username), 1);
             updateUsernames();
@@ -58,7 +58,6 @@ io.on('connection', socket => {
     });
 
     socket.on('join game', (data, callback) => {
-        callback(true);
         core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].name=data;
         core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].x = ~~(Math.random() * (config.w-100 - 100 + 1) + 100);
         core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].y = ~~(Math.random() * (config.h-100 - 100 + 1) + 100);
