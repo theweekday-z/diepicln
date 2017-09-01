@@ -1,4 +1,5 @@
 'use strict';
+const config = require('../core/configService.js').getConfig();
 module.exports = class player {
     constructor(name, x, y, id, ip, sid) {
         this.name = name;
@@ -16,7 +17,6 @@ module.exports = class player {
         this.chatting = false;
         this.playing = false;
         this.sid = sid;
-        this.config = require("../core/configService.js").getConfig();
     }
 
     update() {
@@ -28,8 +28,8 @@ module.exports = class player {
         if(this.vel[1] > 1) this.vel[1] = 1;
         if(this.vel[0] < -1) this.vel[0] = -1;
         if(this.vel[1] < -1) this.vel[1] = -1;
-        if(this.x>this.config.w) this.x=this.config.w;
-        if(this.y>this.config.h) this.y=this.config.h;
+        if(this.x>config.w) this.x=config.w;
+        if(this.y>config.h) this.y=config.h;
         if(this.x<0) this.x=0;
         if(this.y<0) this.y=0;
         if (this.chatting) return;
