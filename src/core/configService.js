@@ -1,8 +1,8 @@
 'use strict';
-const glob = require('glob');
-const request = require('minirequest');
-const fs = require('fs');
-const ini = require('../modules/ini.js');
+const glob = require('glob'),
+    request = require('minirequest'),
+    fs = require('fs'),
+    ini = require('../modules/ini.js');
 
 var config = {
     port: 3000, //Game Port
@@ -17,7 +17,7 @@ var config = {
     maxPentagons: 75, //Maximum Amount Of Pentagons
     chatMaxMessageLength: 70, //Length of messages in chat
     chatIntervalTime: 2500, //ms between each message
-    chatBlockedWords: "fuck;bitch", //Words to filter from chat
+    chatBlockedWords: "", //Words to filter from chat
     clientMaxName: 15, //Number of maximum characters in the name box
     clientTitle: "" //The Title That The Client Uses
 };
