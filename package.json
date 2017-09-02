@@ -9,13 +9,9 @@
     "express": "latest",
     "glob": "latest",
     "minirequest": "latest",
-    "quickmap": "latest",
     "socket.io": "latest"
   },
   "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "SharkFin Productions",
   "license": "ISC"
 }

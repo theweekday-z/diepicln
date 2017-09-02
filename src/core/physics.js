@@ -20,46 +20,47 @@ module.exports = {
                     bulletServer.getBullets().splice(index, 1);
                 }
             });
-            /** Square+Square collisions **
-            squareServer.getSquares().forEach(sqre => {
-                if (this.dist(player.x, player.y, square.x, square.y) < square.d) {
-                    var dst = [player.x - square.x, player.y - square.y];
+            /** Square+Square collisions **/
+            squareServer.getSquares().forEach((sqre, index) => {
+                if(ind===index) return;
+                if (this.dist(square.x, square.y, sqre.x, sqre.y) < sqre.d) {
+                    var dst = [square.x - sqre.x, square.y - sqre.y];
                     var magnitude = this.dist(0, 0, dst[0], dst[1]);
                     dst[0] /= magnitude;
                     dst[1] /= magnitude;
-                    square.vel[0] -= dst[0]/10;
-                    square.vel[1] -= dst[1]/10;
-                    player.vel[0] += dst[0]/10;
-                    player.vel[1] += dst[1]/10;
+                    sqre.vel[0] -= dst[0]/10;
+                    sqre.vel[1] -= dst[1]/10;
+                    square.vel[0] += dst[0]/10;
+                    square.vel[1] += dst[1]/10;
                 }
             });
-            /** Square+Triangle collisions **
+            /** Square+Triangle collisions **/
             triangleServer.getTriangles().forEach(triangle => {
-              if (this.dist(player.x, player.y, triangle.x, triangle.y) < triangle.d) {
-                  var dst = [player.x - triangle.x, player.y - triangle.y];
+              if (this.dist(square.x, square.y, triangle.x, triangle.y) < triangle.d) {
+                  var dst = [square.x - triangle.x, square.y - triangle.y];
                   var magnitude = this.dist(0, 0, dst[0], dst[1]);
                   dst[0] /= magnitude;
                   dst[1] /= magnitude;
                   triangle.vel[0] -= dst[0]/10;
                   triangle.vel[1] -= dst[1]/10;
-                  player.vel[0] += dst[0]/10;
-                  player.vel[1] += dst[1]/10;
+                  square.vel[0] += dst[0]/10;
+                  square.vel[1] += dst[1]/10;
               }
             });
-            /** Square+Pentagon collisions **
-            /*pentagonServer.getPentagons().forEach(pentagon => {
-              if (this.dist(player.x, player.y, pentagon.x, pentagon.y) < pentagon.d) {
-                  var dst = [player.x - pentagon.x, player.y - pentagon.y];
+            /** Square+Pentagon collisions **/
+            pentagonServer.getPentagons().forEach(pentagon => {
+              if (this.dist(square.x, square.y, pentagon.x, pentagon.y) < pentagon.d) {
+                  var dst = [square.x - pentagon.x, square.y - pentagon.y];
                   var magnitude = this.dist(0, 0, dst[0], dst[1]);
                   dst[0] /= magnitude;
                   dst[1] /= magnitude;
                   pentagon.vel[0] -= dst[0]/10;
                   pentagon.vel[1] -= dst[1]/10;
-                  player.vel[0] += dst[0]/10;
-                  player.vel[1] += dst[1]/10;
+                  square.vel[0] += dst[0]/10;
+                  square.vel[1] += dst[1]/10;
               }
             });
-        */});
+        });
         triangleServer.getTriangles().forEach((triangle, ind) => {
             /** Triangle+Bullet collisions **/
             bulletServer.getBullets().forEach((bullet, index) => {
@@ -69,33 +70,34 @@ module.exports = {
                     bulletServer.getBullets().splice(index, 1);
                 }
             });
-            /** Triangle+Triangle collisions **
-            triangleServer.getTriangles().forEach(tringle => {
-              if (this.dist(player.x, player.y, triangle.x, triangle.y) < triangle.d) {
-                  var dst = [player.x - triangle.x, player.y - triangle.y];
+            /** Triangle+Triangle collisions **/
+            triangleServer.getTriangles().forEach((tringle, index) => {
+              if(ind === index) return;
+              if (this.dist(triangle.x, triangle.y, tringle.x, tringle.y) < tringle.d) {
+                  var dst = [triangle.x - tringle.x, triangle.y - tringle.y];
                   var magnitude = this.dist(0, 0, dst[0], dst[1]);
                   dst[0] /= magnitude;
                   dst[1] /= magnitude;
-                  triangle.vel[0] -= dst[0]/10;
-                  triangle.vel[1] -= dst[1]/10;
-                  player.vel[0] += dst[0]/10;
-                  player.vel[1] += dst[1]/10;
+                  tringle.vel[0] -= dst[0]/10;
+                  tringle.vel[1] -= dst[1]/10;
+                  triangle.vel[0] += dst[0]/10;
+                  triangle.vel[1] += dst[1]/10;
               }
             });
-            /** Triangle+Pentagon collisions **
+            /** Triangle+Pentagon collisions **/
             pentagonServer.getPentagons().forEach(pentagon => {
-              if (this.dist(player.x, player.y, pentagon.x, pentagon.y) < pentagon.d) {
-                  var dst = [player.x - pentagon.x, player.y - pentagon.y];
+              if (this.dist(triangle.x, triangle.y, pentagon.x, pentagon.y) < pentagon.d) {
+                  var dst = [triangle.x - pentagon.x, triangle.y - pentagon.y];
                   var magnitude = this.dist(0, 0, dst[0], dst[1]);
                   dst[0] /= magnitude;
                   dst[1] /= magnitude;
                   pentagon.vel[0] -= dst[0]/10;
                   pentagon.vel[1] -= dst[1]/10;
-                  player.vel[0] += dst[0]/10;
-                  player.vel[1] += dst[1]/10;
+                  triangle.vel[0] += dst[0]/10;
+                  triangle.vel[1] += dst[1]/10;
               }
             });
-        */});
+        });
         pentagonServer.getPentagons().forEach((pentagon, ind) => {
             /** Pentagon+Bullet collisions **/
             bulletServer.getBullets().forEach((bullet, index) => {
@@ -105,20 +107,21 @@ module.exports = {
                     bulletServer.getBullets().splice(index, 1);
                 }
             });
-            /** Pentagon+Pentagon collisions **
-            pentagonServer.getPentagons().forEach(pentgon => {
-              if (this.dist(player.x, player.y, pentagon.x, pentagon.y) < pentagon.d) {
-                  var dst = [player.x - pentagon.x, player.y - pentagon.y];
+            /** Pentagon+Pentagon collisions **/
+            pentagonServer.getPentagons().forEach((pentgon, index) => {
+              if(ind === index) return;
+              if (this.dist(pentagon.x, pentagon.y, pentgon.x, pentgon.y) < pentgon.d) {
+                  var dst = [pentagon.x - pentgon.x, pentagon.y - pentgon.y];
                   var magnitude = this.dist(0, 0, dst[0], dst[1]);
                   dst[0] /= magnitude;
                   dst[1] /= magnitude;
-                  pentagon.vel[0] -= dst[0]/10;
-                  pentagon.vel[1] -= dst[1]/10;
-                  player.vel[0] += dst[0]/10;
-                  player.vel[1] += dst[1]/10;
+                  pentgon.vel[0] -= dst[0]/10;
+                  pentgon.vel[1] -= dst[1]/10;
+                  pentagon.vel[0] += dst[0]/10;
+                  pentagon.vel[1] += dst[1]/10;
               }
             });
-        */});
+        });
         playerServer.getPlayers().forEach(player => {
             if(!player.playing) return;
             /** Player+Bullet collisions **/
