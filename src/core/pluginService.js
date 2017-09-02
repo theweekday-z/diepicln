@@ -22,6 +22,7 @@ module.exports = {
         plgns.forEach(plugin => {
             try {
                 const plgn = require(plugin);
+                console.log('[\x1b[34mINFO\x1b[0m] Loading ' + plgn.name + " v" + plgn.version + " By " + plgn.author);
                 plugins.push(plgn);
                 console.log('[\x1b[32mOK\x1b[0m] Loaded Plugin ' + plgn.name + " v" + plgn.version + " By " + plgn.author);
             } catch (err) {

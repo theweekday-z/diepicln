@@ -53,6 +53,7 @@ module.exports = {
                 let load = ini.parse(fs.readFileSync(file, 'utf-8'));
                 // Replace all the default config's values with the loaded config's values
                 for (let obj in load) config[obj] = load[obj];
+                console.log('[\x1b[32mOK\x1b[0m] Loaded ' + file);
             } catch (err) {
                 console.warn("Error while loading: " + file + " error: " + err);
             }
