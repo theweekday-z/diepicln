@@ -209,7 +209,7 @@ var sketchProc = processingInstance => {
             textSize(12);
             textOutline(txt, x+38, y+12.5, 0, 0, color(255), color(0), 1.25);
         };
-        var draw = () => {
+        draw = () => {
             try {
                 if(players.length === 0) return;
                 if(players[myNum].playing){
@@ -228,29 +228,29 @@ var sketchProc = processingInstance => {
                     }
                     strokeWeight(3);
                     stroke(204,186,83);
+                    fill(colors.square);
                     for(var i=0; i<squares.length; i++){
                         pushMatrix();
                         translate(squares[i].x, squares[i].y);
                         rotate(squares[i].r);
-                        fill(colors.square);
                         rect(-squares[i].d / 2, -squares[i].d / 2, squares[i].d, squares[i].d);
                         popMatrix();
                     }
                     stroke(189,88,89);
+                    fill(colors.triangle);
                     for(var i=0; i<triangles.length; i++){
                         pushMatrix();
                         translate(triangles[i].x, triangles[i].y);
                         rotate(triangles[i].r);
-                        fill(colors.triangle);
                         triangle(0, 0 - triangles[i].d / 1.25, 0 - triangles[i].d, 0 + triangles[i].d, 0 + triangles[i].d, 0 + triangles[i].d);
                         popMatrix();
                     }
                     stroke(88,105,189);
+                    fill(colors.pentagon);
                     for(var i=0; i<pentagons.length; i++){
                         pushMatrix();
                         translate(pentagons[i].x, pentagons[i].y);
                         rotate(pentagons[i].r);
-                        fill(colors.pentagon);
                         beginShape();
                         vertex(0, 0 - pentagons[i].d / 2);
                         vertex(0 + pentagons[i].d / 2, 0 - pentagons[i].d / 8);
@@ -263,10 +263,10 @@ var sketchProc = processingInstance => {
                     strokeWeight(2.5);
                     for(var i=0; i<bullets.length; i++){
                         if(bullets[i].owner === myId) {
-                            fill(0,178,225);
+                            fill(colors.tank_blue);
                             stroke(0,133,168);
                         } else {
-                            fill(241, 78, 84);
+                            fill(colors.tank_red);
                             stroke(180, 58, 63);
                         }
                         ellipse(bullets[i].x, bullets[i].y, bullets[i].d, bullets[i].d);
@@ -303,9 +303,9 @@ var sketchProc = processingInstance => {
                     noStroke();
                     rect(25,height-65,250,40);
                     textAlign(LEFT,TOP);
-                    textSize(25);
-                    fill(200);
-                    text(message.join(""), 30,height-60);
+                    textSize(20);
+                    fill(245);
+                    text(message.join(""), 30,height-55);
                     fill(0);
                     textSize(25);
                     if(messages.length > 10) for(var i=0; i<10; i++) text(messages[i].user+": "+messages[i].msg, 50,height-120-i*25);
@@ -319,7 +319,6 @@ var sketchProc = processingInstance => {
                             fill(22, 22, 22, 200);
                             rect(width-190,175,175,16,100);
                             fill(108, 240, 162);
-                            //println(plyrs[i].score % plyrs[0].score);
                             rect(width-190+1,175+1, 14, 14+(plyrs[i].score%plyrs[0].score)*100, 100);
                             fill(0);
                             text(plyrs[i].name+": "+plyrs[i].score, width-200, 120+i*25);
@@ -373,7 +372,7 @@ var sketchProc = processingInstance => {
         };
 
         document.onkeydown = preventKeyHandlers;
-        var keyTyped = () => {
+        keyTyped = () => {
             if (!players[myNum].playing) if (key.code !== 8 && username.length < 15 && !keys[ENTER]) return username.push(key);
             if(canType){
                 if(keys[ENTER]) {
