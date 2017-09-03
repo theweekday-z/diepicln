@@ -127,7 +127,9 @@ process.on('message', m => {
 });
 
 updates = () => {
-    if(squares.length === 0 || triangles.length === 0 || pentagons.length === 0) return;
+    if (squares.length<config.minimumSquares) squares.push(new square());
+    if (triangles.length<config.minimumTriangles) triangles.push(new triangle());
+    if (pentagons.length<config.minimumPentagons) pentagons.push(new pentagon());
     squares.forEach(square => square.update());
     process.send({type: 'send', call: 'sendSquares', data: squares});
     triangles.forEach(triangle => triangle.update());

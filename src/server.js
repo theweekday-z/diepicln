@@ -109,9 +109,6 @@ var updates = () => {
     core.pluginService.getPlugins().forEach(plugin => {
         if(plugin.run) plugin.run();
     });
-    if (squares.length<config.minimumSquares) enemyServer.send({type: 'send', call: 'addASquare', data: 1});
-    if (triangles.length<config.minimumTriangles) enemyServer.send({type: 'send', call: 'addATriangle', data: 1});
-    if (pentagons.length<config.minimumPentagons) enemyServer.send({type: 'send', call: 'addAPentagon', data: 1});
     core.playerServer.getPlayers().forEach(player => player.update());
     core.bulletServer.getBullets().forEach(bullet => bullet.update());
     core.physics.collisions();
