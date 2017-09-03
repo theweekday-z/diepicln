@@ -34,44 +34,39 @@ enemyServer.on('message', m => {
     }
 });
 
-core.configService.init();
+core.configService.init(); // Init Config Service
 
 var config = core.configService.getConfig(),
     connections = [],
     Id=1;
 
-enemyServer.send({type: 'send', call: 'config', data: config});
+enemyServer.send({type: 'send', call: 'config', data: config}); // Send config Data to Enemy Server
 
-core.pluginService.init();
+core.pluginService.init(); // Init Plugin Service
 
-var updateIds = () => {
-    Id += 1;
-    exports.Id = Id;
-};
-var updateMessages = () => io.sockets.emit('get messages', core.chatServer.getMessages());
-var updateUsernames = () => {
-    io.sockets.emit('get players', core.playerServer.getPlayers());
-    io.sockets.emit('get id', Id);
-};
-var updateWorld = () => io.sockets.emit('update world', config);
-var updatePositions = () => io.sockets.emit('get players', core.playerServer.getPlayers());
-var ban = () => {
-    core.banServer.getBanList().forEach(ban => {
-        for(var u=0; u<connections.length; u++) if(connections[u].request.client._peername.address===ban.ip) connections[u].disconnect();
-    });
-};
-var updateEnemies = () => io.sockets.emit('update enemies', squares, triangles, pentagons);
-var updateBullets = () => io.sockets.emit('update bullets', core.bulletServer.getBullets());
+var updateMessages = () => io.sockets.emit('get messages', core.chatServer.getMessages()),
+  	updateUsernames = () => {
+    		io.sockets.emit('get players', core.playerServer.getPlayers());
+    		io.sockets.emit('get id', Id);
+  	},
+  	updateWorld = () => io.sockets.emit('update world', config),
+  	updatePositions = () => io.sockets.emit('get players', core.playerServer.getPlayers()),
+  	ban = () => {
+    		core.banServer.getBanList().forEach(ban => {
+            for (var u = 0; u < connections.length; u++) if (connections[u].request.client._peername.address === ban.ip) connections[u].disconnect();
+    		});
+  	},
+  	updateEnemies = () => io.sockets.emit('update enemies', squares, triangles, pentagons),
+  	updateBullets = () => io.sockets.emit('update bullets', core.bulletServer.getBullets());
 
 io.on('connection', socket => {
     for(var each in core.banServer.getBanList()) if(socket.request.client._peername.address === core.banServer.getBanList()[each].ip) socket.disconnect();
     core.pluginService.getPlugins().forEach(plugin => plugin.call("beforeNewUser"));
     connections.push(socket);
-    updateUsernames();
     socket.username = new entities.player("", 0, 0, Id, socket.request.client._peername.address, socket.id);
     core.playerServer.addPlayer(socket.username);
+    updateUsernames();
     updateWorld();
-    updateIds();
 
     socket.on('disconnect', data => {
         if(socket.username !== undefined){
@@ -106,7 +101,7 @@ io.on('connection', socket => {
         else entities.chat(socket.username.id, '[Server]', 'You are muted and cannot chat!')
     });
 
-    socket.on('new bullet', (x, y, xd, yd, speed, d, damage, penetration) => core.bulletServer.addBullet(new entities.bullet(x, y, xd, yd, speed, d, damage, penetration, socket.username.id)));
+    socket.on('new bullet', (x, y, xd, yd) => core.bulletServer.addBullet(new entities.bullet(x, y, xd, yd, socket.username.id)));
 });
 
 var updates = () => {
@@ -136,8 +131,8 @@ server.listen(process.env.PORT || config.port, process.env.IP || "0.0.0.0", () =
 
 exports.ban = ban;
 exports.updateMessages = updateMessages;
-exports.Id = Id;
-exports.updateIds = updateIds;
+exports.Id = () => {return Id};
+exports.setId = id => Id = id;
 exports.enemyServer = enemyServer;
 exports.getConfig = () => {return config};
 exports.getSquares = () => {return squares};

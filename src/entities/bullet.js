@@ -2,15 +2,15 @@
 const bulletServer = require('../core/bulletServer.js'),
     config = require('../core/configService.js').getConfig();
 module.exports = class bullet {
-    constructor(x, y, xd, yd, speed, d, damage, penetration, owner) {
+    constructor(x, y, xd, yd, owner) {
       this.x = x;
       this.y = y;
       this.xd = xd;
       this.yd = yd;
-      this.speed = speed;
-      this.d = d;
-      this.damage = damage;
-      this.penetration = penetration;
+      this.speed = 5;
+      this.d = 19;
+      this.damage = 1;
+      this.penetration = 1;
       this.owner = owner;
 
       this.t=0;
