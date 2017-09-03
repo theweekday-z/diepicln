@@ -9,14 +9,38 @@ const https = require('https'),
     io = socketio.listen(server),
     core = require("./core/index.js"),
     entities = require("./entities/index.js"),
-    commandList = require("./commands/index.js");
+    commandList = require("./commands/index.js"),
+    cp = require('child_process'),
+    enemyServer = cp.fork('./core/enemyServer.js');
 router.use(express.static(path.resolve(__dirname, 'client')));
+
+var squares = [],
+    triangles = [],
+    pentagons = [];
+enemyServer.on('message', m => {
+    if(m.type === 'send') {
+        if(m.call === 'sendSquares') {
+            squares = m.data;
+            updateEnemies();
+        }
+        if(m.call === 'sendTriangles') {
+            triangles = m.data;
+            updateEnemies();
+        }
+        if(m.call === 'sendPentagons') {
+            pentagons = m.data;
+            updateEnemies();
+        }
+    }
+});
 
 core.configService.init();
 
 var config = core.configService.getConfig(),
     connections = [],
     Id=1;
+
+enemyServer.send({type: 'send', call: 'config', data: config});
 
 core.pluginService.init();
 
@@ -36,7 +60,7 @@ var ban = () => {
         for(var u=0; u<connections.length; u++) if(connections[u].request.client._peername.address===ban.ip) connections[u].disconnect();
     });
 };
-var updateEnemies = () => io.sockets.emit('update enemies', core.squareServer.getSquares(), core.triangleServer.getTriangles(), core.pentagonServer.getPentagons());
+var updateEnemies = () => io.sockets.emit('update enemies', squares, triangles, pentagons);
 var updateBullets = () => io.sockets.emit('update bullets', core.bulletServer.getBullets());
 
 io.on('connection', socket => {
@@ -90,16 +114,12 @@ var updates = () => {
     core.pluginService.getPlugins().forEach(plugin => {
         if(plugin.run) plugin.run();
     });
-    if (core.squareServer.getSquares().length<config.minimumSquares) core.squareServer.addSquare(new entities.square(~~(Math.random() * (config.w-100 - 100 + 1) + 100), Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), Math.floor(Math.random() * (360 - 0 + 1) + 0), 35));
-    if (core.triangleServer.getTriangles().length<config.minimumTriangles) core.triangleServer.addTriangle(new entities.triangle(~~(Math.random() * (config.w-100 - 100 + 1) + 100), Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), Math.floor(Math.random() * (360 - 0 + 1) + 0), 20));
-    if (core.pentagonServer.getPentagons().length<config.minimumPentagons) core.pentagonServer.addPentagon(new entities.pentagon(~~(Math.random() * (config.w-100 - 100 + 1) + 100), Math.floor(Math.random() * (config.h-100 - 100 + 1) + 100), Math.floor(Math.random() * (360 - 0 + 1) + 0), 60));
-    core.squareServer.getSquares().forEach(square => square.update());
-    core.triangleServer.getTriangles().forEach(triangle => triangle.update());
-    core.pentagonServer.getPentagons().forEach(pentagon => pentagon.update());
+    if (squares.length<config.minimumSquares) enemyServer.send({type: 'send', call: 'addASquare', data: 1});
+    if (triangles.length<config.minimumTriangles) enemyServer.send({type: 'send', call: 'addATriangle', data: 1});
+    if (pentagons.length<config.minimumPentagons) enemyServer.send({type: 'send', call: 'addAPentagon', data: 1});
     core.playerServer.getPlayers().forEach(player => player.update());
     core.bulletServer.getBullets().forEach(bullet => bullet.update());
     core.physics.collisions();
-    updateEnemies();
     updatePositions();
     updateBullets();
 };
@@ -118,3 +138,14 @@ exports.ban = ban;
 exports.updateMessages = updateMessages;
 exports.Id = Id;
 exports.updateIds = updateIds;
+exports.enemyServer = enemyServer;
+exports.getConfig = () => {return config};
+exports.getSquares = () => {return squares};
+exports.getTriangles = () => {return triangles};
+exports.getPentagons = () => {return pentagons};
+exports.removeSquare = index => enemyServer.send({type: 'remove', call: 'removeASquare', data: index});
+exports.removeTriangle = index => enemyServer.send({type: 'remove', call: 'removeATriangle', data: index});
+exports.removePentagon = index => enemyServer.send({type: 'remove', call: 'removeAPentagon', data: index});
+exports.setSquares = data => enemyServer.send({type: 'set', call: 'setSquares', data: data});
+exports.setTriangles = data => enemyServer.send({type: 'set', call: 'setTriangles', data: data});
+exports.setPentagons = data => enemyServer.send({type: 'set', call: 'setPentagons', data: data});

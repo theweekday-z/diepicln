@@ -1,8 +1,6 @@
 const playerServer = require('./playerServer.js'),
-    bulletServer = require('./bulletServer.js'),
-    squareServer = require('./squareServer.js'),
-    triangleServer = require('./triangleServer.js'),
-    pentagonServer = require('./pentagonServer.js');
+    server = require('../server.js'),
+    bulletServer = require('./bulletServer.js');
 module.exports = {
     dist: function(x1, y1, x2, y2) {
         var a = x1 - x2;
@@ -11,8 +9,11 @@ module.exports = {
         return c;
     },
     collisions: function() {
-        squareServer.getSquares().forEach((square, ind) => {
-            /** Triangle+Bullet collisions **/
+        var squares = server.getSquares(),
+            triangles = server.getTriangles(),
+            pentagons = server.getPentagons();
+        squares.forEach((square, ind) => {
+            /** Square+Bullet collisions **/
             bulletServer.getBullets().forEach((bullet, index) => {
                 if (this.dist(bullet.x, bullet.y, square.x, square.y) < square.d/1.5) {
                     square.vel[0] += bullet.xd * 1.5;
@@ -21,7 +22,7 @@ module.exports = {
                 }
             });
             /** Square+Square collisions **/
-            squareServer.getSquares().forEach((sqre, index) => {
+            squares.forEach((sqre, index) => {
                 if(ind===index) return;
                 if (this.dist(square.x, square.y, sqre.x, sqre.y) < sqre.d) {
                     var dst = [square.x - sqre.x, square.y - sqre.y];
@@ -35,7 +36,7 @@ module.exports = {
                 }
             });
             /** Square+Triangle collisions **/
-            triangleServer.getTriangles().forEach(triangle => {
+            triangles.forEach(triangle => {
               if (this.dist(square.x, square.y, triangle.x, triangle.y) < triangle.d) {
                   var dst = [square.x - triangle.x, square.y - triangle.y];
                   var magnitude = this.dist(0, 0, dst[0], dst[1]);
@@ -48,7 +49,7 @@ module.exports = {
               }
             });
             /** Square+Pentagon collisions **/
-            pentagonServer.getPentagons().forEach(pentagon => {
+            pentagons.forEach(pentagon => {
               if (this.dist(square.x, square.y, pentagon.x, pentagon.y) < pentagon.d) {
                   var dst = [square.x - pentagon.x, square.y - pentagon.y];
                   var magnitude = this.dist(0, 0, dst[0], dst[1]);
@@ -61,7 +62,7 @@ module.exports = {
               }
             });
         });
-        triangleServer.getTriangles().forEach((triangle, ind) => {
+        triangles.forEach((triangle, ind) => {
             /** Triangle+Bullet collisions **/
             bulletServer.getBullets().forEach((bullet, index) => {
                 if (this.dist(bullet.x, bullet.y, triangle.x, triangle.y) < triangle.d) {
@@ -71,7 +72,7 @@ module.exports = {
                 }
             });
             /** Triangle+Triangle collisions **/
-            triangleServer.getTriangles().forEach((tringle, index) => {
+            triangles.forEach((tringle, index) => {
               if(ind === index) return;
               if (this.dist(triangle.x, triangle.y, tringle.x, tringle.y) < tringle.d) {
                   var dst = [triangle.x - tringle.x, triangle.y - tringle.y];
@@ -85,7 +86,7 @@ module.exports = {
               }
             });
             /** Triangle+Pentagon collisions **/
-            pentagonServer.getPentagons().forEach(pentagon => {
+            pentagons.forEach(pentagon => {
               if (this.dist(triangle.x, triangle.y, pentagon.x, pentagon.y) < pentagon.d) {
                   var dst = [triangle.x - pentagon.x, triangle.y - pentagon.y];
                   var magnitude = this.dist(0, 0, dst[0], dst[1]);
@@ -98,7 +99,7 @@ module.exports = {
               }
             });
         });
-        pentagonServer.getPentagons().forEach((pentagon, ind) => {
+        pentagons.forEach((pentagon, ind) => {
             /** Pentagon+Bullet collisions **/
             bulletServer.getBullets().forEach((bullet, index) => {
                 if (this.dist(bullet.x, bullet.y, pentagon.x, pentagon.y) < pentagon.d/1.5) {
@@ -108,7 +109,7 @@ module.exports = {
                 }
             });
             /** Pentagon+Pentagon collisions **/
-            pentagonServer.getPentagons().forEach((pentgon, index) => {
+            pentagons.forEach((pentgon, index) => {
               if(ind === index) return;
               if (this.dist(pentagon.x, pentagon.y, pentgon.x, pentgon.y) < pentgon.d) {
                   var dst = [pentagon.x - pentgon.x, pentagon.y - pentgon.y];
@@ -149,7 +150,7 @@ module.exports = {
                 }
             });
             /** Player+Square collisions **/
-            squareServer.getSquares().forEach(square => {
+            squares.forEach(square => {
                 if (this.dist(player.x, player.y, square.x, square.y) < square.d) {
                     var dst = [player.x - square.x, player.y - square.y];
                     var magnitude = this.dist(0, 0, dst[0], dst[1]);
@@ -162,7 +163,7 @@ module.exports = {
                 }
             });
             /** Player+Triangle collisions **/
-            triangleServer.getTriangles().forEach(triangle => {
+            triangles.forEach(triangle => {
               if (this.dist(player.x, player.y, triangle.x, triangle.y) < triangle.d) {
                   var dst = [player.x - triangle.x, player.y - triangle.y];
                   var magnitude = this.dist(0, 0, dst[0], dst[1]);
@@ -175,7 +176,7 @@ module.exports = {
               }
             });
             /** Player+Pentagon collisions **/
-            pentagonServer.getPentagons().forEach(pentagon => {
+            pentagons.forEach(pentagon => {
               if (this.dist(player.x, player.y, pentagon.x, pentagon.y) < pentagon.d) {
                   var dst = [player.x - pentagon.x, player.y - pentagon.y];
                   var magnitude = this.dist(0, 0, dst[0], dst[1]);
@@ -188,5 +189,9 @@ module.exports = {
               }
             });
         });
+        if(squares.length === 0 || triangles.length === 0 || pentagons.length === 0) return;
+        server.setSquares(squares);
+        server.setTriangles(triangles);
+        server.setPentagons(pentagons);
     }
 };
