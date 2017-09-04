@@ -17,11 +17,12 @@ module.exports = class player {
         this.chatting = false;
         this.playing = false;
         this.sid = sid;
+        this.hp = 50 + [2*(this.lvl - 1)];
     }
 
     update() {
-        this.x+=this.vel[0]*2;
-        this.y+=this.vel[1]*2;
+        this.x+=this.vel[0];
+        this.y+=this.vel[1];
         this.vel[0]/=1.015;
         this.vel[1]/=1.015;
         if (this.vel[0] > this.speed) this.vel[0] = this.speed;

@@ -5,6 +5,7 @@ class square {
         this.r = r || ~~(Math.random() * (360 - 0 + 1) + 0);
         this.d = d || 35;
         this.vel = vel || [0, 0];
+        this.hp = 10;
     }
 
     update() {
@@ -25,6 +26,7 @@ class triangle {
         this.r = ~~(Math.random() * (360 - 0 + 1) + 0);
         this.d = 20;
         this.vel = [0, 0];
+        this.hp = 30;
     }
 
     update() {
@@ -45,6 +47,7 @@ class pentagon {
         this.r = ~~(Math.random() * (360 - 0 + 1) + 0);
         this.d = 60;
         this.vel = [0, 0];
+        this.hp = 100;
     }
 
     update() {
