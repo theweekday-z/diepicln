@@ -77,7 +77,3 @@ updates = () => {
     });
     process.send({type: 'send',  call: 'sendPentagons', data: pentagons });
 };
-
-exports.getSquares = () => {return squares};
-exports.getTriangles = () => {return triangles};
-exports.getPentagons = () => {return pentagons};
