@@ -1,4 +1,3 @@
-'use strict';
 const https = require('https'),
     path = require('path'),
     asyncconsole = require('asyncconsole'),

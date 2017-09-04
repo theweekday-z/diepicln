@@ -1,4 +1,4 @@
-'use strict';
+
 const playerServer = require("../../core/playerServer.js");
 module.exports = msg => {
     var nameW=[];

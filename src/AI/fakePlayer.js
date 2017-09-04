@@ -1,4 +1,3 @@
-'use strict';
 const config = require('../core/configService.js').getConfig(),
     bot = require('./bot.js');
 module.exports = class fakePlayer {

@@ -1,4 +1,3 @@
-'use strict';
 var messages = [];
 const server = require("../server.js");
 module.exports = {

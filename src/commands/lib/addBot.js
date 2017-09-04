@@ -1,4 +1,3 @@
-'use strict';
 const playerServer = require("../../core/playerServer.js"),
     fakePlayer = require("../../AI/fakePlayer.js"),
     server = require("../../server.js");

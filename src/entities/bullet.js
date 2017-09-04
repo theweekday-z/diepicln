@@ -1,4 +1,3 @@
-'use strict';
 const bulletServer = require('../core/bulletServer.js'),
     config = require('../core/configService.js').getConfig();
 module.exports = class bullet {

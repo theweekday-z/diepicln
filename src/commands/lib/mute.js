@@ -1,4 +1,3 @@
-'use strict';
 const muteServer = require("../../core/muteServer.js"),
     playerServer = require("../../core/playerServer.js"),
     chat = require("../../entities/chat.js");

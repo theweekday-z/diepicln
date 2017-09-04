@@ -1,4 +1,3 @@
-'use strict';
 var banList = [];
 const server = require("../server.js"),
     pluginService = require('./pluginService.js');

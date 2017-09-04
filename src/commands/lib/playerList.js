@@ -1,4 +1,3 @@
-'use strict';
 module.exports = () => {
     var players = require("../../core/playerServer.js").getPlayers();
     if (players.length == 0) return console.log("[Console] No players are connected to the server");

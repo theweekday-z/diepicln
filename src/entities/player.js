@@ -1,4 +1,3 @@
-'use strict';
 const config = require('../core/configService.js').getConfig();
 module.exports = class player {
     constructor(name, x, y, id, ip, sid) {

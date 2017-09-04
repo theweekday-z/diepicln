@@ -1,4 +1,3 @@
-'use strict';
 const playerServer = require('../core/playerServer.js'),
     bulletServer = require('../core/bulletServer.js'),
     entities = require('../entities/index.js'),

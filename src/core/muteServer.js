@@ -1,4 +1,3 @@
-'use strict';
 var muteList = [];
 module.exports = {
     getMuteList: () => {return muteList},

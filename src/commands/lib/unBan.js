@@ -1,4 +1,4 @@
-'use strict';
+
 const banServer = require("../../core/banServer.js");
 module.exports = msg => {
     for(var i=0; i<banServer.getBanList().length; i++){

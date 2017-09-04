@@ -1,4 +1,3 @@
-'use strict';
 const chat = require("../../entities/chat.js");
 module.exports = msg => {
     var msgW = [];

@@ -1,4 +1,3 @@
-'use strict';
 var players = [];
 module.exports = {
     getPlayers: () => {return players},

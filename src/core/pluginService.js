@@ -1,4 +1,4 @@
-'use strict';
+
 const glob = require('glob');
 const fs = require('fs');
 const ini = require('../modules/ini.js');

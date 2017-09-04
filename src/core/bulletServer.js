@@ -1,4 +1,3 @@
-'use strict';
 var bullets = [];
 module.exports = {
     getBullets: () => {return bullets},

@@ -1,4 +1,3 @@
-'use strict';
 module.exports = {
     bulletServer: require('./bulletServer.js'),
     chatServer: require('./chatServer.js'),

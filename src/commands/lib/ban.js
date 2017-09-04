@@ -1,4 +1,3 @@
-'use strict';
 const banServer = require("../../core/banServer.js"),
     playerServer = require("../../core/playerServer.js");
 module.exports = msg => {
