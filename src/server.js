@@ -35,7 +35,7 @@ var updateMessages = () => io.sockets.emit('get messages', core.chatServer.getMe
     		io.sockets.emit('get players', core.playerServer.getPlayers());
     		io.sockets.emit('get id', Id);
   	},
-  	updateWorld = () => io.sockets.emit('update world', config),
+  	updateWorld = () => io.sockets.emit('update world', {w: config.w, h: config.h}),
   	updatePositions = () => io.sockets.emit('get players', core.playerServer.getPlayers()),
   	ban = () => {
     		core.banServer.getBanList().forEach(ban => {

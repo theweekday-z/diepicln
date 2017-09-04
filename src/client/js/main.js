@@ -59,10 +59,7 @@ var sketchProc = processingInstance => {
         };
 
         /** World **/
-        var world = {
-            w: 0, //World Width
-            h: 0 //World Height
-        };
+        var world = {};
 
         /** Stuff **/
         var squares = [];
