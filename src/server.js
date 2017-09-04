@@ -10,7 +10,13 @@ const path = require('path'),
     commandList = require("./commands/index.js"),
     cp = require('child_process'),
     enemyServer = cp.fork('./core/enemyServer.js');
-router.use(express.static(path.resolve(__dirname, 'client')));
+router.use(express.static(path.resolve(__dirname, 'client'))); // Set client directory
+core.pluginService.init(); // Init Plugin Service
+core.configService.init(); // Init Config Service
+var config = core.configService.getConfig(),
+    connections = [],
+    Id=1;
+enemyServer.send({type: 'send', call: 'config', data: config}); // Send config Data to Enemy Server
 
 var squares = [],
     triangles = [],
@@ -23,16 +29,6 @@ enemyServer.on('message', m => {
         updateEnemies();
     }
 });
-
-core.configService.init(); // Init Config Service
-
-var config = core.configService.getConfig(),
-    connections = [],
-    Id=1;
-
-enemyServer.send({type: 'send', call: 'config', data: config}); // Send config Data to Enemy Server
-
-core.pluginService.init(); // Init Plugin Service
 
 var updateMessages = () => io.sockets.emit('get messages', core.chatServer.getMessages()),
   	updateUsernames = () => {
@@ -67,7 +63,7 @@ io.on('connection', socket => {
     });
 
     socket.on('join game', (data, callback) => {
-        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].name=data;
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].name = data;
         core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].x = ~~(Math.random() * (config.w-100 - 100 + 1) + 100);
         core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].y = ~~(Math.random() * (config.h-100 - 100 + 1) + 100);
         core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].playing = true;
@@ -76,7 +72,7 @@ io.on('connection', socket => {
     });
 
     socket.on('user update', (r, km) => {
-        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].r=r;
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].r = r;
         core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].keyMap = km;
     });
 
@@ -116,13 +112,13 @@ server.listen(process.env.PORT || config.port, process.env.IP || "0.0.0.0", () =
 
 exports.ban = ban;
 exports.updateMessages = updateMessages;
-exports.Id = () => {return Id};
+exports.Id = () => Id;
 exports.setId = id => Id = id;
 exports.enemyServer = enemyServer;
-exports.getConfig = () => {return config};
-exports.getSquares = () => {return squares};
-exports.getTriangles = () => {return triangles};
-exports.getPentagons = () => {return pentagons};
+exports.getConfig = () => config;
+exports.getSquares = () => squares;
+exports.getTriangles = () => triangles;
+exports.getPentagons = () => pentagons;
 exports.removeSquare = index => enemyServer.send({type: 'remove', call: 'removeASquare', data: index});
 exports.removeTriangle = index => enemyServer.send({type: 'remove', call: 'removeATriangle', data: index});
 exports.removePentagon = index => enemyServer.send({type: 'remove', call: 'removeAPentagon', data: index});
