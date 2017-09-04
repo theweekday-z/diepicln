@@ -1,5 +1,4 @@
-const https = require('https'),
-    path = require('path'),
+const path = require('path'),
     asyncconsole = require('asyncconsole'),
     socketio = require('socket.io'),
     express = require('express'),
@@ -18,18 +17,10 @@ var squares = [],
     pentagons = [];
 enemyServer.on('message', m => {
     if(m.type === 'send') {
-        if(m.call === 'sendSquares') {
-            squares = m.data;
-            updateEnemies();
-        }
-        if(m.call === 'sendTriangles') {
-            triangles = m.data;
-            updateEnemies();
-        }
-        if(m.call === 'sendPentagons') {
-            pentagons = m.data;
-            updateEnemies();
-        }
+        if(m.call === 'sendSquares') squares = m.data;
+        if(m.call === 'sendTriangles') triangles = m.data;
+        if(m.call === 'sendPentagons') pentagons = m.data;
+        updateEnemies();
     }
 });
 
