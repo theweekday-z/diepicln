@@ -95,10 +95,8 @@ io.on('connection', socket => {
     socket.on('stop chatting', () => core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].chatting = false);
 
     socket.on('send message', data => {
-        var cc=true;
-        for(var i=0; i<core.muteServer.getMuteList().length; i++) if(socket.username.id===core.muteServer.getMuteList()[i]) cc=false;
-        if(cc) entities.chat('all', socket.username.name, data)
-        else entities.chat(socket.username.id, '[Server]', 'You are muted and cannot chat!')
+        for(var i=0; i<core.muteServer.getMuteList().length; i++) if(socket.username.id===core.muteServer.getMuteList()[i]) return entities.chat(socket.username.id, '[Server]', 'You are muted and cannot chat!');
+        entities.chat('all', socket.username.name, data)
     });
 
     socket.on('new bullet', (x, y, xd, yd) => core.bulletServer.addBullet(new entities.bullet(x, y, xd, yd, socket.username.id)));

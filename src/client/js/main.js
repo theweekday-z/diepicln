@@ -227,7 +227,7 @@ var sketchProc = processingInstance => {
                         for (var h = -height*2; h < world.h+height*2; h += 22.5) line(-height*2, h, world.h*2, h);
                     }
                     strokeWeight(3);
-                    stroke(204,186,83);
+                    stroke(191,174,80);
                     fill(colors.square);
                     for(var i=0; i<squares.length; i++){
                         pushMatrix();
@@ -396,7 +396,7 @@ var sketchProc = processingInstance => {
         mouseClicked = () => {
             if(!players[myNum].playing) return;
             var r = atan2(mouseY-screeny, mouseX-screenx);
-            socket.emit('new bullet', players[myNum].x, players[myNum].y, cos(r), sin(r), 5, 19, 1, 1);
+            socket.emit('new bullet', players[myNum].x, players[myNum].y, cos(r), sin(r));
         };
     }
 };
