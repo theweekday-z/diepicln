@@ -1,66 +1,6 @@
-class square {
-    constructor(x, y, r, d, vel) {
-        this.x = x || ~~(Math.random() * (config.w-100 - 100 + 1) + 100);
-        this.y = y || ~~(Math.random() * (config.h-100 - 100 + 1) + 100);
-        this.r = r || ~~(Math.random() * (360 - 0 + 1) + 0);
-        this.d = d || 35;
-        this.vel = vel || [0, 0];
-        this.hp = 10;
-    }
-
-    update() {
-        this.r+=0.01;
-        this.x += this.vel[0];
-        this.y += this.vel[1];
-        this.vel[0] -= this.vel[0] / 20;
-        this.vel[1] -= this.vel[1] / 20;
-        if (this.x < 0 || this.y < 0 || this.x > config.w || this.y > config.h) {
-            squares.splice(squares.indexOf(this), 1);
-        }
-    }
-}
-class triangle {
-    constructor() {
-        this.x = ~~(Math.random() * (config.w-100 - 100 + 1) + 100);
-        this.y = ~~(Math.random() * (config.h-100 - 100 + 1) + 100);
-        this.r = ~~(Math.random() * (360 - 0 + 1) + 0);
-        this.d = 20;
-        this.vel = [0, 0];
-        this.hp = 30;
-    }
-
-    update() {
-        this.r+=0.01;
-        this.x += this.vel[0];
-        this.y += this.vel[1];
-        this.vel[0] -= this.vel[0] / 20;
-        this.vel[1] -= this.vel[1] / 20;
-        if (this.x < 0 || this.y < 0 || this.x > config.w || this.y > config.h) {
-            triangles.splice(triangles.indexOf(this), 1);
-        }
-    }
-}
-class pentagon {
-    constructor() {
-        this.x = ~~(Math.random() * (config.w-100 - 100 + 1) + 100);
-        this.y = ~~(Math.random() * (config.h-100 - 100 + 1) + 100);
-        this.r = ~~(Math.random() * (360 - 0 + 1) + 0);
-        this.d = 60;
-        this.vel = [0, 0];
-        this.hp = 100;
-    }
-
-    update() {
-        this.r+=0.01;
-        this.x += this.vel[0];
-        this.y += this.vel[1];
-        this.vel[0] -= this.vel[0] / 20;
-        this.vel[1] -= this.vel[1] / 20;
-        if (this.x < 0 || this.y < 0 || this.x > config.w || this.y > config.h) {
-            pentagons.splice(pentagons.indexOf(this), 1);
-        }
-    }
-}
+const square = require('../entities/square.js'),
+    triangle = require('../entities/triangle.js'),
+    pentagon = require('../entities/pentagon.js');
 
 var squares = [],
     triangles = [],
@@ -102,27 +42,15 @@ process.on('message', m => {
         }
     } else if(m.type === 'set') {
         if(m.call === 'setSquares') {
-            for(var each in squares) {
-                for(var all in m.data[each]){
-                    squares[each].vel = m.data[each].vel;
-                }
-            }
+            for(var each in squares) for(var all in m.data[each]) squares[each].vel = m.data[each].vel;
             process.send({type: 'send', call: 'sendSquares', data: squares});
         }
         if(m.call === 'setTriangles') {
-            for(var each in triangles) {
-                for(var all in m.data[each]){
-                    triangles[each].vel = m.data[each].vel;
-                }
-            }
+            for(var each in triangles) for(var all in m.data[each]) triangles[each].vel = m.data[each].vel;
             process.send({type: 'send', call: 'sendTriangles', data: triangles});
         }
         if(m.call === 'setPentagons') {
-            for(var each in pentagons) {
-                for(var all in m.data[each]){
-                    pentagons[each].vel = m.data[each].vel;
-                }
-            }
+            for(var each in pentagons) for(var all in m.data[each]) pentagons[each].vel = m.data[each].vel;
             process.send({type: 'send', call: 'sendPentagons', data: pentagons});
         }
     }
@@ -133,10 +61,23 @@ updates = () => {
     if (squares.length<config.minimumSquares) squares.push(new square());
     if (triangles.length<config.minimumTriangles) triangles.push(new triangle());
     if (pentagons.length<config.minimumPentagons) pentagons.push(new pentagon());
-    squares.forEach(square => square.update());
+    squares.forEach(square => {
+        square.update();
+        if (square.x < 0 || square.y < 0 || square.x > config.w || square.y > config.h) squares.splice(squares.indexOf(square), 1);
+    });
     process.send({type: 'send', call: 'sendSquares', data: squares});
-    triangles.forEach(triangle => triangle.update());
+    triangles.forEach(triangle => {
+        triangle.update();
+        if (triangle.x < 0 || triangle.y < 0 || triangle.x > config.w || triangle.y > config.h) triangles.splice(triangles.indexOf(triangle), 1);
+    });
     process.send({type: 'send',  call: 'sendTriangles', data: triangles});
-    pentagons.forEach(pentagon => pentagon.update());
+    pentagons.forEach(pentagon => {
+        pentagon.update();
+        if (pentagon.x < 0 || pentagon.y < 0 || pentagon.x > config.w || pentagon.y > config.h) pentagons.splice(pentagons.indexOf(pentagon), 1);
+    });
     process.send({type: 'send',  call: 'sendPentagons', data: pentagons });
 };
+
+exports.getSquares = () => {return squares};
+exports.getTriangles = () => {return triangles};
+exports.getPentagons = () => {return pentagons};
