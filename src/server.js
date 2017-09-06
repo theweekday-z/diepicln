@@ -85,7 +85,7 @@ io.on('connection', socket => {
         entities.chat('all', socket.username.name, data)
     });
 
-    socket.on('new bullet', (x, y, xd, yd) => core.bulletServer.addBullet(new entities.bullet(x, y, xd, yd, socket.username.id)));
+    socket.on('new bullet', (xd, yd) => core.bulletServer.addBullet(new entities.bullet(socket.username.x, socket.username.y, xd, yd, socket.username.id)));
 });
 
 var updates = () => {

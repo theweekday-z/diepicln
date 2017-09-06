@@ -393,7 +393,7 @@ var sketchProc = processingInstance => {
         mouseClicked = () => {
             if(!players[myNum].playing) return;
             var r = atan2(mouseY-screeny, mouseX-screenx);
-            socket.emit('new bullet', players[myNum].x, players[myNum].y, cos(r), sin(r));
+            socket.emit('new bullet', cos(r), sin(r));
         };
     }
 };
