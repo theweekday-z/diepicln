@@ -164,29 +164,29 @@ module.exports = {
             });
             /** Player+Triangle collisions **/
             triangles.forEach(triangle => {
-              if (this.dist(player.x, player.y, triangle.x, triangle.y) < triangle.d) {
-                  var dst = [player.x - triangle.x, player.y - triangle.y];
-                  var magnitude = this.dist(0, 0, dst[0], dst[1]);
-                  dst[0] /= magnitude;
-                  dst[1] /= magnitude;
-                  triangle.vel[0] -= dst[0]/10;
-                  triangle.vel[1] -= dst[1]/10;
-                  player.vel[0] += dst[0]/10;
-                  player.vel[1] += dst[1]/10;
-              }
+                if (this.dist(player.x, player.y, triangle.x, triangle.y) < triangle.d) {
+                    var dst = [player.x - triangle.x, player.y - triangle.y];
+                    var magnitude = this.dist(0, 0, dst[0], dst[1]);
+                    dst[0] /= magnitude;
+                    dst[1] /= magnitude;
+                    triangle.vel[0] -= dst[0]/10;
+                    triangle.vel[1] -= dst[1]/10;
+                    player.vel[0] += dst[0]/10;
+                    player.vel[1] += dst[1]/10;
+                }
             });
             /** Player+Pentagon collisions **/
             pentagons.forEach(pentagon => {
-              if (this.dist(player.x, player.y, pentagon.x, pentagon.y) < pentagon.d) {
-                  var dst = [player.x - pentagon.x, player.y - pentagon.y];
-                  var magnitude = this.dist(0, 0, dst[0], dst[1]);
-                  dst[0] /= magnitude;
-                  dst[1] /= magnitude;
-                  pentagon.vel[0] -= dst[0]/10;
-                  pentagon.vel[1] -= dst[1]/10;
-                  player.vel[0] += dst[0]/10;
-                  player.vel[1] += dst[1]/10;
-              }
+                if (this.dist(player.x, player.y, pentagon.x, pentagon.y) < pentagon.d) {
+                    var dst = [player.x - pentagon.x, player.y - pentagon.y];
+                    var magnitude = this.dist(0, 0, dst[0], dst[1]);
+                    dst[0] /= magnitude;
+                    dst[1] /= magnitude;
+                    pentagon.vel[0] -= dst[0]/10;
+                    pentagon.vel[1] -= dst[1]/10;
+                    player.vel[0] += dst[0]/10;
+                    player.vel[1] += dst[1]/10;
+                }
             });
         });
         if(squares.length === 0 || triangles.length === 0 || pentagons.length === 0) return;
