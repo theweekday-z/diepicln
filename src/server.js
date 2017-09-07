@@ -64,8 +64,8 @@ io.on('connection', socket => {
 
     socket.on('join game', (data, callback) => {
         core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].name = data;
-        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].x = ~~(Math.random() * (config.w-100 - 100 + 1) + 100);
-        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].y = ~~(Math.random() * (config.h-100 - 100 + 1) + 100);
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].x = ~~(Math.random() * (config.w - 199) + 100);
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].y = ~~(Math.random() * (config.h - 199) + 100);
         core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].playing = true;
         updateUsernames();
         updateMessages();

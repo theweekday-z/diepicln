@@ -10,8 +10,8 @@ var dist = (x1, y1, x2, y2) => {
 };
 module.exports = bot => {
     if(!bot.playing){
-        bot.x = ~~(Math.random() * (config.w-100 - 100 + 1) + 100);
-        bot.y = ~~(Math.random() * (config.h-100 - 100 + 1) + 100);
+        bot.x = ~~(Math.random() * (config.w - 199) + 100);
+        bot.y = ~~(Math.random() * (config.h - 199) + 100);
         bot.playing = true;
     }
     playerServer.getPlayers().forEach(player => {
