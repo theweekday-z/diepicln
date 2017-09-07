@@ -7,7 +7,7 @@ module.exports = class triangle {
         this.d = d || 20;
         this.vel = vel || [0, 0];
         this.hp = 30;
-        this.sdir = sdir || Math.random(0,1) <= 0.5 ? 0.01 : -0.01;
+        this.sdir = sdir || Math.random(0,1) <= 0.5 ? 0.005 : -0.005;
     }
 
     update() {
