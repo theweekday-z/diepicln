@@ -35,6 +35,6 @@ module.exports = class fakePlayer {
         if (this.keyMap[40] || this.keyMap[83]) this.vel[1] += 0.025;
         if (this.keyMap[39] || this.keyMap[68]) this.vel[0] += 0.025;
         if (this.keyMap[37] || this.keyMap[65]) this.vel[0] -= 0.025;
-        bot(this.id);
+        bot(this);
     }
 }
