@@ -2,13 +2,13 @@ const playerServer = require('./playerServer.js'),
     server = require('../server.js'),
     bulletServer = require('./bulletServer.js');
 module.exports = {
-    dist: function(x1, y1, x2, y2) {
+    dist(x1, y1, x2, y2) {
         var a = x1 - x2;
         var b = y1 - y2;
         var c = Math.sqrt(a * a + b * b);
         return c;
     },
-    collisions: function() {
+    collisions() {
         var squares = server.getSquares(),
             triangles = server.getTriangles(),
             pentagons = server.getPentagons();
@@ -73,17 +73,17 @@ module.exports = {
             });
             /** Triangle+Triangle collisions **/
             triangles.forEach((tringle, index) => {
-              if(ind === index) return;
-              if (this.dist(triangle.x, triangle.y, tringle.x, tringle.y) < tringle.d) {
-                  var dst = [triangle.x - tringle.x, triangle.y - tringle.y];
-                  var magnitude = this.dist(0, 0, dst[0], dst[1]);
-                  dst[0] /= magnitude;
-                  dst[1] /= magnitude;
-                  tringle.vel[0] -= dst[0]/10;
-                  tringle.vel[1] -= dst[1]/10;
-                  triangle.vel[0] += dst[0]/10;
-                  triangle.vel[1] += dst[1]/10;
-              }
+                if(ind === index) return;
+                if (this.dist(triangle.x, triangle.y, tringle.x, tringle.y) < tringle.d) {
+                    var dst = [triangle.x - tringle.x, triangle.y - tringle.y];
+                    var magnitude = this.dist(0, 0, dst[0], dst[1]);
+                    dst[0] /= magnitude;
+                    dst[1] /= magnitude;
+                    tringle.vel[0] -= dst[0]/10;
+                    tringle.vel[1] -= dst[1]/10;
+                    triangle.vel[0] += dst[0]/10;
+                    triangle.vel[1] += dst[1]/10;
+                }
             });
             /** Triangle+Pentagon collisions **/
             pentagons.forEach(pentagon => {
