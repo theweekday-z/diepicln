@@ -15,10 +15,11 @@ module.exports = {
         squares.forEach((square, ind) => {
             /** Square+Bullet collisions **/
             bulletServer.getBullets().forEach((bullet, index) => {
+                if(bullet.dying) return;
                 if (this.dist(bullet.x, bullet.y, square.x, square.y) < square.d/1.5) {
                     square.vel[0] += bullet.xd * 1.5;
                     square.vel[1] += bullet.yd * 1.5;
-                    bulletServer.getBullets().splice(index, 1);
+                    bullet.dying = true;
                 }
             });
             /** Square+Square collisions **/
@@ -65,10 +66,11 @@ module.exports = {
         triangles.forEach((triangle, ind) => {
             /** Triangle+Bullet collisions **/
             bulletServer.getBullets().forEach((bullet, index) => {
+                if(bullet.dying) return;
                 if (this.dist(bullet.x, bullet.y, triangle.x, triangle.y) < triangle.d) {
                     triangle.vel[0] += bullet.xd * 1.5;
                     triangle.vel[1] += bullet.yd * 1.5;
-                    bulletServer.getBullets().splice(index, 1);
+                    bullet.dying = true;
                 }
             });
             /** Triangle+Triangle collisions **/
@@ -102,10 +104,11 @@ module.exports = {
         pentagons.forEach((pentagon, ind) => {
             /** Pentagon+Bullet collisions **/
             bulletServer.getBullets().forEach((bullet, index) => {
+                if(bullet.dying) return;
                 if (this.dist(bullet.x, bullet.y, pentagon.x, pentagon.y) < pentagon.d/1.5) {
                     pentagon.vel[0] += bullet.xd * 1.5;
                     pentagon.vel[1] += bullet.yd * 1.5;
-                    bulletServer.getBullets().splice(index, 1);
+                    bullet.dying = true;
                 }
             });
             /** Pentagon+Pentagon collisions **/
@@ -128,10 +131,11 @@ module.exports = {
             /** Player+Bullet collisions **/
             bulletServer.getBullets().forEach((bullet, index) => {
                 if(bullet.owner === player.id) return;
+                if(bullet.dying) return;
                 if (this.dist(bullet.x, bullet.y, player.x, player.y) < player.d/1.5) {
                     player.vel[0] += bullet.xd * 1.5;
                     player.vel[1] += bullet.yd * 1.5;
-                    bulletServer.getBullets().splice(index, 1);
+                    bullet.dying = true;
                 }
             });
             /** Player+Player collisions **/

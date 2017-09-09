@@ -11,13 +11,20 @@ module.exports = class bullet {
       this.penetration = 1;
       this.owner = owner;
 
-      this.t=0;
+      this.t = 0;
+      this.transparency = 0;
+      this.dying = false;
     }
 
     update() {
         this.x += this.xd*this.speed;
         this.y += this.yd*this.speed;
         this.t++;
-        if(this.t>=250) bulletServer.getBullets().splice(bulletServer.getBullets().indexOf(this), 1);
+        if(this.t >= 500 && this.dying === false) this.dying = true;
+        if(this.dying) {
+            this.transparency += 0.1;
+            this.d+=0.5
+        }
+        if(this.transparency>=1) bulletServer.getBullets().splice(bulletServer.getBullets().indexOf(this), 1);
     }
 }

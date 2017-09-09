@@ -101,7 +101,7 @@ var sketchProc = processingInstance => {
         });
         socket.on('update bullets', data => {
             var stuff = [];
-            for(var i=0; i<data.length; i++) stuff.push({x: data[i].x, y: data[i].y, d: data[i].d, owner: data[i].owner});
+            for(var i=0; i<data.length; i++) stuff.push({x: data[i].x, y: data[i].y, d: data[i].d, owner: data[i].owner, transparency: data[i].transparency});
             bullets = stuff;
         });
 
@@ -260,16 +260,15 @@ var sketchProc = processingInstance => {
                     strokeWeight(2.5);
                     for(var i=0; i<bullets.length; i++){
                         if(bullets[i].owner === myId) {
-                            fill(colors.tank_blue);
-                            stroke(0,133,168);
+                            fill(colors.tank_blue, 255-bullets[i].transparency*255);
+                            stroke(0,133,168, 255-bullets[i].transparency*255);
                         } else {
-                            fill(colors.tank_red);
-                            stroke(180, 58, 63);
+                            fill(colors.tank_red, 255-bullets[i].transparency*255);
+                            stroke(180, 58, 63, 255-bullets[i].transparency*255);
                         }
                         ellipse(bullets[i].x, bullets[i].y, bullets[i].d, bullets[i].d);
                     }
                     textSize(20);
-                    strokeWeight(2.5);
                     for(var i=0; i<players.length; i++){
                         if(!players[i].playing) break;
                         pushMatrix();
