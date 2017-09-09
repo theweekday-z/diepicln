@@ -52,6 +52,7 @@ io.on('connection', socket => {
     core.playerServer.addPlayer(socket.username);
     updateUsernames();
     updateWorld();
+    Id++;
 
     socket.on('disconnect', data => {
         if(socket.username !== undefined){
