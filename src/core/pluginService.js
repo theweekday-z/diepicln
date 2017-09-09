@@ -1,4 +1,3 @@
-
 const glob = require('glob');
 const fs = require('fs');
 const ini = require('../modules/ini.js');
@@ -6,8 +5,8 @@ const ini = require('../modules/ini.js');
 var plugins = [];
 
 module.exports = {
-    getPlugins: () => {return plugins},
-    init: () => {
+    getPlugins () {return plugins},
+    init() {
         //Find Plugins
         if (!fs.existsSync('./plugins')) {
             console.log('[\x1b[31mINFO\x1b[0m] plugins Folder Not Found. Generating...');
@@ -34,11 +33,8 @@ module.exports = {
             const commandList = require('../commands/index.js');
             for(var each in plugin.addToHelp) commandList.pluginCommands[each] = plugin.addToHelp[each];
             for(var each in plugin.commands){
-                if(!commandList[plugin.commands[each].name]){
-                    commandList[plugin.commands[each].name] = plugin.commands[each].callback;
-                } else {
-                    console.log('[Console] Command "'+plugin.commands[each].name+'" From Plugin '+plugin.name+" Could not be added because it already exists in another plugin.");
-                }
+                if(!commandList[plugin.commands[each].name]) commandList[plugin.commands[each].name] = plugin.commands[each].callback;
+                else console.log('[Console] Command "'+plugin.commands[each].name+'" From Plugin '+plugin.name+" Could not be added because it already exists in another plugin.");
             }
         });
         //

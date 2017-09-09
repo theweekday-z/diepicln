@@ -1,4 +1,3 @@
-
 const glob = require('glob'),
     request = require('minirequest'),
     fs = require('fs'),
@@ -23,13 +22,13 @@ var config = {
 };
 
 module.exports = {
-    getConfig: function() {
+    getConfig() {
         return config;
     },
-    init: function() {
+    init() {
         this.loadConfig();
     },
-    loadConfig: function() {
+    loadConfig() {
         let configFiles = glob.sync(__dirname + "/../settings/*.ini");
         if (configFiles.length === 0) {
           console.log("[\x1b[34mINFO\x1b[0m] No config files found, generating: src/settings/config.ini");
