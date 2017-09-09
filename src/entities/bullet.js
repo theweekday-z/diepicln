@@ -1,5 +1,4 @@
-const bulletServer = require('../core/bulletServer.js'),
-    config = require('../core/configService.js').getConfig();
+const bulletServer = require('../core/bulletServer.js');
 module.exports = class bullet {
     constructor(x, y, xd, yd, owner) {
       this.x = x;
@@ -19,6 +18,6 @@ module.exports = class bullet {
         this.x += this.xd*this.speed;
         this.y += this.yd*this.speed;
         this.t++;
-        if(this.t>=250 || this.x < 0 || this.y < 0 || this.x > config.w || this.y > config.h) bulletServer.getBullets().splice(bulletServer.getBullets().indexOf(this), 1);
+        if(this.t>=250) bulletServer.getBullets().splice(bulletServer.getBullets().indexOf(this), 1);
     }
 }

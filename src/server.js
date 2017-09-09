@@ -63,6 +63,7 @@ io.on('connection', socket => {
     });
 
     socket.on('join game', (data, callback) => {
+        if(socket.username.playing) return;
         core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].name = data;
         core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].x = ~~(Math.random() * (config.w - 199) + 100);
         core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].y = ~~(Math.random() * (config.h - 199) + 100);
@@ -72,20 +73,31 @@ io.on('connection', socket => {
     });
 
     socket.on('user update', (r, km) => {
+        if(!socket.username.playing) return;
         core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].r = r;
         core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].keyMap = km;
     });
 
-    socket.on('start chatting', () => core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].chatting = true);
+    socket.on('start chatting', () => {
+        if(!socket.username.playing) return;
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].chatting = true;
+    });
 
-    socket.on('stop chatting', () => core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].chatting = false);
+    socket.on('stop chatting', () => {
+        if(!socket.username.playing) return;
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].chatting = false;
+    });
 
     socket.on('send message', data => {
+        if(!socket.username.playing) return;
         for(var i=0; i<core.muteServer.getMuteList().length; i++) if(socket.username.id===core.muteServer.getMuteList()[i]) return entities.chat(socket.username.id, '[Server]', 'You are muted and cannot chat!');
         entities.chat('all', socket.username.name, data)
     });
 
-    socket.on('new bullet', (xd, yd) => core.bulletServer.addBullet(new entities.bullet(socket.username.x, socket.username.y, xd, yd, socket.username.id)));
+    socket.on('new bullet', (xd, yd) => {
+        if(!socket.username.playing) return;
+        core.bulletServer.addBullet(new entities.bullet(socket.username.x, socket.username.y, xd, yd, socket.username.id));
+    });
 });
 
 var updates = () => {
