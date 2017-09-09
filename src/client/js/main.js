@@ -68,9 +68,7 @@ var sketchProc = processingInstance => {
             bullets = [];
 
         socket.on('get players', data => {
-            var stuffs = [];
-            for(var i=0; i<data.length; i++) stuffs.push({x: data[i].x, y: data[i].y, name: data[i].name, score: data[i].score, lvl: data[i].lvl, r: data[i].r, d: data[i].d, id: data[i].id, playing: data[i].playing});
-            players = stuffs;
+            players = data;
             var num = 0;
             for(var i=0; i<players.length; i++){
                 if(players[i].id===myId) myNum = num
@@ -79,30 +77,16 @@ var sketchProc = processingInstance => {
         });
         socket.on('get id', data => {if(myId === "") myId = data});
         socket.on('get messages', data => {
-            var nmsgs = [];
-            for(var i=0; i<data.length; i++) {
-                if(data[i].to === "all") nmsgs.push({user: data[i].user, msg: data[i].msg});
-                else if(data[i].to.toString() === myId.toString()) nmsgs.push({user: data[i].user, msg: data[i].msg});
-            }
-            nmsgs.reverse();
-            messages = nmsgs;
+            messages = data.reverse();
         });
         socket.on('update world', data => world = data);
         socket.on('update enemies', (s, t, p) => {
-            var stuff = [];
-            for(var i=0; i<s.length; i++) stuff.push({x: s[i].x, y: s[i].y, r: s[i].r, d: s[i].d});
-            squares = stuff;
-            stuff = [];
-            for(var i=0; i<t.length; i++) stuff.push({x: t[i].x, y: t[i].y, r: t[i].r, d: t[i].d});
-            triangles = stuff;
-            stuff = [];
-            for(var i=0; i<p.length; i++) stuff.push({x: p[i].x, y: p[i].y, r: p[i].r, d: p[i].d});
-            pentagons = stuff;
+            squares = s;
+            triangles = t;
+            pentagons = p;
         });
         socket.on('update bullets', data => {
-            var stuff = [];
-            for(var i=0; i<data.length; i++) stuff.push({x: data[i].x, y: data[i].y, d: data[i].d, owner: data[i].owner, transparency: data[i].transparency});
-            bullets = stuff;
+            bullets = data;
         });
 
         var keys = {},
@@ -116,7 +100,7 @@ var sketchProc = processingInstance => {
             y: 0,
             right: -world.w,
             bottom: -world.h,
-            run: () => {
+            run() {
                 this.x = players[myNum].x;
                 this.y = players[myNum].y;
                 this.right = -world.w;
@@ -134,7 +118,7 @@ var sketchProc = processingInstance => {
             y: height-135,
             ax: 0,
             ay: 0,
-            run: () => {
+            run() {
                 if (this.x !== width - 135 || this.y !== height - 135) {
                     this.x = width - 135;
                     this.y = height - 135;
