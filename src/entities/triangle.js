@@ -9,8 +9,8 @@ module.exports = class triangle {
         this.hp = 30;
         this.sdir = sdir || Math.random(0,1) <= 0.5 ? 0.005 : -0.005;
 
-        this.xdir = Math.random() * 0.25 - 0.125;
-        this.ydir = Math.random() * 0.25 - 0.125;
+        this.xdir = Math.random() * (0.125 - -0.125) - 0.125;
+        this.ydir = Math.random() * (0.125 - -0.125) - 0.125;
     }
 
     update() {

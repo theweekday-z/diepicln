@@ -68,17 +68,17 @@ updates = () => {
             square.x = 0;
         }
         if (square.y < 0) {
-            square.ydir = Math.random() * 0.25;
+            square.ydir = Math.random() * 0.125;
             square.vel[1] += 2;
             square.y = 0;
         }
         if (square.x > config.w) {
-            square.xdir = Math.random() * 0.25 - 0.375;
+            square.xdir = Math.random() * (0 - -0.125) - 0.125;
             square.vel[0] -= 2;
             square.x = config.w;
         }
         if (square.y > config.h) {
-            square.ydir = Math.random() * 0.25 - 0.375;
+            square.ydir = Math.random() * (0 - -0.125) - 0.125;
             square.vel[1] -= 2;
             square.y = config.h;
         }
@@ -88,22 +88,22 @@ updates = () => {
     process.send({type: 'send', call: 'sendSquares', data: squares});
     triangles.forEach(triangle => {
         if (triangle.x < 0) {
-            triangle.xdir = Math.random() * 0.25;
+            triangle.xdir = Math.random() * 0.125;
             triangle.vel[0] += 2;
             triangle.x = 0;
         }
         if (triangle.y < 0) {
-            triangle.ydir = Math.random() * 0.25;
+            triangle.ydir = Math.random() * 0.125;
             triangle.vel[1] += 2;
             triangle.y = 0;
         }
         if (triangle.x > config.w) {
-            triangle.xdir = Math.random() * 0.25 - 0.375;
+            triangle.xdir = Math.random() * (0 - -0.125) - 0.125;
             triangle.vel[0] -= 2;
             triangle.x = config.w;
         }
         if (triangle.y > config.h) {
-            triangle.ydir = Math.random() * 0.25 - 0.375;
+            triangle.ydir = Math.random() * (0 - -0.125) - 0.125;
             triangle.vel[1] -= 2;
             triangle.y = config.h;
         }
@@ -113,22 +113,22 @@ updates = () => {
     process.send({type: 'send',  call: 'sendTriangles', data: triangles});
     pentagons.forEach(pentagon => {
         if (pentagon.x < 0) {
-            pentagon.xdir = Math.random() * 0.25;
+            pentagon.xdir = Math.random() * 0.125;
             pentagon.vel[0] += 2;
             pentagon.x = 0;
         }
         if (pentagon.y < 0) {
-            pentagon.ydir = Math.random() * 0.25;
+            pentagon.ydir = Math.random() * 0.125;
             pentagon.vel[1] += 2;
             pentagon.y = 0;
         }
         if (pentagon.x > config.w) {
-            pentagon.xdir = Math.random() * 0.25 - 0.375;
+            pentagon.xdir = Math.random() * (0 - -0.125) - 0.125;
             pentagon.vel[0] -= 2;
             pentagon.x = config.w;
         }
         if (pentagon.y > config.h) {
-            pentagon.ydir = Math.random() * 0.25 - 0.375;
+            pentagon.ydir = Math.random() * (0 - -0.125) - 0.125;
             pentagon.vel[1] -= 2;
             pentagon.y = config.h;
         }
