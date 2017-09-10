@@ -22,8 +22,8 @@ module.exports = class bullet {
         this.t++;
         if(this.t >= 500 && this.dying === false) this.dying = true;
         if(this.dying) {
-            this.transparency += 0.1;
-            this.d+=0.5
+            this.transparency += 0.15;
+            this.d+=1.75;
         }
         if(this.transparency>=1) bulletServer.getBullets().splice(bulletServer.getBullets().indexOf(this), 1);
     }
