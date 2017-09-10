@@ -62,18 +62,78 @@ updates = () => {
     if (triangles.length<config.minimumTriangles) triangles.push(new triangle());
     if (pentagons.length<config.minimumPentagons) pentagons.push(new pentagon());
     squares.forEach(square => {
+        if (square.x < 0) {
+            square.xdir = Math.random() * 0.25;
+            square.vel[0] += 2;
+            square.x = 0;
+        }
+        if (square.y < 0) {
+            square.ydir = Math.random() * 0.25;
+            square.vel[1] += 2;
+            square.y = 0;
+        }
+        if (square.x > config.w) {
+            square.xdir = Math.random() * 0.25 - 0.375;
+            square.vel[0] -= 2;
+            square.x = config.w;
+        }
+        if (square.y > config.h) {
+            square.ydir = Math.random() * 0.25 - 0.375;
+            square.vel[1] -= 2;
+            square.y = config.h;
+        }
         square.update();
-        if (square.x < 0 || square.y < 0 || square.x > config.w || square.y > config.h) squares.splice(squares.indexOf(square), 1);
+        //squares.splice(squares.indexOf(square), 1);
     });
     process.send({type: 'send', call: 'sendSquares', data: squares});
     triangles.forEach(triangle => {
+        if (triangle.x < 0) {
+            triangle.xdir = Math.random() * 0.25;
+            triangle.vel[0] += 2;
+            triangle.x = 0;
+        }
+        if (triangle.y < 0) {
+            triangle.ydir = Math.random() * 0.25;
+            triangle.vel[1] += 2;
+            triangle.y = 0;
+        }
+        if (triangle.x > config.w) {
+            triangle.xdir = Math.random() * 0.25 - 0.375;
+            triangle.vel[0] -= 2;
+            triangle.x = config.w;
+        }
+        if (triangle.y > config.h) {
+            triangle.ydir = Math.random() * 0.25 - 0.375;
+            triangle.vel[1] -= 2;
+            triangle.y = config.h;
+        }
         triangle.update();
-        if (triangle.x < 0 || triangle.y < 0 || triangle.x > config.w || triangle.y > config.h) triangles.splice(triangles.indexOf(triangle), 1);
+        //triangles.splice(triangles.indexOf(triangle), 1);
     });
     process.send({type: 'send',  call: 'sendTriangles', data: triangles});
     pentagons.forEach(pentagon => {
+        if (pentagon.x < 0) {
+            pentagon.xdir = Math.random() * 0.25;
+            pentagon.vel[0] += 2;
+            pentagon.x = 0;
+        }
+        if (pentagon.y < 0) {
+            pentagon.ydir = Math.random() * 0.25;
+            pentagon.vel[1] += 2;
+            pentagon.y = 0;
+        }
+        if (pentagon.x > config.w) {
+            pentagon.xdir = Math.random() * 0.25 - 0.375;
+            pentagon.vel[0] -= 2;
+            pentagon.x = config.w;
+        }
+        if (pentagon.y > config.h) {
+            pentagon.ydir = Math.random() * 0.25 - 0.375;
+            pentagon.vel[1] -= 2;
+            pentagon.y = config.h;
+        }
         pentagon.update();
-        if (pentagon.x < 0 || pentagon.y < 0 || pentagon.x > config.w || pentagon.y > config.h) pentagons.splice(pentagons.indexOf(pentagon), 1);
+        //pentagons.splice(pentagons.indexOf(pentagon), 1);
     });
     process.send({type: 'send',  call: 'sendPentagons', data: pentagons });
 };
