@@ -1,5 +1,4 @@
-const path = require('path'),
-    asyncconsole = require('asyncconsole'),
+const asyncconsole = require('asyncconsole'),
     express = require('express'),
     router = express(),
     server = require('http').createServer(router),
@@ -7,9 +6,8 @@ const path = require('path'),
     core = require("./core/index.js"),
     entities = require("./entities/index.js"),
     commandList = require("./commands/index.js"),
-    cp = require('child_process'),
-    enemyServer = cp.fork('./core/enemyServer.js');
-router.use(express.static(path.resolve(__dirname, 'client'))); // Set client directory
+    enemyServer = require('child_process').fork('./core/enemyServer.js');
+router.use(express.static(require('path').resolve(__dirname, 'client'))); // Set client directory
 core.pluginService.init(); // Init Plugin Service
 core.configService.init(); // Init Config Service
 var config = core.configService.getConfig(),
