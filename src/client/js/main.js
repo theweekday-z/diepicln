@@ -9,13 +9,13 @@ var sketchProc = processingInstance => {
         textSize(20);
 
         var socket = io.connect(),
-            username =  [],
+            username = [],
             players = [],
             message = [],
             messages = [],
             canType = true,
-            myId="",
-            myNum="",
+            myId,
+            myNum,
             zoom = 0,
             gameMode = "ffa",
             hideGrid = false;
@@ -75,7 +75,7 @@ var sketchProc = processingInstance => {
                 else num++;
             }
         });
-        socket.on('get id', data => {if(myId === "") myId = data});
+        socket.on('get id', data => {if(!myId) myId = data});
         socket.on('get messages', data => {
             messages = data.reverse();
         });
@@ -123,7 +123,7 @@ var sketchProc = processingInstance => {
                     this.x = width - 135;
                     this.y = height - 135;
                 }
-                if(myNum !== ""){
+                if(myNum){
                     this.ax = 115 * players[myNum].x / world.w;
                     this.ay = 115 * players[myNum].y / world.h;
                 }
@@ -143,7 +143,7 @@ var sketchProc = processingInstance => {
         };
 
         var overlays = () => {
-            if(myNum === "") return;
+            if(!myNum) return;
             noStroke();
             fill(22, 22, 22, 200);
             rect(width / 2 - (250 / 2), height - 60, 250, 17.5, 100);
@@ -270,7 +270,7 @@ var sketchProc = processingInstance => {
                             stroke(180, 58, 63)
                         }
                         ellipse(players[i].x, players[i].y, players[i].d, players[i].d);
-                        if(players[i].id!==myId){
+                        if(players[i].id){
                             fill(255);
                             text(players[i].nick, players[i].x, players[i].y);
                         }
