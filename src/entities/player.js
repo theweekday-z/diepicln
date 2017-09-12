@@ -5,9 +5,8 @@ module.exports = class player {
         this.x = x;
         this.y = y;
         this.vel = [0, 0];
-        this.lvl = 0;
+        this.level = 0;
         this.score = 0;
-        this.speed = 2;
         this.r = 0;
         this.d = 40;
         this.id = id;
@@ -16,18 +15,88 @@ module.exports = class player {
         this.chatting = false;
         this.playing = false;
         this.sid = sid;
-        this.hp = 50 + [2*(this.lvl - 1)];
+        this.stats = {
+            healthRegen: {
+                level: 0,
+                value: 1
+            },
+            maxHealth: {
+                level: 0,
+                value: 50 + (2 * this.level - 1)
+            },
+            bodyDamage: {
+                level: 0,
+                value: 20
+            },
+            bulletSpeed: {
+                level: 0,
+                value: 1
+            },
+            bulletPenetration: {
+                level: 0,
+                value: 1
+            },
+            bulletDamage: {
+                level: 0,
+                value: 7
+            },
+            reload: {
+                level: 0,
+                value: 0
+            },
+            movementSpeed: {
+                level: 0,
+                value: 2
+            }
+        }
+    }
+
+    setHealthRegen() {
+        //
+    }
+
+    setMaxHealth(level) {
+        level ? this.stats.maxHealth.level = level : this.stats.maxHealth.level++;
+        return this.stats.maxHealth.value = (50 + (2 * this.level - 1)) + (20 * this.stats.maxHealth.level);
+    }
+
+    setBodyDamage() {
+        //
+    }
+
+    setBulletSpeed() {
+        //
+    }
+
+    setBulletPenetration() {
+        //
+    }
+
+    setBulletDamage() {
+        //
+    }
+
+    setReload() {
+        //
+    }
+
+    setMovementSpeed() {
+        //
+    }
+
+    move() {
+      this.x += this.vel[0];
+      this.y += this.vel[1];
     }
 
     update() {
-        this.x+=this.vel[0];
-        this.y+=this.vel[1];
+        this.move();
         this.vel[0]/=1.015;
         this.vel[1]/=1.015;
-        if (this.vel[0] > this.speed) this.vel[0] = this.speed;
-        if (this.vel[1] > this.speed) this.vel[1] = this.speed;
-        if (this.vel[0] < -this.speed) this.vel[0] = -this.speed;
-        if (this.vel[1] < -this.speed) this.vel[1] = -this.speed;
+        if (this.vel[0] > this.stats.movementSpeed.value) this.vel[0] = this.stats.movementSpeed.value;
+        if (this.vel[1] > this.stats.movementSpeed.value) this.vel[1] = this.stats.movementSpeed.value;
+        if (this.vel[0] < -this.stats.movementSpeed.value) this.vel[0] = -this.stats.movementSpeed.value;
+        if (this.vel[1] < -this.stats.movementSpeed.value) this.vel[1] = -this.stats.movementSpeed.value;
         if (this.x>config.w) this.x=config.w;
         if (this.y>config.h) this.y=config.h;
         if (this.x<0) this.x=0;

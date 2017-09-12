@@ -159,7 +159,7 @@ var sketchProc = processingInstance => {
             textSize(11);
             textOutline("Score: " + players[myNum].score, width / 2, height - 51, 0, 0, color(240), color(61), 1);
             textSize(12.5);
-            textOutline("Lvl " + players[myNum].lvl + " Tank", width / 2, height - 30, 0, 0, color(240), color(61), 1);
+            textOutline("Level " + players[myNum].level + " Tank", width / 2, height - 30, 0, 0, color(240), color(61), 1);
             textSize(32.5);
             textOutline(players[myNum].name, width / 2, height - 80, 0, 0, color(240), color(61), 3.5);
         };
