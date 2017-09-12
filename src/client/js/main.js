@@ -200,7 +200,7 @@ var sketchProc = processingInstance => {
                     mapCamera.run();
                     fill(colors.gameBackgroundMain);
                     noStroke();
-                    rect(width/4,height/4,world.w-width/4*2,world.h-height/4*2);
+                    rect(width/4, height/4, world.w-width/4*2, world.h-height/4*2);
                     stroke(170);
                     strokeWeight(0.5);
                     if(!hideGrid) {

@@ -97,7 +97,7 @@ io.on('connection', socket => {
     });
 });
 
-var updates = () => {
+const updates = setInterval(() => {
     if (core.playerServer.getPlayers().length == 0) return;
     core.pluginService.getPlugins().forEach(plugin => {
         if(plugin.run) plugin.run();
@@ -107,8 +107,7 @@ var updates = () => {
     core.physics.collisions();
     updatePositions();
     updateBullets();
-};
-var interval = setInterval(updates, 1000/config.fps);
+}, 1000/config.fps);
 console.log("[\x1b[34mINFO\x1b[0m] Loading server...");
 server.listen(process.env.PORT || config.port, process.env.IP || "0.0.0.0", () => {
     console.log(`[\x1b[36mConsole\x1b[0m] Server running node ${process.version} On port ${server.address().port}`);
