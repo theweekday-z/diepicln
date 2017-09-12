@@ -51,8 +51,8 @@ module.exports = class player {
         }
     }
 
-    setHealthRegen() {
-        //
+    setHealthRegen(level) {
+        level ? this.stats.healthRegen.level = level : this.stats.healthRegen.level++;
     }
 
     setMaxHealth(level) {
@@ -60,28 +60,28 @@ module.exports = class player {
         return this.stats.maxHealth.value = (50 + (2 * this.level - 1)) + (20 * this.stats.maxHealth.level);
     }
 
-    setBodyDamage() {
-        //
+    setBodyDamage(level) {
+        level ? this.stats.bodyDamage.level = level : this.stats.bodyDamage.level++;
     }
 
-    setBulletSpeed() {
-        //
+    setBulletSpeed(level) {
+        level ? this.stats.bulletSpeed.level = level : this.stats.bulletSpeed.level++;
     }
 
-    setBulletPenetration() {
-        //
+    setBulletPenetration(level) {
+        level ? this.stats.bulletPenetration.level = level : this.stats.bulletPenetration.level++;
     }
 
-    setBulletDamage() {
-        //
+    setBulletDamage(level) {
+        level ? this.stats.bulletDamage.level = level : this.stats.bulletDamage.level++;
     }
 
-    setReload() {
-        //
+    setReload(level) {
+        level ? this.stats.reload.level = level : this.stats.reload.level++;
     }
 
-    setMovementSpeed() {
-        //
+    setMovementSpeed(level) {
+        level ? this.stats.movementSpeed.level = level : this.stats.movementSpeed.level++;
     }
 
     move() {
