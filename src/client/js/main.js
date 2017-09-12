@@ -161,7 +161,7 @@ var sketchProc = processingInstance => {
             textSize(12.5);
             textOutline("Level " + players[myNum].level + " Tank", width / 2, height - 30, 0, 0, color(240), color(61), 1);
             textSize(32.5);
-            textOutline(players[myNum].name, width / 2, height - 80, 0, 0, color(240), color(61), 3.5);
+            textOutline(players[myNum].nick, width / 2, height - 80, 0, 0, color(240), color(61), 3.5);
         };
 
         var menuButton = (txt, x, y, c1, c2, c3) => {
@@ -272,7 +272,7 @@ var sketchProc = processingInstance => {
                         ellipse(players[i].x, players[i].y, players[i].d, players[i].d);
                         if(players[i].id!==myId){
                             fill(255);
-                            text(players[i].name, players[i].x, players[i].y);
+                            text(players[i].nick, players[i].x, players[i].y);
                         }
                     }
                     popMatrix();
@@ -288,20 +288,20 @@ var sketchProc = processingInstance => {
                     text(message.join(""), 30,height-55);
                     fill(0);
                     textSize(25);
-                    if(messages.length > 10) for(var i=0; i<10; i++) text(messages[i].user+": "+messages[i].msg, 50,height-120-i*25);
-                    else for(var i=0; i<messages.length; i++) text(messages[i].user+": "+messages[i].msg, 50,height-120-i*25);
+                    if(messages.length > 10) for(var i=0; i<10; i++) text(messages[i].user + ": " + messages[i].msg, 50, height-120-i*25);
+                    else for(var i=0; i<messages.length; i++) text(messages[i].user + ": " + messages[i].msg, 50, height-120-i*25);
                     var plyrs = [];
                     for(var i=0; i<players.length; i++) if(players[i].playing) plyrs.push(players[i]);
                     plyrs.sort((a, b) => {return b.score-a.score});
-                    if(plyrs.length > 10) for(var i=0; i<10; i++) text(plyrs[i].name+": "+plyrs[i].score, width-200, 120+i*25);
+                    if(plyrs.length > 10) for(var i=0; i<10; i++) text(plyrs[i].nick + ": " + plyrs[i].score, width-200, 120+i*25);
                     else {
                         for(var i=0; i<plyrs.length; i++){
                             fill(22, 22, 22, 200);
-                            rect(width-190,175,175,16,100);
+                            rect(width-190, 175, 175, 16, 100);
                             fill(108, 240, 162);
-                            rect(width-190+1,175+1, 14, 14+(plyrs[i].score%plyrs[0].score)*100, 100);
+                            rect(width-190+1, 175+1, 14, 14+(plyrs[i].score%plyrs[0].score)*100, 100);
                             fill(0);
-                            text(plyrs[i].name+": "+plyrs[i].score, width-200, 120+i*25);
+                            text(plyrs[i].nick + ": " + plyrs[i].score, width-200, 120+i*25);
                         }
                     }
                     socket.emit('user update', atan2(mouseY-screeny, mouseX-screenx) - HALF_PI, keys);

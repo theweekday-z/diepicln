@@ -10,7 +10,7 @@ module.exports = {
         "|                                ─────────                                 |\n"+
         "|                                                                          |\n"+
         "│ help           | Shows help                                              |\n"+
-        "| name           | Changes a player's name                                 |\n"+
+        "| nick           | Changes a player's name                                 |\n"+
         "| ban            | Bans an IP                                              |\n"+
         "| exit           | Closes the server                                       |\n"+
         "| banlist        | Displays banned IPs                                     |\n"+
@@ -39,7 +39,7 @@ module.exports = {
         "│                             Diepio commands                              |\n"+
         "╰──────────────────────────────────────────────────────────────────────────╯");
     },
-    name: require("./lib/name.js"),
+    nick: require("./lib/nick.js"),
     playerlist: require("./lib/playerList.js"),
     ban: require("./lib/ban.js"),
     exit: () => process.exit(0),

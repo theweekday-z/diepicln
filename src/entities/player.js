@@ -1,7 +1,9 @@
-const config = require('../core/configService.js').getConfig();
+const config = require('../core/configService.js').getConfig(),
+    bulletServer = require('../core/bulletServer.js'),
+    bullet = require('./bullet.js');
 module.exports = class player {
-    constructor(name, x, y, id, ip, sid) {
-        this.name = name;
+    constructor(nick, x, y, id, ip, sid) {
+        this.nick = nick;
         this.x = x;
         this.y = y;
         this.vel = [0, 0];
@@ -86,23 +88,31 @@ module.exports = class player {
         level ? this.stats.movementSpeed.level = level : this.stats.movementSpeed.level++;
     }
 
+    setNick(nick) {
+        this.nick = nick;
+    }
+
     move() {
-      this.x += this.vel[0];
-      this.y += this.vel[1];
+        this.x += this.vel[0];
+        this.y += this.vel[1];
+    }
+
+    shoot(xd, yd) {
+        bulletServer.addBullet(new bullet(this.x, this.y, xd, yd, this.id));
     }
 
     update() {
         this.move();
-        this.vel[0]/=1.015;
-        this.vel[1]/=1.015;
+        this.vel[0] /= 1.015;
+        this.vel[1] /= 1.015;
         if (this.vel[0] > this.stats.movementSpeed.value) this.vel[0] = this.stats.movementSpeed.value;
         if (this.vel[1] > this.stats.movementSpeed.value) this.vel[1] = this.stats.movementSpeed.value;
         if (this.vel[0] < -this.stats.movementSpeed.value) this.vel[0] = -this.stats.movementSpeed.value;
         if (this.vel[1] < -this.stats.movementSpeed.value) this.vel[1] = -this.stats.movementSpeed.value;
-        if (this.x>config.w) this.x=config.w;
-        if (this.y>config.h) this.y=config.h;
-        if (this.x<0) this.x=0;
-        if (this.y<0) this.y=0;
+        if (this.x > config.w) this.x = config.w;
+        if (this.y > config.h) this.y = config.h;
+        if (this.x < 0) this.x = 0;
+        if (this.y < 0) this.y = 0;
         if (this.chatting) return;
         if (this.keyMap[38] || this.keyMap[87]) this.vel[1] -= 0.025;
         if (this.keyMap[40] || this.keyMap[83]) this.vel[1] += 0.025;

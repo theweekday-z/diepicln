@@ -46,55 +46,54 @@ io.on('connection', socket => {
     for(var each in core.banServer.getBanList()) if(socket.request.client._peername.address === core.banServer.getBanList()[each].ip) socket.disconnect();
     core.pluginService.getPlugins().forEach(plugin => plugin.call("beforeNewUser"));
     connections.push(socket);
-    socket.username = new entities.player("", 0, 0, Id, socket.request.client._peername.address, socket.id);
-    core.playerServer.addPlayer(socket.username);
+    socket.user = new entities.player("", 0, 0, Id, socket.request.client._peername.address, socket.id);
+    core.playerServer.addPlayer(socket.user);
     updateUsernames();
     updateWorld();
     Id++;
 
     socket.on('disconnect', data => {
-        if(socket.username !== undefined){
-            core.playerServer.getPlayers().splice(core.playerServer.getPlayers().indexOf(socket.username), 1);
+        if(socket.user !== undefined){
+            core.playerServer.getPlayers().splice(core.playerServer.getPlayers().indexOf(socket.user), 1);
             updateUsernames();
         }
         connections.splice(connections.indexOf(socket), 1);
     });
 
     socket.on('join game', (data, callback) => {
-        if(socket.username.playing) return;
-        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].name = data;
-        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].x = ~~(Math.random() * (config.w - 199) + 100);
-        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].y = ~~(Math.random() * (config.h - 199) + 100);
-        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].playing = true;
+        if(socket.user.playing) return;
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.user)].nick = data;
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.user)].x = ~~(Math.random() * (config.w - 199) + 100);
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.user)].y = ~~(Math.random() * (config.h - 199) + 100);
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.user)].playing = true;
         updateUsernames();
         updateMessages();
     });
 
     socket.on('user update', (r, km) => {
-        if(!socket.username.playing) return;
-        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].r = r;
-        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].keyMap = km;
+        if(!socket.user.playing) return;
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.user)].r = r;
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.user)].keyMap = km;
     });
 
     socket.on('start chatting', () => {
-        if(!socket.username.playing) return;
-        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].chatting = true;
+        if(!socket.user.playing) return;
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.user)].chatting = true;
     });
 
     socket.on('stop chatting', () => {
-        if(!socket.username.playing) return;
-        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.username)].chatting = false;
+        if(!socket.user.playing) return;
+        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.user)].chatting = false;
     });
 
     socket.on('send message', data => {
-        if(!socket.username.playing) return;
-        for(var i=0; i<core.muteServer.getMuteList().length; i++) if(socket.username.id===core.muteServer.getMuteList()[i]) return entities.chat(socket.username.id, '[Server]', 'You are muted and cannot chat!');
-        entities.chat('all', socket.username.name, data)
+        if(!socket.user.playing) return;
+        for(var i=0; i<core.muteServer.getMuteList().length; i++) if(socket.user.id===core.muteServer.getMuteList()[i]) return entities.chat(socket.user.id, '[Server]', 'You are muted and cannot chat!');
+        entities.chat('all', socket.user.nick, data)
     });
 
     socket.on('new bullet', (xd, yd) => {
-        if(!socket.username.playing) return;
-        core.bulletServer.addBullet(new entities.bullet(socket.username.x, socket.username.y, xd, yd, socket.username.id));
+        if(socket.user.playing) return socket.user.shoot(xd, yd);
     });
 });
 
