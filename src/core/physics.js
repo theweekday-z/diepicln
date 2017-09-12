@@ -195,7 +195,7 @@ module.exports = {
         });
         if(squares.length === 0 || triangles.length === 0 || pentagons.length === 0) return;
         server.enemyServer.send({type: 'set', call: 'setSquares', data: squares});
-        server.setTriangles.send({type: 'set', call: 'setTriangles', data: triangles});
-        server.setPentagons.send({type: 'set', call: 'setPentagons', data: pentagons});
+        server.enemyServer.send({type: 'set', call: 'setTriangles', data: triangles});
+        server.enemyServer.send({type: 'set', call: 'setPentagons', data: pentagons});
     }
 };
