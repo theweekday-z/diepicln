@@ -62,6 +62,7 @@ module.exports = class player {
 
     setBodyDamage(level) {
         level ? this.stats.bodyDamage.level = level : this.stats.bodyDamage.level++;
+        return this.stats.bodyDamage.value = 20 + (4 * this.stats.bodyDamage.level);
     }
 
     setBulletSpeed(level) {
@@ -74,6 +75,7 @@ module.exports = class player {
 
     setBulletDamage(level) {
         level ? this.stats.bulletDamage.level = level : this.stats.bulletDamage.level++;
+        return this.stats.bulletDamage.value = 7 + (3 * this.stats.bulletDamage.level);
     }
 
     setReload(level) {
