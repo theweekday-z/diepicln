@@ -386,8 +386,7 @@ var sketchProc = processingInstance => {
                     socket.emit('start chatting');
                     canType = true;
                 }
-                if(key.code===104 && !hideGrid) hideGrid = true;
-                else if(key.code===104 && hideGrid) hideGrid = false;
+                if(key.code === 104) hideGrid ? hideGrid = false : hideGrid = true;
             }
         };
         mouseClicked = () => {
