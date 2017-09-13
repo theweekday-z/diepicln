@@ -68,12 +68,21 @@ var sketchProc = processingInstance => {
             bullets = [];
 
         socket.on('get players', data => {
-            players = data;
-            var num = 0;
-            for(var i=0; i<players.length; i++){
-                if(players[i].id===myId) myNum = num
-                else num++;
+            d = [];
+            for(var i=0; i<data.length; i++) {
+                d.push({
+                    d: data[i].d,
+                    id: data[i].id,
+                    level: data[i].level,
+                    nick: data[i].nick,
+                    playing: data[i].playing,
+                    r: data[i].r,
+                    score: data[i].score,
+                    x: data[i].x,
+                    y: data[i].y});
+                if(data[i].id === myId) myNum = i;
             }
+            players = d;
         });
         socket.on('get id', data => {if(!myId) myId = data});
         socket.on('get messages', data => {
@@ -123,7 +132,7 @@ var sketchProc = processingInstance => {
                     this.x = width - 135;
                     this.y = height - 135;
                 }
-                if(myNum){
+                if(myNum !== undefined) {
                     this.ax = 115 * players[myNum].x / world.w;
                     this.ay = 115 * players[myNum].y / world.h;
                 }
@@ -143,17 +152,17 @@ var sketchProc = processingInstance => {
         };
 
         var overlays = () => {
-            if(!myNum) return;
+            if(myNum === undefined) return;
             noStroke();
             fill(22, 22, 22, 200);
             rect(width / 2 - (250 / 2), height - 60, 250, 17.5, 100);
             rect(width / 2 - (350 / 2), height - 40, 350, 20, 100);
 
             fill(108, 240, 162);
-            rect(width / 2 - (250 / 2) + 2, height - 58, 13.5/*+this.scoreBarLength*/, 13.5, 100);
+            rect(width / 2 - (250 / 2) + 2, height - 58, 13.5, 13.5, 100);
 
             fill(240, 217, 108);
-            rect(width / 2 - (350 / 2) + 2, height - 38, 16/*+this.levelBarLength*/, 16, 100);
+            rect(width / 2 - (350 / 2) + 2, height - 38, 16, 16, 100);
 
             textAlign(CENTER, CENTER);
             textSize(11);
@@ -270,7 +279,7 @@ var sketchProc = processingInstance => {
                             stroke(180, 58, 63)
                         }
                         ellipse(players[i].x, players[i].y, players[i].d, players[i].d);
-                        if(players[i].id){
+                        if(players[i].id !== myNum){
                             fill(255);
                             text(players[i].nick, players[i].x, players[i].y);
                         }
