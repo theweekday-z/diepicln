@@ -290,11 +290,11 @@ var sketchProc = processingInstance => {
                     if(canType) fill(0,0,0,150);
                     else fill(0,0,0,50);
                     noStroke();
-                    rect(25,height-65,250,40);
-                    textAlign(LEFT,TOP);
+                    rect(25, height-65, 250, 40);
+                    textAlign(LEFT, TOP);
                     textSize(20);
                     fill(245);
-                    text(message.join(""), 30,height-55);
+                    text(message.join(""), 30, height-55);
                     fill(0);
                     textSize(25);
                     if(messages.length > 10) for(var i=0; i<10; i++) text(messages[i].user + ": " + messages[i].msg, 50, height-120-i*25);
@@ -351,16 +351,27 @@ var sketchProc = processingInstance => {
             fill(0);
             text("Framerate: "+round(__frameRate), width-125, 50);
         };
-        var preventKeyHandlers = evt => {
-            evt = evt || window.event;
-            if (evt.keyCode == 8) {
+
+        onkeydown = e => {
+            if (e.keyCode == 8) {
                 if(!players[myNum].playing) username.pop();
                 else if(canType) message.pop();
                 return false;
             }
-        };
 
-        document.onkeydown = preventKeyHandlers;
+            if(e.ctrlKey) switch(e.keyCode) {
+                case 'R'.charCodeAt(0):
+                    e.preventDefault();
+                    break;
+                case 'S'.charCodeAt(0):
+                    e.preventDefault();
+                    break;
+                case 'D'.charCodeAt(0):
+                    e.preventDefault();
+                    break;
+            }
+        }
+
         keyTyped = () => {
             if (!players[myNum].playing) if (key.code !== 8 && username.length < 15 && !keys[ENTER]) return username.push(key);
             if(canType){
