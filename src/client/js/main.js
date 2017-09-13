@@ -361,11 +361,7 @@ var sketchProc = processingInstance => {
 
             if(e.ctrlKey) switch(e.keyCode) {
                 case 'R'.charCodeAt(0):
-                    e.preventDefault();
-                    break;
                 case 'S'.charCodeAt(0):
-                    e.preventDefault();
-                    break;
                 case 'D'.charCodeAt(0):
                     e.preventDefault();
                     break;
