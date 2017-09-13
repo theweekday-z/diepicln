@@ -360,9 +360,10 @@ var sketchProc = processingInstance => {
             }
 
             if(e.ctrlKey) switch(e.keyCode) {
-                case 'R'.charCodeAt(0):
-                case 'S'.charCodeAt(0):
                 case 'D'.charCodeAt(0):
+                case 'R'.charCodeAt(0):
+                    return;
+                default:
                     e.preventDefault();
                     break;
             }
