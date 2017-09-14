@@ -202,7 +202,7 @@ var sketchProc = processingInstance => {
         draw = () => {
             try {
                 if(players.length === 0) return;
-                if(players[myNum].playing){
+                if(players[myNum].playing) {
                     size(window.innerWidth+zoom, window.innerHeight+zoom);
                     background(colors.gameBackground);
                     pushMatrix();
@@ -219,7 +219,7 @@ var sketchProc = processingInstance => {
                     strokeWeight(3);
                     stroke(191,174,80);
                     fill(colors.square);
-                    for(var i=0; i<squares.length; i++){
+                    for(var i=0; i<squares.length; i++) {
                         pushMatrix();
                         translate(squares[i].x, squares[i].y);
                         rotate(squares[i].r);
@@ -228,7 +228,7 @@ var sketchProc = processingInstance => {
                     }
                     stroke(189,88,89);
                     fill(colors.triangle);
-                    for(var i=0; i<triangles.length; i++){
+                    for(var i=0; i<triangles.length; i++) {
                         pushMatrix();
                         translate(triangles[i].x, triangles[i].y);
                         rotate(triangles[i].r);
@@ -237,7 +237,7 @@ var sketchProc = processingInstance => {
                     }
                     stroke(88,105,189);
                     fill(colors.pentagon);
-                    for(var i=0; i<pentagons.length; i++){
+                    for(var i=0; i<pentagons.length; i++) {
                         pushMatrix();
                         translate(pentagons[i].x, pentagons[i].y);
                         rotate(pentagons[i].r);
@@ -251,7 +251,7 @@ var sketchProc = processingInstance => {
                         popMatrix();
                     }
                     strokeWeight(2.5);
-                    for(var i=0; i<bullets.length; i++){
+                    for(var i=0; i<bullets.length; i++) {
                         if(bullets[i].owner === myId) {
                             fill(colors.tank_blue, 255-bullets[i].transparency*255);
                             stroke(0,133,168, 255-bullets[i].transparency*255);
@@ -262,7 +262,7 @@ var sketchProc = processingInstance => {
                         ellipse(bullets[i].x, bullets[i].y, bullets[i].d, bullets[i].d);
                     }
                     textSize(20);
-                    for(var i=0; i<players.length; i++){
+                    for(var i=0; i<players.length; i++) {
                         if(!players[i].playing) break;
                         pushMatrix();
                         translate(players[i].x, players[i].y);
