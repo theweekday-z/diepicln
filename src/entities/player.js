@@ -2,10 +2,10 @@ const config = require('../core/configService.js').getConfig(),
     bulletServer = require('../core/bulletServer.js'),
     bullet = require('./ammunition/bullet.js');
 module.exports = class player {
-    constructor(nick, x, y, id, ip, sid) {
-        this.nick = nick;
-        this.x = x;
-        this.y = y;
+    constructor(id, ip, sid) {
+        this.nick = '';
+        this.x = 0;
+        this.y = 0;
         this.vel = [0, 0];
         this.level = 0;
         this.score = 0;

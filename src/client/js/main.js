@@ -79,7 +79,7 @@ var sketchProc = processingInstance => {
             }
             players = d;
         });
-        socket.on('get id', data => {if(!myId) myId = data});
+        socket.on('get id', data => myId = myId || data);
         socket.on('get messages', data => messages = data.reverse());
         socket.on('update world', data => world = data);
         socket.on('update enemies', (s, t, p) => {
@@ -231,11 +231,11 @@ var sketchProc = processingInstance => {
                 strokeWeight(2.5);
                 for(var i=0; i<bullets.length; i++) {
                     if(bullets[i].owner === myId) {
-                        fill(colors.tank_blue, 255-bullets[i].transparency * 255);
-                        stroke(0,133,168, 255-bullets[i].transparency * 255);
+                        fill(colors.tank_blue, 255 - bullets[i].transparency * 255);
+                        stroke(0,133,168, 255 - bullets[i].transparency * 255);
                     } else {
-                        fill(colors.tank_red, 255-bullets[i].transparency * 255);
-                        stroke(180, 58, 63, 255-bullets[i].transparency * 255);
+                        fill(colors.tank_red, 255 - bullets[i].transparency * 255);
+                        stroke(180, 58, 63, 255 - bullets[i].transparency * 255);
                     }
                     ellipse(bullets[i].x, bullets[i].y, bullets[i].d, bullets[i].d);
                 }
@@ -264,14 +264,14 @@ var sketchProc = processingInstance => {
                 popMatrix();
                 minimap.run();
                 overlays();
-                if(canType) fill(0,0,0,150);
-                else fill(0,0,0,50);
+                if(canType) fill(0, 0, 0, 150);
+                else fill(0, 0, 0, 50);
                 noStroke();
-                rect(25, height-65, 250, 40);
+                rect(25, height - 65, 250, 40);
                 textAlign(LEFT, TOP);
                 textSize(20);
                 fill(245);
-                text(message.join(""), 30, height-55);
+                text(message.join(""), 30, height - 55);
                 fill(0);
                 textSize(25);
                 for(var i=0; i<(messages.length <= 10 ? messages.length : 10); i++) text(`${messages[i].user}: ${messages[i].msg}`, 50, height - 120 - i * 25);

@@ -45,7 +45,7 @@ io.on('connection', socket => {
     for(var each in core.banServer.getBanList()) if(socket.request.client._peername.address === core.banServer.getBanList()[each].ip) socket.disconnect();
     core.pluginService.getPlugins().forEach(plugin => plugin.call("beforeNewUser"));
     connections.push(socket);
-    socket.user = new entities.player("", 0, 0, Id, socket.request.client._peername.address, socket.id);
+    socket.user = new entities.player(Id, socket.request.client._peername.address, socket.id);
     core.playerServer.addPlayer(socket.user);
     updateUsernames();
     updateWorld();
@@ -107,8 +107,8 @@ const updates = setInterval(() => {
 }, 1000/config.fps);
 console.log("[\x1b[34mINFO\x1b[0m] Loading server...");
 server.listen(process.env.PORT || config.port, process.env.IP || "0.0.0.0", () => {
-    console.log(`[\x1b[36mConsole\x1b[0m] Server running node ${process.version} On port ${server.address().port}`);
     process.title = "diepio private server";
+    console.log(`[\x1b[36mConsole\x1b[0m] Server running node ${process.version} On port ${server.address().port}`);
     var cmds = new (require('asyncconsole'))(' > ', data => {
         var msg = data.trim().toString().split(" ");
         for (var i in commandList) if(i === msg[0]) commandList[i](msg);
