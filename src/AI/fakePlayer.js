@@ -1,7 +1,7 @@
 const config = require('../core/configService.js').getConfig(),
     bot = require('./bot.js'),
     bulletServer = require('../core/bulletServer.js'),
-    bullet = require('../entities/bullet.js');
+    bullet = require('../entities/ammunition/bullet.js');
 module.exports = class fakePlayer {
     constructor(nick, x, y, id, brain) {
         this.nick = nick;

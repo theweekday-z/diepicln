@@ -177,21 +177,9 @@ var sketchProc = processingInstance => {
             noStroke();
             if(gameMode === txt.toLowerCase()) fill(c3);
             else fill(c1);
-            beginShape();
-            vertex(x, y);
-            vertex(x, y+15);
-            vertex(x+75, y+15);
-            vertex(x+75,y);
-            vertex(x, y);
-            endShape();
+            rect(x, y, 75, 15);
             fill(c2);
-            beginShape();
-            vertex(x, y+15);
-            vertex(x, y+25);
-            vertex(x+75, y+25);
-            vertex(x+75, y+15);
-            vertex(x, y+15);
-            endShape();
+            rect(x, y+15, 75, 10)
             strokeWeight(3);
             stroke(41);
             noFill();
@@ -279,10 +267,9 @@ var sketchProc = processingInstance => {
                             stroke(180, 58, 63)
                         }
                         ellipse(players[i].x, players[i].y, players[i].d, players[i].d);
-                        if(players[i].id !== myNum){
-                            fill(255);
-                            text(players[i].nick, players[i].x, players[i].y);
-                        }
+                        if(players[i].id === myNum) return;
+                        fill(255);
+                        text(players[i].nick, players[i].x, players[i].y);
                     }
                     popMatrix();
                     minimap.run();

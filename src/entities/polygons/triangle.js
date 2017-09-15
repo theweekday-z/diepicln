@@ -1,5 +1,5 @@
-const config = require('../core/configService.js').getConfig(),
-    enemy = require('./enemy.js');
+const config = require('../../core/configService.js').getConfig(),
+    enemy = require('../enemy.js');
 module.exports = class triangle extends enemy {
     constructor(x, y, r, d, vel, sdir) {
         super(

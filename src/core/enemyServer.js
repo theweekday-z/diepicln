@@ -1,6 +1,6 @@
-const square = require('../entities/square.js'),
-    triangle = require('../entities/triangle.js'),
-    pentagon = require('../entities/pentagon.js');
+const square = require('../entities/polygons/square.js'),
+    triangle = require('../entities/polygons/triangle.js'),
+    pentagon = require('../entities/polygons/pentagon.js');
 
 var squares = [],
     triangles = [],

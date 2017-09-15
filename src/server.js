@@ -1,5 +1,4 @@
-const asyncconsole = require('asyncconsole'),
-    express = require('express'),
+const express = require('express'),
     router = express(),
     server = require('http').createServer(router),
     io = require('socket.io').listen(server),
@@ -77,18 +76,16 @@ io.on('connection', socket => {
     });
 
     socket.on('start chatting', () => {
-        if(!socket.user.playing) return;
-        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.user)].chatting = true;
+        if(socket.user.playing) core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.user)].chatting = true;
     });
 
     socket.on('stop chatting', () => {
-        if(!socket.user.playing) return;
-        core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.user)].chatting = false;
+        if(socket.user.playing) core.playerServer.getPlayers()[core.playerServer.getPlayers().indexOf(socket.user)].chatting = false;
     });
 
     socket.on('send message', data => {
         if(!socket.user.playing) return;
-        for(var i=0; i<core.muteServer.getMuteList().length; i++) if(socket.user.id===core.muteServer.getMuteList()[i]) return entities.chat(socket.user.id, '[Server]', 'You are muted and cannot chat!');
+        for(var i=0; i<core.muteServer.getMuteList().length; i++) if(socket.user.id === core.muteServer.getMuteList()[i]) return entities.chat(socket.user.id, '[Server]', 'You are muted and cannot chat!');
         entities.chat('all', socket.user.nick, data)
     });
 
@@ -112,7 +109,7 @@ console.log("[\x1b[34mINFO\x1b[0m] Loading server...");
 server.listen(process.env.PORT || config.port, process.env.IP || "0.0.0.0", () => {
     console.log(`[\x1b[36mConsole\x1b[0m] Server running node ${process.version} On port ${server.address().port}`);
     process.title = "diepio private server";
-    var cmds = new asyncconsole(' > ', data => {
+    var cmds = new (require('asyncconsole'))(' > ', data => {
         var msg = data.trim().toString().split(" ");
         for (var i in commandList) if(i === msg[0]) commandList[i](msg);
     });

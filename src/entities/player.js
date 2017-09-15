@@ -1,6 +1,6 @@
 const config = require('../core/configService.js').getConfig(),
     bulletServer = require('../core/bulletServer.js'),
-    bullet = require('./bullet.js');
+    bullet = require('./ammunition/bullet.js');
 module.exports = class player {
     constructor(nick, x, y, id, ip, sid) {
         this.nick = nick;
@@ -32,7 +32,7 @@ module.exports = class player {
             },
             bulletSpeed: {
                 level: 0,
-                value: 1
+                value: 5
             },
             bulletPenetration: {
                 level: 0,
@@ -59,12 +59,12 @@ module.exports = class player {
 
     setMaxHealth(level) {
         level ? this.stats.maxHealth.level = level : this.stats.maxHealth.level++;
-        return this.stats.maxHealth.value = (50 + (2 * this.level - 1)) + (20 * this.stats.maxHealth.level);
+        this.stats.maxHealth.value = (50 + (2 * this.level - 1)) + (20 * this.stats.maxHealth.level);
     }
 
     setBodyDamage(level) {
         level ? this.stats.bodyDamage.level = level : this.stats.bodyDamage.level++;
-        return this.stats.bodyDamage.value = 20 + (4 * this.stats.bodyDamage.level);
+        this.stats.bodyDamage.value = 20 + (4 * this.stats.bodyDamage.level);
     }
 
     setBulletSpeed(level) {
@@ -77,7 +77,7 @@ module.exports = class player {
 
     setBulletDamage(level) {
         level ? this.stats.bulletDamage.level = level : this.stats.bulletDamage.level++;
-        return this.stats.bulletDamage.value = 7 + (3 * this.stats.bulletDamage.level);
+        this.stats.bulletDamage.value = 7 + (3 * this.stats.bulletDamage.level);
     }
 
     setReload(level) {
@@ -98,7 +98,7 @@ module.exports = class player {
     }
 
     shoot(xd, yd) {
-        bulletServer.addBullet(new bullet(this.x, this.y, xd, yd, this.id));
+        bulletServer.addBullet(new bullet(this.x, this.y, xd, yd, this.stats.bulletSpeed.value, this.id));
     }
 
     update() {
