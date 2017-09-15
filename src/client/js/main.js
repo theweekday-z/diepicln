@@ -84,8 +84,8 @@ var sketchProc = processingInstance => {
         socket.on('update world', data => world = data);
         socket.on('update enemies', (s, t, p) => {
             squares = s,
-            triangles = t,
-            pentagons = p;
+                triangles = t,
+                pentagons = p;
         });
         socket.on('update bullets', data => bullets = data);
 
@@ -135,7 +135,7 @@ var sketchProc = processingInstance => {
                 stroke(114);
                 pushMatrix();
                 translate(this.ax + (width - 130), this.ay + (height - 130));
-                rotate(atan2(mouseY-screeny, mouseX-screenx) - TWO_PI);
+                rotate(players[myNum].r + HALF_PI);
                 fill(0);
                 triangle(10, 0, -1, -2.5, -1, 2.5);
                 popMatrix();
@@ -307,7 +307,7 @@ var sketchProc = processingInstance => {
                 fill(238);
                 stroke(0);
                 strokeWeight(4);
-                rect(width / 2 - (325 / 2)+2, height / 2 - (40 / 2), 325-4, 40);
+                rect(width / 2 - (325 / 2)+2, height / 2 - (40 / 2), 325 - 4, 40);
                 textAlign(LEFT, CENTER);
                 textSize(30);
                 if (round(frameCount / 100) % 2 === 0) textOutline(username.join("") + "|", width / 2 - (320 / 2), height / 2, 0, 0, color(0));

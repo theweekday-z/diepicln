@@ -1,7 +1,7 @@
 var messages = [];
 const server = require("../server.js");
 module.exports = {
-    getMessages: () => {return messages;},
+    getMessages: () => messages,
     setMessages: msgs => {
         messages = msgs;
         server.updateMessages();

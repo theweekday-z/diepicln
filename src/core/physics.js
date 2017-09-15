@@ -29,10 +29,10 @@ module.exports = {
                 var magnitude = this.dist(0, 0, dst[0], dst[1]);
                 dst[0] /= magnitude;
                 dst[1] /= magnitude;
-                sqre.vel[0] -= dst[0]/10;
-                sqre.vel[1] -= dst[1]/10;
-                square.vel[0] += dst[0]/10;
-                square.vel[1] += dst[1]/10;
+                sqre.vel[0] -= dst[0] / 10;
+                sqre.vel[1] -= dst[1] / 10;
+                square.vel[0] += dst[0] / 10;
+                square.vel[1] += dst[1] / 10;
             });
             /** Square+Triangle collisions **/
             triangles.forEach(triangle => {
@@ -41,10 +41,10 @@ module.exports = {
                 var magnitude = this.dist(0, 0, dst[0], dst[1]);
                 dst[0] /= magnitude;
                 dst[1] /= magnitude;
-                triangle.vel[0] -= dst[0]/10;
-                triangle.vel[1] -= dst[1]/10;
-                square.vel[0] += dst[0]/10;
-                square.vel[1] += dst[1]/10;
+                triangle.vel[0] -= dst[0] / 10;
+                triangle.vel[1] -= dst[1] / 10;
+                square.vel[0] += dst[0] / 10;
+                square.vel[1] += dst[1] / 10;
             });
             /** Square+Pentagon collisions **/
             pentagons.forEach(pentagon => {
@@ -53,10 +53,10 @@ module.exports = {
                 var magnitude = this.dist(0, 0, dst[0], dst[1]);
                 dst[0] /= magnitude;
                 dst[1] /= magnitude;
-                pentagon.vel[0] -= dst[0]/10;
-                pentagon.vel[1] -= dst[1]/10;
-                square.vel[0] += dst[0]/10;
-                square.vel[1] += dst[1]/10;
+                pentagon.vel[0] -= dst[0] / 10;
+                pentagon.vel[1] -= dst[1] / 10;
+                square.vel[0] += dst[0] / 10;
+                square.vel[1] += dst[1] / 10;
             });
         });
         triangles.forEach((triangle, ind) => {
@@ -76,10 +76,10 @@ module.exports = {
                 var magnitude = this.dist(0, 0, dst[0], dst[1]);
                 dst[0] /= magnitude;
                 dst[1] /= magnitude;
-                tringle.vel[0] -= dst[0]/10;
-                tringle.vel[1] -= dst[1]/10;
-                triangle.vel[0] += dst[0]/10;
-                triangle.vel[1] += dst[1]/10;
+                tringle.vel[0] -= dst[0] / 10;
+                tringle.vel[1] -= dst[1] / 10;
+                triangle.vel[0] += dst[0] / 10;
+                triangle.vel[1] += dst[1] / 10;
             });
             /** Triangle+Pentagon collisions **/
             pentagons.forEach(pentagon => {
@@ -88,10 +88,10 @@ module.exports = {
                 var magnitude = this.dist(0, 0, dst[0], dst[1]);
                 dst[0] /= magnitude;
                 dst[1] /= magnitude;
-                pentagon.vel[0] -= dst[0]/10;
-                pentagon.vel[1] -= dst[1]/10;
-                triangle.vel[0] += dst[0]/10;
-                triangle.vel[1] += dst[1]/10;
+                pentagon.vel[0] -= dst[0] / 10;
+                pentagon.vel[1] -= dst[1] / 10;
+                triangle.vel[0] += dst[0] / 10;
+                triangle.vel[1] += dst[1] / 10;
             });
         });
         pentagons.forEach((pentagon, ind) => {
@@ -111,10 +111,10 @@ module.exports = {
               var magnitude = this.dist(0, 0, dst[0], dst[1]);
               dst[0] /= magnitude;
               dst[1] /= magnitude;
-              pentgon.vel[0] -= dst[0]/10;
-              pentgon.vel[1] -= dst[1]/10;
-              pentagon.vel[0] += dst[0]/10;
-              pentagon.vel[1] += dst[1]/10;
+              pentgon.vel[0] -= dst[0] / 10;
+              pentgon.vel[1] -= dst[1] / 10;
+              pentagon.vel[0] += dst[0] / 10;
+              pentagon.vel[1] += dst[1] / 10;
             });
         });
         playerServer.getPlayers().forEach(player => {
@@ -137,10 +137,10 @@ module.exports = {
                 var magnitude = this.dist(0, 0, dst[0], dst[1]);
                 dst[0] /= magnitude;
                 dst[1] /= magnitude;
-                plyr.vel[0] -= dst[0]/10;
-                plyr.vel[1] -= dst[1]/10;
-                player.vel[0] += dst[0]/10;
-                player.vel[1] += dst[1]/10;
+                plyr.vel[0] -= dst[0] / 10;
+                plyr.vel[1] -= dst[1] / 10;
+                player.vel[0] += dst[0] / 10;
+                player.vel[1] += dst[1] / 10;
             });
             /** Player+Square collisions **/
             squares.forEach(square => {
@@ -149,10 +149,10 @@ module.exports = {
                 var magnitude = this.dist(0, 0, dst[0], dst[1]);
                 dst[0] /= magnitude;
                 dst[1] /= magnitude;
-                square.vel[0] -= dst[0]/10;
-                square.vel[1] -= dst[1]/10;
-                player.vel[0] += dst[0]/10;
-                player.vel[1] += dst[1]/10;
+                square.vel[0] -= dst[0] / 10;
+                square.vel[1] -= dst[1] / 10;
+                player.vel[0] += dst[0] / 10;
+                player.vel[1] += dst[1] / 10;
             });
             /** Player+Triangle collisions **/
             triangles.forEach(triangle => {
@@ -161,10 +161,10 @@ module.exports = {
                 var magnitude = this.dist(0, 0, dst[0], dst[1]);
                 dst[0] /= magnitude;
                 dst[1] /= magnitude;
-                triangle.vel[0] -= dst[0]/10;
-                triangle.vel[1] -= dst[1]/10;
-                player.vel[0] += dst[0]/10;
-                player.vel[1] += dst[1]/10;
+                triangle.vel[0] -= dst[0] / 10;
+                triangle.vel[1] -= dst[1] / 10;
+                player.vel[0] += dst[0] / 10;
+                player.vel[1] += dst[1] / 10;
             });
             /** Player+Pentagon collisions **/
             pentagons.forEach(pentagon => {
@@ -173,10 +173,10 @@ module.exports = {
                 var magnitude = this.dist(0, 0, dst[0], dst[1]);
                 dst[0] /= magnitude;
                 dst[1] /= magnitude;
-                pentagon.vel[0] -= dst[0]/10;
-                pentagon.vel[1] -= dst[1]/10;
-                player.vel[0] += dst[0]/10;
-                player.vel[1] += dst[1]/10;
+                pentagon.vel[0] -= dst[0] / 10;
+                pentagon.vel[1] -= dst[1] / 10;
+                player.vel[0] += dst[0] / 10;
+                player.vel[1] += dst[1] / 10;
             });
         });
         if(squares.length === 0 || triangles.length === 0 || pentagons.length === 0) return;

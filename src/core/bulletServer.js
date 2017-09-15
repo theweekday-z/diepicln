@@ -1,6 +1,6 @@
 var bullets = [];
 module.exports = {
-    getBullets: () => {return bullets},
+    getBullets: () => bullets,
     setBullets: blts => bullets = blts,
     addBullet: blt => bullets.push(blt),
     addBullets: blts => bullets.push(blts),
