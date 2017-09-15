@@ -1,12 +1,7 @@
 var sketchProc = processingInstance => {
     with(processingInstance) {
         frameRate(0); //Set The Frame Rate
-        var l = function() {
-            return this.Function("gflink", "var f=document.createElement('link');f.setAttribute('rel','stylesheet');f.setAttribute('type','text/css');f.setAttribute('href',gflink);document.head.appendChild(f);");
-        }();
-        l("./css/ubuntu.css");
         textFont(createFont("Ubuntu"));
-        textSize(20);
 
         var socket = io.connect(),
             username = [],
@@ -46,16 +41,16 @@ var sketchProc = processingInstance => {
             gameBackgroundMain: color(50, 50, 50)
         };*/
 
-        var textOutline = (t, x, y, w, h, fc, sc, o) => {
-            fill(sc);
+        var textOutline = (txt, x, y, w, h, solidColor, outlineColor, o) => {
+            fill(outlineColor);
             o = max(o, 1);
             for (var a = 0; a < 360; a += 360 / (2 * PI * o)) {
                 if (w > 0 && h > 0) text(t, x + cos(a) * o, y + sin(a) * o, w, h);
-                else text(t, x + cos(a) * o, y + sin(a) * o);
+                else text(txt, x + cos(a) * o, y + sin(a) * o);
             }
-            fill(fc);
-            if (w > 0 && h > 0) text(t, x, y, w, h);
-            else text(t, x, y);
+            fill(solidColor);
+            if (w > 0 && h > 0) text(txt, x, y, w, h);
+            else text(txt, x, y);
         };
 
         /** World **/
@@ -162,19 +157,19 @@ var sketchProc = processingInstance => {
 
             textAlign(CENTER, CENTER);
             textSize(11);
-            textOutline("Score: " + players[myNum].score, width / 2, height - 51, 0, 0, color(240), color(61), 1);
+            textOutline(`Score: ${players[myNum].score}`, width / 2, height - 51, 0, 0, color(240), color(61), 1);
             textSize(12.5);
-            textOutline("Level " + players[myNum].level + " Tank", width / 2, height - 30, 0, 0, color(240), color(61), 1);
+            textOutline(`Level ${players[myNum].level} Tank`, width / 2, height - 30, 0, 0, color(240), color(61), 1);
             textSize(32.5);
             textOutline(players[myNum].nick, width / 2, height - 80, 0, 0, color(240), color(61), 3.5);
         };
 
-        var menuButton = (txt, x, y, c1, c2, c3) => {
+        var menuButton = (txt, x, y, color1, color2, color3) => {
             noStroke();
-            if(gameMode === txt.toLowerCase()) fill(c3);
-            else fill(c1);
+            if(gameMode === txt.toLowerCase()) fill(color3);
+            else fill(color1);
             rect(x, y, 75, 15);
-            fill(c2);
+            fill(color2);
             rect(x, y + 15, 75, 10)
             strokeWeight(3);
             stroke(41);
@@ -186,18 +181,18 @@ var sketchProc = processingInstance => {
         draw = () => {
             if(players.length === 0) return;
             if(players[myNum].playing) {
-                size(window.innerWidth+zoom, window.innerHeight+zoom);
+                size(window.innerWidth + zoom, window.innerHeight + zoom);
                 background(colors.gameBackground);
                 pushMatrix();
                 mapCamera.run();
                 fill(colors.gameBackgroundMain);
                 noStroke();
-                rect(width/4, height/4, world.w-width/4*2, world.h-height/4*2);
+                rect(width / 4, height / 4, world.w - width / 4 * 2, world.h - height / 4 * 2);
                 stroke(170);
                 strokeWeight(0.5);
                 if(!hideGrid) {
-                    for (var w = -width*2; w < world.w+width*2; w += 22.5) line(w, -width*2, w, world.w*2);
-                    for (var h = -height*2; h < world.h+height*2; h += 22.5) line(-height*2, h, world.h*2, h);
+                    for (var w = -width * 2; w < world.w + width * 2; w += 22.5) line(w, -width * 2, w, world.w * 2);
+                    for (var h = -height * 2; h < world.h + height * 2; h += 22.5) line(-height * 2, h, world.h * 2, h);
                 }
                 strokeWeight(3);
                 stroke(191,174,80);
@@ -236,11 +231,11 @@ var sketchProc = processingInstance => {
                 strokeWeight(2.5);
                 for(var i=0; i<bullets.length; i++) {
                     if(bullets[i].owner === myId) {
-                        fill(colors.tank_blue, 255-bullets[i].transparency*255);
-                        stroke(0,133,168, 255-bullets[i].transparency*255);
+                        fill(colors.tank_blue, 255-bullets[i].transparency * 255);
+                        stroke(0,133,168, 255-bullets[i].transparency * 255);
                     } else {
-                        fill(colors.tank_red, 255-bullets[i].transparency*255);
-                        stroke(180, 58, 63, 255-bullets[i].transparency*255);
+                        fill(colors.tank_red, 255-bullets[i].transparency * 255);
+                        stroke(180, 58, 63, 255-bullets[i].transparency * 255);
                     }
                     ellipse(bullets[i].x, bullets[i].y, bullets[i].d, bullets[i].d);
                 }
@@ -279,19 +274,18 @@ var sketchProc = processingInstance => {
                 text(message.join(""), 30, height-55);
                 fill(0);
                 textSize(25);
-                if(messages.length > 10) for(var i=0; i<10; i++) text(`${messages[i].user}: ${messages[i].msg}`, 50, height - 120 - i * 25);
-                else for(var i=0; i<messages.length; i++) text(`${messages[i].user}: ${messages[i].msg}`, 50, height - 120 - i * 25);
+                for(var i=0; i<(messages.length <= 10 ? messages.length : 10); i++) text(`${messages[i].user}: ${messages[i].msg}`, 50, height - 120 - i * 25);
                 var plyrs = [];
                 for(var i=0; i<players.length; i++) if(players[i].playing) plyrs.push(players[i]);
                 plyrs.sort((a, b) => b.score-a.score);
                 textAlign(CENTER, CENTER);
-                for(var i=0; i<(plyrs.length <= 10 ? plyrs.length : 10) ; i++){
+                for(var i=0; i<(plyrs.length <= 10 ? plyrs.length : 10); i++){
                     fill(22, 22, 22, 200);
                     rect(width - 190, 25 + i * 20, 175, 16, 100);
                     fill(108, 240, 162);
                     rect(width - 189, 26 + i * 20, 13 + (plyrs[i].score%plyrs[0].score || 100)/100*160, 14, 100);
                     textSize(12.5);
-                    textOutline(`${plyrs[i].nick} - ${plyrs[i].score}`, width - 102.5, 33 + i * 25, 0, 0, color(255, 255, 255), color(0, 0, 0), 1.75);
+                    textOutline(`${plyrs[i].nick} - ${plyrs[i].score}`, width - 102.5, 33 + i * 20, 0, 0, color(255, 255, 255), color(0, 0, 0), 1.75);
                 }
                 socket.emit('user update', atan2(mouseY-screeny, mouseX-screenx) - HALF_PI, keys);
             } else {
@@ -334,16 +328,6 @@ var sketchProc = processingInstance => {
             if (e.keyCode == 8) {
                 if(!players[myNum].playing) username.pop();
                 else if(canType) message.pop();
-                return false;
-            }
-
-            if(e.ctrlKey) switch(e.keyCode) {
-                case 'D'.charCodeAt(0):
-                case 'R'.charCodeAt(0):
-                    return;
-                default:
-                    e.preventDefault();
-                    break;
             }
         }
 
