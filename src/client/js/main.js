@@ -358,5 +358,4 @@ var sketchProc = processingInstance => {
         };
     }
 };
-var canvas = document.getElementById("canvas");
-var processingInstance = new Processing(canvas, sketchProc);
+var processingInstance = new Processing(document.getElementById("canvas"), sketchProc);
