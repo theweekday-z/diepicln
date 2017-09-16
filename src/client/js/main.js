@@ -83,9 +83,30 @@ var sketchProc = processingInstance => {
         socket.on('get messages', data => messages = data.reverse());
         socket.on('update world', data => world = data);
         socket.on('update enemies', (s, t, p) => {
-            squares = s,
-                triangles = t,
-                pentagons = p;
+            var d = [];
+            for(var i=0; i<s.length; i++) d.push({
+                d: s[i].d,
+                r: s[i].r,
+                x: s[i].x,
+                y: s[i].y
+            });
+            squares = d;
+            d = [];
+            for(var i=0; i<t.length; i++) d.push({
+                d: t[i].d,
+                r: t[i].r,
+                x: t[i].x,
+                y: t[i].y
+            });
+            triangles = d;
+            d = [];
+            for(var i=0; i<p.length; i++) d.push({
+                d: p[i].d,
+                r: p[i].r,
+                x: p[i].x,
+                y: p[i].y
+            });
+            pentagons = d;
         });
         socket.on('update bullets', data => bullets = data);
 
