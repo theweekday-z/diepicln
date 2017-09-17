@@ -5,13 +5,14 @@ const config = require('../core/configService.js').getConfig(),
 module.exports = class fakePlayer {
     constructor(nick, x, y, id, brain) {
         this.nick = nick;
+        this.tank = 1;
         this.x = x;
         this.y = y;
         this.vel = [0, 0];
-        this.level = 0;
+        this.level = 1;
         this.score = 0;
         this.r = 0;
-        this.d = 40;
+        this.d = 45;
         this.id = id;
         this.ip = "BOT";
         this.keyMap = {};
@@ -99,7 +100,7 @@ module.exports = class fakePlayer {
     }
 
     shoot(xd, yd) {
-        bulletServer.addBullet(new bullet(this.x, this.y, xd, yd, this.id));
+        bulletServer.addBullet(new bullet(this.x, this.y, xd, yd, this.stats.bulletSpeed.value, this.id));
     }
 
     update() {

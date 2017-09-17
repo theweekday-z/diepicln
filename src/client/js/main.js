@@ -230,14 +230,14 @@ var sketchProc = processingInstance => {
         };
 
         var overlays = () => {
-            if(myNum === undefined) return;
+            if(myNum === undefined || leader === undefined) return;
             noStroke();
             fill(22, 22, 22, 200);
             rect(width / 2 - (250 / 2), height - 60, 250, 17.5, 100);
             rect(width / 2 - (350 / 2), height - 40, 350, 20, 100);
 
             fill(108, 240, 162);
-            rect(width / 2 - (250 / 2) + 2, height - 58, 13.5, 13.5, 100);
+            rect(width / 2 - (250 / 2) + 2, height - 58, 13.5 + (players[myNum].score%leader.score || 100)/100*232, 13.5, 100);
 
             fill(240, 217, 108);
             rect(width / 2 - (350 / 2) + 2, height - 38, 16, 16, 100);
@@ -246,7 +246,7 @@ var sketchProc = processingInstance => {
             textSize(11);
             textOutline(`Score: ${players[myNum].score}`, width / 2, height - 51, 0, 0, color(240), color(61), 1);
             textSize(12.5);
-            textOutline(`Level ${players[myNum].level} ${tanks[players[myNum].tank]}`, width / 2, height - 30, 0, 0, color(240), color(61), 1);
+            textOutline(`Lvl ${players[myNum].level} ${tanks[players[myNum].tank]}`, width / 2, height - 30, 0, 0, color(240), color(61), 1);
             textSize(32.5);
             textOutline(players[myNum].nick, width / 2, height - 80, 0, 0, color(240), color(61), 3.5);
         };
@@ -328,26 +328,31 @@ var sketchProc = processingInstance => {
                     ellipse(bullets[i].x, bullets[i].y, bullets[i].d, bullets[i].d);
                 }
                 textSize(20);
+                strokeWeight(3.5)
                 for(var i=0; i<players.length; i++) {
                     if(!players[i].playing) break;
-                    pushMatrix();
-                    translate(players[i].x, players[i].y);
-                    rotate(players[i].r);
-                    stroke(114);
-                    fill(colors.tank_barrel);
-                    rect(-8.75, 5, 17.5, 35);
-                    popMatrix();
-                    if(players[i].id === myId) {
-                        fill(colors.tank_blue);
-                        stroke(0, 133, 168);
-                    } else {
-                        fill(colors.tank_red);
-                        stroke(180, 58, 63)
+                    switch(players[i].tank){
+                        case 1:
+                            pushMatrix();
+                            translate(players[i].x, players[i].y);
+                            rotate(players[i].r);
+                            stroke(114);
+                            fill(colors.tank_barrel);
+                            rect(-8.75, 5, 17.5, 35);
+                            popMatrix();
+                            if(players[i].id === myId) {
+                                fill(colors.tank_blue);
+                                stroke(0, 133, 168);
+                            } else {
+                                fill(colors.tank_red);
+                                stroke(180, 58, 63)
+                            }
+                            ellipse(players[i].x, players[i].y, players[i].d, players[i].d);
+                            if(players[i].id === myNum) return;
+                            fill(255);
+                            text(players[i].nick, players[i].x, players[i].y);
+                            break;
                     }
-                    ellipse(players[i].x, players[i].y, players[i].d, players[i].d);
-                    if(players[i].id === myNum) return;
-                    fill(255);
-                    text(players[i].nick, players[i].x, players[i].y);
                 }
                 popMatrix();
                 minimap.run();
@@ -366,8 +371,7 @@ var sketchProc = processingInstance => {
                 var plyrs = [];
                 for(var i=0; i<players.length; i++) if(players[i].playing) plyrs.push(players[i]);
                 plyrs.sort((a, b) => b.score-a.score);
-                leader = players.indexOf(plyrs[0]);
-                console.log(leader);
+                leader = plyrs[0];
                 textAlign(CENTER, CENTER);
                 for(var i=0; i<(plyrs.length <= 10 ? plyrs.length : 10); i++){
                     fill(22, 22, 22, 200);
@@ -377,7 +381,7 @@ var sketchProc = processingInstance => {
                     textSize(12.5);
                     textOutline(`${plyrs[i].nick} - ${plyrs[i].score}`, width - 102.5, 33 + i * 20, 0, 0, color(255, 255, 255), color(0, 0, 0), 1.75);
                 }
-                socket.emit('user update', atan2(mouseY-screeny, mouseX-screenx) - HALF_PI, keys);
+                socket.emit('user update', atan2(mouseY - screeny, mouseX - screenx) - HALF_PI, keys);
             } else {
                 size(window.innerWidth, window.innerHeight);
                 background(124);
@@ -397,7 +401,7 @@ var sketchProc = processingInstance => {
                 fill(238);
                 stroke(0);
                 strokeWeight(4);
-                rect(width / 2 - (325 / 2)+2, height / 2 - (40 / 2), 325 - 4, 40);
+                rect(width / 2 - (325 / 2) + 2, height / 2 - (40 / 2), 325 - 4, 40);
                 textAlign(LEFT, CENTER);
                 textSize(30);
                 if (round(frameCount / 100) % 2 === 0) textOutline(username.join("") + "|", width / 2 - (320 / 2), height / 2, 0, 0, color(0));
@@ -443,7 +447,7 @@ var sketchProc = processingInstance => {
         };
         mouseClicked = () => {
             if(!players[myNum].playing) return;
-            var r = atan2(mouseY-screeny, mouseX-screenx);
+            var r = atan2(mouseY - screeny, mouseX - screenx);
             socket.emit('new bullet', cos(r), sin(r));
         };
     }
