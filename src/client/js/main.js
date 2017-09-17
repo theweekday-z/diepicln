@@ -201,8 +201,8 @@ var sketchProc = processingInstance => {
         };
 
         var minimap = {
-            x: width-135,
-            y: height-135,
+            x: width - 135,
+            y: height - 135,
             ax: 0,
             ay: 0,
             run() {
@@ -265,6 +265,7 @@ var sketchProc = processingInstance => {
             textSize(12);
             textOutline(txt, x + 38, y + 12.5, 0, 0, color(255), color(0), 1.25);
         };
+
         draw = () => {
             if(players.length === 0) return;
             if(players[myNum].playing) {
