@@ -13,7 +13,8 @@ var sketchProc = processingInstance => {
             myNum,
             zoom = 0,
             gameMode = "ffa",
-            hideGrid = false;
+            hideGrid = false,
+            leader;
 
         /** Colors **/
         var colors = {
@@ -41,6 +42,70 @@ var sketchProc = processingInstance => {
             gameBackgroundMain: color(50, 50, 50)
         };*/
 
+        /** Tanks **/
+        const tanks = {
+            1: 'Tank',
+            2: 'Twin',
+            3: 'Triplet',
+            4: 'Triple Shot',
+            5: 'Quad Tank',
+            6: 'Octo Tank',
+            7: 'Sniper',
+            8: 'Machine Gun',
+            9: 'Machine Gun II',
+            10: 'Flank Guard',
+            11: 'Tri-Angle',
+            12: 'Mega Destroyer',
+            13: 'Destroyer',
+            14: 'Overseer',
+            15: 'Overlord',
+            16: 'Twin FLank',
+            17: 'Penta Shot',
+            18: 'Assasin',
+            19: 'Arena Closer',
+            20: 'Necromancer',
+            21: 'Triple Twin',
+            22: 'Hunter',
+            23: 'Gunner',
+            24: 'Stalker',
+            25: 'Ranger',
+            26: 'Destroyer Dominator',
+            27: 'Booster',
+            28: 'Fighter',
+            29: 'Hybrid',
+            30: 'Manager',
+            31: 'Mothership',
+            32: 'X Hunter',
+            33: 'Predator',
+            34: 'Sprayer',
+            35: 'Trapper',
+            36: 'Gunner Trapper',
+            37: 'Overtrapper',
+            38: 'Mega Trapper',
+            39: 'Tri-Trapper',
+            40: 'Smasher',
+            41: 'Mega Smasher',
+            42: 'Landmine',
+            43: 'Auto Gunner',
+            44: 'Auto 4',
+            45: 'Auto 5',
+            46: 'Auto 3',
+            47: 'Spread Shot',
+            48: 'Streamliner',
+            49: 'Auto Trapper',
+            50: 'Gunner Dominator',
+            51: 'Trapper Dominator',
+            52: 'Battleship',
+            53: 'Annihilator',
+            54: 'Auto Smasher',
+            55: 'Spike',
+            56: 'Factory',
+            57: 'Mounter Turret',
+            58: 'Ball',
+            59: 'Skimmer',
+        };
+
+        /** Text Outline **/
         var textOutline = (txt, x, y, w, h, solidColor, outlineColor, o) => {
             fill(outlineColor);
             o = max(o, 1);
@@ -74,7 +139,8 @@ var sketchProc = processingInstance => {
                     r: data[i].r,
                     score: data[i].score,
                     x: data[i].x,
-                    y: data[i].y});
+                    y: data[i].y,
+                    tank: data[i].tank});
                 if(data[i].id === myId) myNum = i;
             }
             players = d;
@@ -180,7 +246,7 @@ var sketchProc = processingInstance => {
             textSize(11);
             textOutline(`Score: ${players[myNum].score}`, width / 2, height - 51, 0, 0, color(240), color(61), 1);
             textSize(12.5);
-            textOutline(`Level ${players[myNum].level} Tank`, width / 2, height - 30, 0, 0, color(240), color(61), 1);
+            textOutline(`Level ${players[myNum].level} ${tanks[players[myNum].tank]}`, width / 2, height - 30, 0, 0, color(240), color(61), 1);
             textSize(32.5);
             textOutline(players[myNum].nick, width / 2, height - 80, 0, 0, color(240), color(61), 3.5);
         };
@@ -299,12 +365,14 @@ var sketchProc = processingInstance => {
                 var plyrs = [];
                 for(var i=0; i<players.length; i++) if(players[i].playing) plyrs.push(players[i]);
                 plyrs.sort((a, b) => b.score-a.score);
+                leader = players.indexOf(plyrs[0]);
+                console.log(leader);
                 textAlign(CENTER, CENTER);
                 for(var i=0; i<(plyrs.length <= 10 ? plyrs.length : 10); i++){
                     fill(22, 22, 22, 200);
                     rect(width - 190, 25 + i * 20, 175, 16, 100);
                     fill(108, 240, 162);
-                    rect(width - 189, 26 + i * 20, 13 + (plyrs[i].score%plyrs[0].score || 100)/100*160, 14, 100);
+                    rect(width - 189, 26 + i * 20, 13 + (plyrs[i].score%leader.score || 100)/100*160, 14, 100);
                     textSize(12.5);
                     textOutline(`${plyrs[i].nick} - ${plyrs[i].score}`, width - 102.5, 33 + i * 20, 0, 0, color(255, 255, 255), color(0, 0, 0), 1.75);
                 }

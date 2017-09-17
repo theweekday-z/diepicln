@@ -4,10 +4,11 @@ const config = require('../core/configService.js').getConfig(),
 module.exports = class player {
     constructor(id, ip, sid) {
         this.nick = '';
+        this.tank = 1;
         this.x = 0;
         this.y = 0;
         this.vel = [0, 0];
-        this.level = 0;
+        this.level = 1;
         this.score = 0;
         this.r = 0;
         this.d = 40;
