@@ -111,7 +111,7 @@ server.listen(process.env.PORT || config.port, process.env.IP || "0.0.0.0", () =
     console.log(`[\x1b[36mConsole\x1b[0m] Server running node ${process.version} On port ${server.address().port}`);
     var cmds = new (require('asyncconsole'))(' > ', data => {
         var msg = data.trim().toString().split(" ");
-        for (var i in commandList) if(i === msg[0]) commandList[i](msg);
+        for (var i in commandList) if(i === msg[0]) commandList[i](msg)
     });
 });
 

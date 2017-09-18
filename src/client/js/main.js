@@ -338,7 +338,7 @@ var sketchProc = processingInstance => {
                             rotate(players[i].r);
                             stroke(114);
                             fill(colors.tank_barrel);
-                            rect(-8.75, 5, 17.5, 35);
+                            rect(-8.75, 5, 17.5, 35, 1);
                             popMatrix();
                             if(players[i].id === myId) {
                                 fill(colors.tank_blue);
@@ -348,9 +348,8 @@ var sketchProc = processingInstance => {
                                 stroke(180, 58, 63)
                             }
                             ellipse(players[i].x, players[i].y, players[i].d, players[i].d);
-                            if(players[i].id === myNum) return;
                             fill(255);
-                            text(players[i].nick, players[i].x, players[i].y);
+                            if(players[i].id !== players[myNum].id) text(players[i].nick, players[i].x, players[i].y);
                             break;
                     }
                 }

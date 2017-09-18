@@ -11,7 +11,7 @@ module.exports = class player {
         this.level = 1;
         this.score = 0;
         this.r = 0;
-        this.d = 45;
+        this.d = 44;
         this.id = id;
         this.ip = ip;
         this.keyMap = {};
@@ -100,6 +100,8 @@ module.exports = class player {
 
     shoot(xd, yd) {
         bulletServer.addBullet(new bullet(this.x, this.y, xd, yd, this.stats.bulletSpeed.value, this.id));
+        this.vel[0] -= xd;
+        this.vel[1] -= yd;
     }
 
     update() {
