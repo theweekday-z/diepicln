@@ -1,6 +1,6 @@
 @echo off
-echo installing Modules, Please Wait :)
+echo Installing Modules, Please Wait...
 cd ../
 npm install
-echo All Modules installed
+echo All Modules Installed
 pause
