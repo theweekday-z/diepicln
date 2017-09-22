@@ -107,7 +107,7 @@ const updates = setInterval(() => {
 }, 1000/config.fps);
 console.log("[\x1b[34mINFO\x1b[0m] Loading server...");
 server.listen(process.env.PORT || config.port, process.env.IP || "0.0.0.0", () => {
-    process.title = "diepio private server";
+    process.title = 'diepio private server';
     console.log(`[\x1b[36mConsole\x1b[0m] Server running node ${process.version} On port ${server.address().port}`);
     var cmds = new (require('asyncconsole'))(' > ', data => {
         var msg = data.trim().toString().split(" ");
