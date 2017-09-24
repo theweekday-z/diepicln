@@ -269,7 +269,7 @@ var sketchProc = processingInstance => {
         draw = () => {
             if(players.length === 0) return;
             if(players[myNum].playing) {
-                size(window.innerWidth + zoom, window.innerHeight + zoom);
+                size(window.innerWidth, window.innerHeight);
                 background(colors.gameBackground);
                 pushMatrix();
                 mapCamera.run();
@@ -376,7 +376,7 @@ var sketchProc = processingInstance => {
                     fill(22, 22, 22, 200);
                     rect(width - 190, 25 + i * 20, 175, 16, 100);
                     fill(108, 240, 162);
-                    rect(width - 189, 26 + i * 20, 13 + (plyrs[i].score%leader.score || 100)/100*160, 14, 100);
+                    rect(width - 189, 26 + i * 20, 13 + (plyrs[i].score%leader.score || 100) / 100 * 160, 14, 100);
                     textSize(12.5);
                     textOutline(`${plyrs[i].nick} - ${plyrs[i].score}`, width - 102.5, 33 + i * 20, 0, 0, color(255, 255, 255), color(0, 0, 0), 1.75);
                 }
@@ -387,13 +387,13 @@ var sketchProc = processingInstance => {
                 textSize(16);
                 textOutline("Game mode", width / 2, 18, 0, 0, color(255), color(0), 1.75);
                 //
-                menuButton("FFA", width/2-160, 35, color(142,255,251), color(114,205,202), color(91,164,161));
-                menuButton("2 Teams", width/2-80, 35, color(195,255,164), color(145,205,114), color(116,164,91));
-                menuButton("4 Teams", width/2, 35, color(255,142,142), color(205,114,114), color(164,91,91));
-                menuButton("Domination", width/2+80, 35, color(255,235,142), color(205,189,114), color(163,150,91));
-                menuButton("Tag", width/2-120, 65, color(142,178,255), color(114,143,205), color(91,114,164));
-                menuButton("Maze", width/2-40, 65, color(155,122,219), color(146,114,205), color(116,91,164));
-                menuButton("Sandbox", width/2+40, 65, color(251,142,255), color(202,114,205), color(161,91,164));
+                menuButton("FFA", width / 2 - 160, 35, color(142, 255, 251), color(114, 205, 202), color(91, 164, 161));
+                menuButton("2 Teams", width / 2 - 80, 35, color(195, 255, 164), color(145, 205, 114), color(116, 164, 91));
+                menuButton("4 Teams", width / 2, 35, color(255, 142, 142), color(205, 114, 114), color(164, 91, 91));
+                menuButton("Domination", width / 2 + 80, 35, color(255, 235, 142), color(205, 189, 114), color(163, 150, 91));
+                menuButton("Tag", width / 2 - 120, 65, color(142, 178, 255), color(114, 143, 205), color(91, 114, 164));
+                menuButton("Maze", width / 2 - 40, 65, color(155, 122, 219), color(146, 114, 205), color(116, 91, 164));
+                menuButton("Sandbox", width / 2 + 40, 65, color(251, 142, 255), color(202, 114, 205), color(161, 91,164));
                 //
                 textSize(19);
                 textOutline("This is the tale of...", width / 2, height / 2 - 35, 0, 0, color(255), color(0), 1.85);
