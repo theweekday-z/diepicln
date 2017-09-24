@@ -1,11 +1,7 @@
-
 const banServer = require("../../core/banServer.js");
 module.exports = msg => {
-    for(var i=0; i<banServer.getBanList().length; i++){
-        if(msg[1] !== banServer.getBanList()[i].ip) return;
-        var banList = banServer.getBanList();
-        banList.splice(i, 1);
-        banServer.setBanList(banList);
-        console.log("[Console] Unbanned IP "+msg[1]);
-    }
+    if (!banServer.getBanList().includes(msg[1])) return;
+    banList.splice(banServer.getBanList().indexOf(msg[1]), 1);
+    banServer.setBanList(banList);
+    console.log(`[Console] Unbanned IP ${msg[1]}`);
 };

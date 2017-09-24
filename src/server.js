@@ -34,15 +34,15 @@ var updateMessages = () => io.sockets.emit('get messages', core.chatServer.getMe
   	updateWorld = () => io.sockets.emit('update world', {w: config.w, h: config.h}),
   	updatePositions = () => io.sockets.emit('get players', core.playerServer.getPlayers()),
   	ban = () => {
-    		core.banServer.getBanList().forEach(ban => {
-            for (var u = 0; u < connections.length; u++) if (connections[u].request.client._peername.address === ban.ip) connections[u].disconnect();
+    		connections.forEach(con => {
+            if(core.banServer.getBanList().includes(con)) con.disconnect();
     		});
   	},
   	updateEnemies = () => io.sockets.emit('update enemies', squares, triangles, pentagons),
   	updateBullets = () => io.sockets.emit('update bullets', core.bulletServer.getBullets());
 
 io.on('connection', socket => {
-    for(var each in core.banServer.getBanList()) if(socket.request.client._peername.address === core.banServer.getBanList()[each].ip) socket.disconnect();
+    if (core.banServer.getBanList().includes(socket.request.client._peername.address)) socket.disconnect();
     core.pluginService.getPlugins().forEach(plugin => plugin.call("beforeNewUser"));
     connections.push(socket);
     socket.user = new entities.player(Id, socket.request.client._peername.address, socket.id);
