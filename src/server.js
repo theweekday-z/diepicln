@@ -104,7 +104,7 @@ const updates = setInterval(() => {
     core.physics.collisions();
     updatePositions();
     updateBullets();
-}, 1000/config.fps);
+}, 1000 / config.fps);
 console.log("[\x1b[34mINFO\x1b[0m] Loading server...");
 server.listen(process.env.PORT || config.port, process.env.IP || "0.0.0.0", () => {
     process.title = 'diepio private server';

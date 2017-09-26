@@ -175,6 +175,14 @@ var sketchProc = processingInstance => {
             pentagons = d;
         });
         socket.on('update bullets', data => bullets = data);
+        socket.on('disconnect', () => {
+            myId = undefined;
+            players = [];
+            squares = [];
+            triangles = [];
+            pentagons = [];
+            leader = undefined;
+        });
 
         var keys = {},
             keyPressed = () => keys[keyCode] = true,
@@ -403,7 +411,7 @@ var sketchProc = processingInstance => {
                 rect(width / 2 - (325 / 2) + 2, height / 2 - (40 / 2), 325 - 4, 40);
                 textAlign(LEFT, CENTER);
                 textSize(30);
-                if (round(frameCount / 100) % 2 === 0) textOutline(username.join("") + "|", width / 2 - (320 / 2), height / 2, 0, 0, color(0));
+                if (round(frameCount / 100) % 2 === 0) textOutline(`${username.join('')}|`, width / 2 - (320 / 2), height / 2, 0, 0, color(0));
                 else textOutline(username.join(""), width / 2 - (320 / 2), height / 2, 0, 0, color(0));
                 textAlign(CENTER, CENTER);
                 textSize(11);
