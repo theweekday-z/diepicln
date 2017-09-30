@@ -99,6 +99,7 @@ module.exports = class player {
     }
 
     shoot(xd, yd) {
+        if(!this.playing) return;
         bulletServer.addBullet(new bullet(this.x, this.y, xd, yd, this.stats.bulletSpeed.value, this.id));
         this.vel[0] -= xd / 3;
         this.vel[1] -= yd / 3;

@@ -89,9 +89,7 @@ io.on('connection', socket => {
         entities.chat('all', socket.user.nick, data)
     });
 
-    socket.on('new bullet', (xd, yd) => {
-        if(socket.user.playing) return socket.user.shoot(xd, yd);
-    });
+    socket.on('new bullet', (xd, yd) => socket.user.shoot(xd, yd));
 });
 
 const updates = setInterval(() => {
