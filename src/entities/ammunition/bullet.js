@@ -25,6 +25,6 @@ module.exports = class bullet {
             this.transparency += 0.15;
             this.d += 1.75;
         }
-        if(this.transparency>=1) bulletServer.getBullets().splice(bulletServer.getBullets().indexOf(this), 1);
+        if(this.transparency >= 1) bulletServer.getBullets().splice(bulletServer.getBullets().indexOf(this), 1);
     }
 }
